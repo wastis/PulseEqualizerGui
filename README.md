@@ -1,4 +1,4 @@
-Kodi PulseEqualizer GUI Addon
+# Kodi PulseEqualizer GUI Addon
 
 PulseEqualizer GUI is an addon that provides configuration frontend for Kodi. 
 
