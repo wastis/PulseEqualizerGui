@@ -13,6 +13,7 @@ Supports Kodi 18 and 19
 
 2021 wastis
 
+
 Installation
 
 Requires pulseaudio-equalizer installed on the system
@@ -33,17 +34,17 @@ either manual with
 
 or on startup by configuring pulseaudio
 
-	add the lines
-	
-		module-equalizer-sink
-		module-dbus-protocol
-	
-	at the end of either
-	
+add the lines
+
+	module-equalizer-sink
+	module-dbus-protocol
+
+at the end of either
+
 	/etc/pulse/default.pa
-	
-	or
-	
+
+or
+
 	~/.config/pulse/default.pa
 
 warning: on some systems, ~/.config/pulse/default.pa 
