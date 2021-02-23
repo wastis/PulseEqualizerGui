@@ -54,11 +54,11 @@ in this case you can copy /etc/pulse/default.pa to ~/.config/pulse/default.pa
 and add the lines in there.
 
 
-##Install Addon in Kodi
+## Install Addon in Kodi
 
 Launch Kodi >> Add-ons >> Get More >> .. >> Install from zip file
 
-##Configuration
+## Configuration
 
 In Kodi, select the Equalizer as output for Kody
 
@@ -69,7 +69,7 @@ Configure the Addon to stream to a Device
 	Start Addon and Menuentry "Select Output Device"
 
 
-##Configure Hotkeys
+## Configure Hotkeys
 
 The following will enable the keyboard keys l,m,n and o to lauch the different modules.
 
