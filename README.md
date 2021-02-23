@@ -68,6 +68,7 @@ Configure the Addon to stream to a Device
 
 	Start Addon and Menuentry "Select Output Device"
 
+A stream needs to be played in order to select the output device. 
 
 ## Configure Hotkeys
 
