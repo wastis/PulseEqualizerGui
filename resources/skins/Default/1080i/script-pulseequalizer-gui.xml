@@ -1,0 +1,401 @@
+<window>
+	<defaultcontrol always="true">901</defaultcontrol>
+	<animation effect="fade" time="200">WindowOpen</animation>
+	<animation effect="fade" time="200">WindowClose</animation>
+	<coordinates>
+		<left>290</left>
+		<top>130</top>
+	</coordinates>
+    <controls>
+		<control type="image">
+			<left>0</left>
+			<top>0</top>
+			<width>1440</width>
+			<height>850</height>
+			<texture>equalizer-panel.png</texture>
+		</control>
+		<control type="image">
+			<left>0</left>
+			<top>0</top>
+			<width>1440</width>
+			<height>70</height>
+			<texture colordiffuse="FF12B2E7" border="2">equalizer-header.png</texture>
+		</control>
+		<control type="label" id="101">
+			<textoffsetx>70</textoffsetx>
+			<left>-30</left>
+			<top>0</top>
+			<width>1340</width>
+			<label>Pulse Equalizer</label>
+			<height>70</height>
+			<font>font32_title</font>
+			<align>left</align>
+			<aligny>center</aligny>
+			<shadowcolor>black</shadowcolor>
+		</control>
+        <control type="label" id="102">
+			<textoffsetx>70</textoffsetx>
+			<left>-30</left>
+			<top>780</top>
+			<width>1340</width>
+			<label>Enter: save      Back: cancel     0: reset slider</label>
+			<height>70</height>
+			<font>font32_title</font>
+			<align>left</align>
+			<aligny>center</aligny>
+			<shadowcolor>black</shadowcolor>
+		</control>
+        <control type="grouplist" id="17">
+			<description>Grouplist</description>
+			<left>20</left>
+			<top>110</top>
+			<width>1390</width>
+			<height>730</height>
+			<itemgap>5</itemgap>
+			<pagecontrol>121</pagecontrol>
+			<scrolltime>200</scrolltime>
+			<orientation>vertical</orientation>
+			<usecontrolcoords>false</usecontrolcoords>
+			<visible>true</visible>
+			<onup>10</onup>
+			<ondown>10</ondown>
+			<onleft>17</onleft>
+			<onright>17</onright>
+			    <control type="group" id="1000">
+				    <description>ControlGroup</description>
+				    <height>63</height>
+                    <control type="label" id="2000">
+					    <description>ControlName</description>
+					    <left>0</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>Pre</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1900">
+					    <description>Slider</description>
+					    <left>25</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+     
+
+                    <control type="label" id="2001">
+					    <description>ControlName</description>
+					    <left>150</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>DC</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1901">
+					    <description>Slider</description>
+					    <left>175</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+                    <control type="label" id="2002">
+					    <description>ControlName</description>
+					    <left>250</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>31Hz</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1902">
+					    <description>Slider</description>
+					    <left>275</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+                   <control type="label" id="2003">
+					    <description>ControlName</description>
+					    <left>350</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>63Hz</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1903">
+					    <description>Slider</description>
+					    <left>375</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+
+                 <control type="label" id="2004">
+					    <description>ControlName</description>
+					    <left>450</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>125Hz</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1904">
+					    <description>Slider</description>
+					    <left>475</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+                    <control type="label" id="2005">
+					    <description>ControlName</description>
+					    <left>550</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>250Hz</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1905">
+					    <description>Slider</description>
+					    <left>575</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+                    <control type="label" id="2006">
+					    <description>ControlName</description>
+					    <left>650</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>500Hz</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1906">
+					    <description>Slider</description>
+					    <left>675</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+                    <control type="label" id="2007">
+					    <description>ControlName</description>
+					    <left>750</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>1k</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1907">
+					    <description>Slider</description>
+					    <left>775</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+                    <control type="label" id="2008">
+					    <description>ControlName</description>
+					    <left>850</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>2k</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1908">
+					    <description>Slider</description>
+					    <left>875</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+
+                    <control type="label" id="2009">
+					    <description>ControlName</description>
+					    <left>950</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>4k</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1909">
+					    <description>Slider</description>
+					    <left>975</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+
+                   <control type="label" id="2010">
+					    <description>ControlName</description>
+					    <left>1050</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>8k</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1910">
+					    <description>Slider</description>
+					    <left>1075</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+                    <control type="label" id="2011">
+					    <description>ControlName</description>
+					    <left>1150</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>16k</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1911">
+					    <description>Slider</description>
+					    <left>1175</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+
+                   <control type="label" id="2012">
+					    <description>ControlName</description>
+					    <left>1250</left>
+					    <top>600</top>
+					    <width>100</width>
+					    <height>25</height>
+                        <label>max</label>
+					    <font>font13</font>
+					    <align>center</align>
+					    <aligny>top</aligny>
+      			    </control>
+				        <control type="slider" id="1912">
+					    <description>Slider</description>
+					    <left>1275</left>
+					    <top>0</top>
+					    <width>40</width>
+					    <height>590</height>
+                        <orientation>vertical</orientation>
+                        <texturesliderbar>equalizer-slider-background.png</texturesliderbar>
+					    <textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
+					    <textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
+					    <onup>901</onup>
+					    <ondown>901</ondown>
+				    </control>
+
+ 
+			    </control>
+		    </control>
+	</controls>
+</window>
