@@ -60,7 +60,7 @@ Launch Kodi >> Add-ons >> Get More >> .. >> Install from zip file
 
 ## Configuration
 
-In Kodi, select the Equalizer as output for Kody
+In Kodi, select the Equalizer as output for Kodi
 
 	System->Audio->Audio Output Device --- select "FFT-based-equalizer...."
 
