@@ -53,6 +53,17 @@ overwrites /etc/pulse/default.pa, pulse audio will not work anymore
 in this case you can copy /etc/pulse/default.pa to ~/.config/pulse/default.pa 
 and add the lines in there.
 
+## attach equalizer to specific device
+
+PulseAudio can handle more then 2 channels. The number of channels is set at the time the module is load. 
+To copy the configuration of a specific device, the module can be loaded with the folwoing command
+
+	pactl load-module module-equalizer-sink sink_master=SINK_NAME
+
+to get the SINK_NAME run
+	
+	pactl list sinks
+
 
 ## Install Addon in Kodi
 
