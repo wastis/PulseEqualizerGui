@@ -126,7 +126,7 @@ class STREAM_FUNC:
 			
 			if(card_driver=='module-equalizer-sink.c'):
 				self.eqaulizer_sink = sink
-			else:
+			elif(card_driver=='module-alsa-card.c'):
 				#GET PORTS
 				active_port = self.pulse_dbus.get_property(IF.DEVICE_I,sink,"ActivePort")
 				active_port_desc = self.pulse_dbus.get_property(IF.PORT_I,active_port,"Description")
@@ -138,23 +138,25 @@ class STREAM_FUNC:
 					if port != active_port:
 						port_desc = self.pulse_dbus.get_property(IF.PORT_I,port,"Description")
 						sink_lookup.append([sink,card_name,port,port_desc])
+			
 						
 				
-				#sort list to get the current acitve at the beginning
-				sink_lookup_result = []
-				for line in sink_lookup:
-					if line[0] == self.fft_sink:
-						sink_lookup_result.append(line)
-				#and the rest
-				for line in sink_lookup:
-					if line[0] != self.fft_sink:
-						sink_lookup_result.append(line)
-				#create user friendly
-				self.dev_list = []
-				for line in sink_lookup_result:
-					self.dev_list.append(line[3]+' @ '+ line[1])
-				
-				self.sink_lookup = sink_lookup_result
+		#sort list to get the current acitve at the beginning
+		sink_lookup_result = []
+		for line in sink_lookup:
+			if line[0] == self.fft_sink:
+				sink_lookup_result.append(line)
+		#and the rest
+		for line in sink_lookup:
+			if line[0] != self.fft_sink:
+				sink_lookup_result.append(line)
+		#create user friendly
+		self.dev_list = []
+		for line in sink_lookup_result:
+			self.dev_list.append(line[3]+' @ '+ line[1])
+		
+		self.sink_lookup = sink_lookup_result
+			
 
 		return self.dev_list
 	

@@ -50,7 +50,10 @@ try:
 		stream_func = STREAM_FUNC()
 		sel = dialog.contextmenu(stream_func.get_sinks())
 		if sel >= 0:
-			stream_func.set_output_device(sel)
+			try:
+				stream_func.set_output_device(sel)
+			except Exception as e:
+				xbmcgui.Dialog().notification("Select Output Device", "No Stream to switch!", time = 10)
 
 	elif sel==3:
 			sel = dialog.contextmenu(["Add New Profile","Delete Profile"])

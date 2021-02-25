@@ -20,6 +20,6 @@ class PulseDBusError(Exception) :
 		if((self.name == 'org.freedesktop.DBus.Error.FileNotFound') and (self.detail == 'on connect')):
 			return "Cannot connect to pulseaudio dbus server.\nPlease load the module 'module-dbus-protocol' via \n'pactl load-module module-dbus-protocol'\nor configure '/etc/pulse/default.pa'"
 			
-		if((self.name == org.freedesktop.DBus.Error.ServiceUnknown) and (self.detail == 'on connect')):
+		if((self.name == 'org.freedesktop.DBus.Error.ServiceUnknown') and (self.detail == 'on connect')):
 			return "Cannot find pulseaudio dbus server.\nYou can try to set the environment variable PULSE_DBUS_SERVER to the pulseaudio dbus service\n PULSE_DBUS_SERVER='unix:path=PATH_TO SERVICE'."
 			
