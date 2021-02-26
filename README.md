@@ -72,9 +72,13 @@ To define a chain, the modules need to be loaded in the reverse order always ref
 
 As an example withing the default.pa:
 connect the equalizer to the audio device 
+
 	load-module module-equalizer-sink sink_name=equalizer_1
+
 connect a ladspa filter to the equalizer_1
+
 	load-module module-ladspa-sink sink_master=equalizer_1 sink_name=Compressor_1 plugin=sc4_1882 label=sc4 control=1,1.5,401,-20,20,5,15
+
 and so on.
 
 The OS does currently not connect those chains automatically together, the would need to be manually connected via pavucontrol. And sometimes these connections get lost. 
