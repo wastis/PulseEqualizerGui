@@ -1,5 +1,5 @@
 import dbussy as dbus
-from dbussy import DBUS
+from dbussy import DBUS, DBusError
 import os, sys
 import interface as IF
 from pulseerror import PulseDBusError
@@ -30,8 +30,8 @@ class PULSE_DBUS:
 				address = reply.expect_return_objects("v")[0][1]
 			
 			self.conn = dbus.Connection.open(address,0)
-		except Exception as e:
-			raise(PulseDBusError(e.name,e.message,"python3","on connect"))
+		except DBusError as e:  self.handle_exception(e,"python3","on connect")
+			
 
 		
 	def print_introspect(self, interface, d_path ):
@@ -45,8 +45,7 @@ class PULSE_DBUS:
 
 			reply = self.conn.send_with_reply_and_block(request)
 			sys.stdout.write(reply.expect_return_objects("s")[0])
-		except Exception as e:
-			raise(PulseDBusError(e.name,e.message,"python3","on dbus function call"))
+		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
 		
 
 	def get_property(self, interface, d_path, p_name):
@@ -62,8 +61,8 @@ class PULSE_DBUS:
 			reply = self.conn.send_with_reply_and_block(request)
 
 			return reply.expect_return_objects("v")[0][1]
-		except Exception as e:
-			raise(PulseDBusError(e.name,e.message,"python3","on dbus function call"))
+		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
+			
 			
 	def set_property(self, interface, d_path, p_name, *p_val):
 		
@@ -76,8 +75,8 @@ class PULSE_DBUS:
 			)
 			request.append_objects("ssv", dbus.valid_interface(interface),p_name, p_val)
 			reply = self.conn.send_with_reply_and_block(request)
-		except Exception as e:
-			raise(PulseDBusError(e.name,e.message,"python3","on dbus function call"))
+		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
+			
 		
 	def get_all_property(self, interface, d_path):
 		try:
@@ -91,9 +90,8 @@ class PULSE_DBUS:
 			reply = self.conn.send_with_reply_and_block(request)
 
 			return reply.expect_return_objects("a{sv}")[1]
-		except Exception as e:
-			raise(PulseDBusError(e.name,e.message,"python3","on dbus function call"))
-		
+		except DBusError as e:  self.handle_exception(e,"python3","on dbus function call")
+			
 		
 	def call_func(self, interface, d_path, func, *args):
 		try:
@@ -110,9 +108,10 @@ class PULSE_DBUS:
 			if   len(reply) == 0 :return None
 			elif len(reply) == 1 :return reply[0]
 			else:	return reply
-		except Exception as e:
-			raise(PulseDBusError(e.name,e.message,"python3","on dbus function call"))
+		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
 			
-		
-
+	
+	@staticmethod
+	def handle_exception(e,python,func):
+		raise(PulseDBusError(e.name,e.message,python,func))
 

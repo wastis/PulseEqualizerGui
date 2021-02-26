@@ -21,6 +21,16 @@ from pulse_class import FILTER
 from pulse_class import STREAM_FUNC
 import pulseerror
 
+def handle_except(e):
+	if e.args[0] == "no stream available":
+		xbmcgui.Dialog().notification("No stream availabe", "please play something", time = 10)
+	elif e.args[0] == "no equalizer in filter chain":
+		xbmcgui.Dialog().notification("No equalizer in filter chain", "select a chain with equalizer", time = 10)
+	else: 
+		xbmc.log(str(e),xbmc.LOGERROR)
+
+
+
 try:
 	dialog = xbmcgui.Dialog()
 
@@ -32,28 +42,35 @@ try:
 		
 
 	if sel == 0:
-		f = FILTER()
-		
-		profile_list = f.get_profile_list()
-		if len(profile_list) > 0:
-			sel = dialog.contextmenu(profile_list)
-			f.load_profile(profile_list[sel])
-		else: xbmcgui.Dialog().notification("Select Profile", "No profiles defined!", time = 10)
+		try: f = FILTER()
+		except Exception as e: handle_except(e)
+		else:
+			
+			profile_list = f.get_profile_list()
+			if len(profile_list) > 0:
+				sel = dialog.contextmenu(profile_list)
+				f.load_profile(profile_list[sel])
+			else: xbmcgui.Dialog().notification("Select Profile", "No profiles defined!", time = 10)
 
 	elif sel == 1:
 
-		ui = GUI("%s.xml" % addonid.replace(".","-") , cwd, "Default")
-		ui.doModal()
-		del ui
+		try: ui = GUI("%s.xml" % addonid.replace(".","-") , cwd, "Default")
+		except Exception as e: handle_except(e)
+		else:
+			ui.doModal()
+			del ui
 
 	elif sel == 2:
 		stream_func = STREAM_FUNC()
-		sel = dialog.contextmenu(stream_func.get_sinks())
-		if sel >= 0:
-			try:
-				stream_func.set_output_device(sel)
-			except Exception as e:
-				xbmcgui.Dialog().notification("Select Output Device", "No Stream to switch!", time = 10)
+		try:sinklist = stream_func.get_sinks()
+		except Exception as e: handle_except(e)
+		else:
+			sel = dialog.contextmenu(sinklist)
+			if sel >= 0:
+				try:
+					stream_func.set_output_device(sel)
+				except Exception as e:
+					xbmcgui.Dialog().notification("Select Output Device", "No Stream to switch!", time = 10)
 
 	elif sel==3:
 			sel = dialog.contextmenu(["Add New Profile","Delete Profile"])
