@@ -75,7 +75,7 @@ connect the equalizer to the audio device
 
 	load-module module-equalizer-sink sink_name=equalizer_1
 
-connect a ladspa filter to the equalizer_1
+connect a ladspa filter to the equalizer_1 (given the sc4 ladspa filter is available on the system)
 
 	load-module module-ladspa-sink sink_master=equalizer_1 sink_name=Compressor_1 plugin=sc4_1882 label=sc4 control=1,1.5,401,-20,20,5,15
 
