@@ -9,8 +9,10 @@ This includes:
 - Switch equalizer to specific output device and port
 - Hotkey support for each
 - v.1.0.2 Filter chain support
+- tested on i386 Mint 20.4 / Debian 10 server / raspberry PI 3 OS v. May 7th 2021  
 
 Supports Kodi 18 and 19
+
 
 2021 wastis
 
@@ -56,7 +58,7 @@ and add the lines in there.
 
 ## Attach equalizer to specific device
 
-PulseAudio can handle more then 2 channels. The number of channels is set at the time the module is loaded. 
+This is usefull if you want to set a default device or handle more then 2 channels. The number of channels is set at the time the module is loaded. 
 To copy the configuration of a specific device, the module can be loaded with the following command
 
 	pactl load-module module-equalizer-sink sink_master=SINK_NAME
@@ -128,6 +130,50 @@ insert
 
 restart Kodi
 
+## Headless OS installations
+
+On Debian 10 server or raspberry PI OS Lite, Kodi needs to be launched with a dbus session
+
+Both systems currently use /etc/rc.local as custom init script. Replace [path] with the path to your script, replace [user] with the user name Kodi shall run in
+
+	#!/bin/sh -e
+	### BEGIN INIT INFO
+	# Provides:          kodi
+	# Required-Start:    $remote_fs $syslog
+	# Required-Stop:     $remote_fs $syslog
+	# Default-Start:     2 3 4 5
+	# Default-Stop:      0 1 6
+	# Short-Description: Start daemon at boot time
+	# Description:       Enable service provided by daemon.
+	### END INIT INFO
+	sudo -u [user] run_[path]/run_session.sh &
+	exit 0
+
+[path]/run_session.sh starts up the dbus session
+	#!/bin/sh -e
+	exec dbus-run-session -- [path]/run_kodi.sh
+
+[path]/run_kodi.sh starts kodi
+	#!/bin/sh -e
+	
+	KODI_AE_SINK=PULSE      #<-- those two lines are needed on raspberry to tell Kodi 
+	export KODI_AE_SINK     #<-- to use pulseaudio instead of ALSA
+	
+	/usr/bin/pulseaudio -D  #<-- start pulseaudio in the dbus session as daemon 
+	/usr/bin/kodi 
+	exit 0
+	
+## raspberry PI 3 pitfall
+
+if you install Kodi on the headless OS Lite, you might want to increase the video memory from 64MB to 256MB to avoid crashes. 
+
+## raspberry PI 3 performance
+
+pulse audio with equalizer enabled consumes about 20% of one CPU core. 
+
+## LibreELEC, OSMC and OpenELEC
+ 
+To my knowledge, to date, those distributions do not have module-equalizer-sink included in their minimal system, so the PulseEqualizer GUI Addon might not run. 
 
 Enjoy
 

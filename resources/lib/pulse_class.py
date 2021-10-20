@@ -240,7 +240,7 @@ class STREAM_FUNC:
 			
 			card_driver = self.pulse_dbus.get_property(IF.DEVICE_I,sink,'Driver')
 			
-			if(card_driver=='module-alsa-card.c'):
+			if card_driver=='module-alsa-card.c' or card_driver=='module-bluez5-device.c':
 				#GET PORTS
 				active_port = self.pulse_dbus.get_property(IF.DEVICE_I,sink,"ActivePort")
 				active_port_desc = self.pulse_dbus.get_property(IF.PORT_I,active_port,"Description")
@@ -274,11 +274,13 @@ class STREAM_FUNC:
 		if self.fft_stream==None: return []
 
 		#set port first
-		self.pulse_dbus.set_property(IF.DEVICE_I,self.sink_lookup[int(sel)][0],"ActivePort","o",self.sink_lookup[int(sel)][2])
-
+		try:
+			self.pulse_dbus.set_property(IF.DEVICE_I,self.sink_lookup[int(sel)][0],"ActivePort","o",self.sink_lookup[int(sel)][2])
+		except:pass
 		#set stream to sink
-		self.pulse_dbus.call_func(IF.STREAM_I,self.fft_stream,'Move',"o", self.sink_lookup[int(sel)][0])
-		
+		try:
+			self.pulse_dbus.call_func(IF.STREAM_I,self.fft_stream,'Move',"o", self.sink_lookup[int(sel)][0])
+		except:pass
 	
 	def find_last_in_chain(self):
 		streams = get_stream_list(self.pulse_dbus)
@@ -302,7 +304,8 @@ class STREAM_FUNC:
 			for cur_stream in streams:
 				log = log + "self_sink   : %s\n" % cur_stream["self_sink"]
 				log = log + "out_sink    : %s\n" % cur_stream["out_sink"]
-				log = log + "should_out: %s\n" % cur_stream["should_out"]
+				log = log + "should_out: : %s\n" % cur_stream["should_out"]
+				log = log + "should type : %s\n" % cur_stream["should_type"]
 				log = log + "self_type   : %s\n" % cur_stream["self_type"]
 				log = log + "app_name    : %s\n" % cur_stream["app_name"]
 				return log
@@ -316,17 +319,21 @@ class STREAM_FUNC:
 				log = log + "self_sink   : %s\n" % cur_stream["self_sink"]
 				log = log + "out_sink    : %s\n" % cur_stream["out_sink"]
 				log = log + "should_out  : %s\n" % cur_stream["should_out"]
+				log = log + "should type : %s\n" % cur_stream["should_type"]
 				log = log + "self_type   : %s\n" % cur_stream["self_type"]
 				log = log + "driver      : %s\n" % cur_stream["driver"]
 							
 								
 				if ( cur_stream["self_type"] == "filter"):
 					log = log + "sink is fiter\n"
-					if cur_stream["out_sink"] != cur_stream["should_out"]:
-						log = log + "out is not correct.. try to switch\n"
-						self.pulse_dbus.call_func(IF.STREAM_I,cur_stream["stream"],'Move',"o", cur_stream["should_out"])
-						cur_stream["out_sink"] = cur_stream["should_out"]
-					else: log = log + "out is corret\n"
+					if cur_stream["should_type"] == "filter":
+						if cur_stream["out_sink"] != cur_stream["should_out"]:
+							log = log + "out is not correct.. try to switch\n"
+							self.pulse_dbus.call_func(IF.STREAM_I,cur_stream["stream"],'Move',"o", cur_stream["should_out"])
+							cur_stream["out_sink"] = cur_stream["should_out"]
+						else: log = log + "out is corret\n"
+					else:
+						log = log + "out type is %s, select last output device\n" % cur_stream["should_type"]
 				log = log + "----------------\n"
 
 		return log
