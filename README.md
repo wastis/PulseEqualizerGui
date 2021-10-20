@@ -146,14 +146,16 @@ Both systems currently use /etc/rc.local as custom init script. Replace [path] w
 	# Short-Description: Start daemon at boot time
 	# Description:       Enable service provided by daemon.
 	### END INIT INFO
-	sudo -u [user] run_[path]/run_session.sh &
+	sudo -u [user] [path]/run_session.sh &
 	exit 0
 
 [path]/run_session.sh starts up the dbus session
+
 	#!/bin/sh -e
 	exec dbus-run-session -- [path]/run_kodi.sh
 
 [path]/run_kodi.sh starts kodi
+
 	#!/bin/sh -e
 	
 	KODI_AE_SINK=PULSE      #<-- those two lines are needed on raspberry to tell Kodi 
