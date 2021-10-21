@@ -96,7 +96,7 @@ def get_stream_list(pulse_dbus):
 					should_type = should_val[2]
 				except: None
 			
-		streams.append({"stream":stream,"self_sink":self_sink,"out_sink":device,"should_out":should_sink,"self_type":self_type,"driver":driver,"app_name":app_name})
+		streams.append({"stream":stream,"self_sink":self_sink,"out_sink":device,"should_out":should_sink,"should_type":should_type,"self_type":self_type,"driver":driver,"app_name":app_name})
 		
 	return streams
 
