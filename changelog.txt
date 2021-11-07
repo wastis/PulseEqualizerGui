@@ -1,3 +1,5 @@
+1.0.4 Bugfix
+1.0.3 Recognize connected bluetooth device 
 1.0.2 Handle Filter Chains
 1.0.1 Bugfix
 1.0.0 Initial Release
