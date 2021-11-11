@@ -22,9 +22,10 @@ class EqControl():
 	frequencies = [31.75,63.5,125,250,500,1e3,2e3,4e3,8e3,16e3]
 	
 	def __init__(self):
-		
-		self.pulse_dbus = PulseDBus()
 		self.eq_param = {}
+		
+	def on_pa_connect(self):
+		self.pulse_dbus = PulseDBus()
 		
 	def get_filter_param(self, index):
 		

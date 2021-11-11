@@ -42,6 +42,8 @@ class paModuleManager():
 		log("pamm: start paModuleManager")
 		self.load_dyn_equalizer()
 		self.config.load_config()
+		self.load_dbus_module()
+		self.eq.on_pa_connect()
 		
 		
 	def on_message_exit(self):
@@ -323,6 +325,15 @@ class paModuleManager():
 			index = self.padb.sinks[self.dyn_equalizer].owner_module
 			self.dyn_equalizer = None
 			self.pc.unload_module(index)
+			
+	def load_dbus_module(self):
+		for index,module in self.padb.modules.items():
+			if module.name == "module-dbus-protocol": 
+				log("module-dbus-protocol already loaded")
+				return
+			
+		self.pc.load_module('module-dbus-protocol')
+		
 
 	#
 	#	helper
