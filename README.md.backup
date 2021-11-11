@@ -39,7 +39,7 @@ Launch Kodi >> Add-ons >> Get More >> .. >> Install from zip file
 
 ## Configuration
 
-	In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select an equalizer profile. The equalizer is then automatically inserted into the playback stream. This is different to previouse versions of the addon.   
+	In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select an equalizer profile. The equalizer is then automatically inserted into the playback stream.   
 
 
 # Advanced configuration
@@ -58,8 +58,6 @@ Connect the equalizer to the audio device
 Connect a ladspa filter to the equalizer_1 (given the sc4 ladspa filter is available on the system)
 
 	load-module module-ladspa-sink sink_master=eq_1 sink_name=co_1 sink_properties="device.description=CO-1" plugin=sc4_1882 label=sc4 control=1,1.5,401,-20,20,5,15
-
-The sc4_1882 filter needs to be installed on the system. 
 
 
 On playback, PulseEqualizer GUI will connect the chain together based on the sink_master, when first element of the chain is selected within Kodi.

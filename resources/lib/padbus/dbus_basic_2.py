@@ -4,7 +4,7 @@ import sys,os
 from pulseerror import PulseDBusError
 
 
-class PULSE_DBUS:
+class PulseDBus:
 	def __init__( self, *args, **kwargs ):
 		destination = 'org.PulseAudio1' 
 		object_path = '/org/pulseaudio/server_lookup1' 

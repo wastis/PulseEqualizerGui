@@ -1,0 +1,59 @@
+<window>
+	<defaultcontrol always="true">901</defaultcontrol>
+	<animation effect="fade" time="100">WindowOpen</animation>
+	<animation effect="fade" time="100">WindowClose</animation>
+	<coordinates>
+		<left>1500</left>
+		<top>80</top>
+	</coordinates>
+	<controls>
+		<control type="progress" id="1900">
+			<description>Progress</description>
+			<left>5</left>
+			<top>55</top>
+			<width>200</width>
+			<height>30</height>
+			<orientation>horizontal</orientation>
+			<texturebg>volume-fill-transparent.png</texturebg>
+			<midtexture>volume-fill-blue.png</midtexture>
+			
+		</control>
+		<control type="progress" id="1901">
+			<description>Progress</description>
+			<left>205</left>
+			<top>55</top>
+			<width>100</width>
+			<height>30</height>
+			<orientation>horizontal</orientation>
+			<texturebg>volume-fill-transparent.png</texturebg>
+			<midtexture>volume-fill-orange.png</midtexture>
+		</control>
+
+		<control type="label" id="2000">
+				<description>Percent</description>
+				<left>200</left>
+				<top>0</top>
+				<width>90</width>
+				<height>40</height>
+				<label>0 %</label>
+				<font>font16</font>
+				<align>right</align>
+				<aligny>top</aligny>
+		</control>
+		
+		<control type="image" id="10">
+			<description>control overlay</description>
+			<left>0</left>
+			<top>50</top>
+			<width>310</width>
+			<height>40</height>
+			<visible>true</visible>
+			<fadetime>0</fadetime>
+			<bordersize>0</bordersize>
+			<texture  border="0">volume-bk.png</texture>
+			
+		</control>
+
+
+	</controls>
+</window>

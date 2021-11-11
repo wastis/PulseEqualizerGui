@@ -1,26 +1,33 @@
 import xbmc
-import xbmcaddon
-import xbmcvfs
+#import xbmcaddon
+#import xbmcvfs
 import xbmcgui
-import math
+import math, json
+from threading import Thread
 
-from pulse_class import FILTER
+from helper import *
 
-class GUI(  xbmcgui.WindowXMLDialog  ):
+class EqGui(  xbmcgui.WindowXMLDialog  ):
 
-	def __init__( self, *args, **kwargs ):
-		self.test = 1
+	def __init__( self,  *args, **kwargs ):
+		
+		self.pipe_comm = kwargs["pipe_comm"]
+		
+		self.eqid = kwargs["eqid"]
+		self.desc = kwargs["desc"]
+		self.profile = self.pipe_comm.get_from_server("get;eq_base_profile;%d" % (self.eqid))
+		self.frequencies = self.pipe_comm.get_from_server("get;eq_frequencies")
+		self.preamp, self.coef = self.pipe_comm.get_from_server("get;eq_filter;%d" % (self.eqid))
+		
 		self.control_state = {}
 		self.controlId = 0
-		self.filter = FILTER()
 		
-		xbmc.log( "sample rate :" + str(self.filter.filter_rate),xbmc.LOGINFO)
+		self.updating = False
 		
-
 	def onInit( self ):
 		header = self.getControl(101)
-		self.profile = self.filter.get_base_profile()
 		
+		'''
 		try:
 			self.filter.load_profile(self.profile)
 		except Exception as e:
@@ -29,8 +36,9 @@ class GUI(  xbmcgui.WindowXMLDialog  ):
 			self.filter.reset()
 			self.filter.save_state()
 			self.filter.save_profile(self.profile)
-
-		header.setLabel("Pulse Equalizer         Profile:   %s" % self.profile)
+		'''
+		
+		header.setLabel("%s         Profile:   %s" % (self.desc, self.profile))
 		self.scan_slider()
 		
 	def scan_slider(self):
@@ -44,7 +52,7 @@ class GUI(  xbmcgui.WindowXMLDialog  ):
 			except Exception:
 				break;
 		
-		freq = self.filter.frequencies[1:]
+		freq = self.frequencies
 		for i in range(2002,2013):
 			try:
 				tbox = self.getControl(i)
@@ -68,19 +76,25 @@ class GUI(  xbmcgui.WindowXMLDialog  ):
 		
 		# set focus to first slider
 		self.setFocus(slider_list[0])
-		
-		# get current filter coeffitients
-		coef,preamp = self.filter.filter_at_points()
 
 		# set slider of the filter
 		coef_pos = 0
 		for slider in slider_list[1:]:
-			 slider.setInt(self.coef2slider(coef[coef_pos]), 0, 1, 100)
+			 slider.setInt(self.coef2slider(self.coef[coef_pos]), 0, 1, 100)
 			 coef_pos = coef_pos + 1
 
 		# set preamplifier slider
-		slider_list[0].setInt(self.coef2slider(preamp), 0, 1, 100) 
+		slider_list[0].setInt(self.coef2slider(self.preamp), 0, 1, 100) 
+
+	def set_filter(self):
+		self.pipe_comm.send_to_server("set;eq_filter;%s" % (json.dumps([self.eqid, self.preamp, self.coef])))
+		#self.pipe_comm.send_to_server("save;eq_state;%d" % (self.eqid))
 		
+	def load_profile(self):
+		self.pipe_comm.send_to_server("load;eq_profile;%d,%s" % (self.eqid,self.profile))
+		
+	def save_profile(self):
+		self.pipe_comm.send_to_server("save;eq_profile;%d,%s" % (self.eqid,self.profile))
 
 	def onFocus( self, controlId ):
 		if self.controlId == 0: self.controlId = controlId
@@ -99,41 +113,48 @@ class GUI(  xbmcgui.WindowXMLDialog  ):
 	def coef2slider(val):
 		return int(math.log10( val )*50+50.0)
 
+	#reduce the messages to dbus, when slider is moved. 
+	def update(self):
+		sleep(0.3)
+		self.set_filter()
+		self.updating = False
+	
 	def setFilter(self):
 		cid = self.controlId - 1900
 		
 		if cid == 0:
-			self.filter.preamp = self.slider2coef(self.slider_list[0].getFloat())
+			self.preamp = self.slider2coef(self.slider_list[0].getFloat())
 		elif cid < len( self.slider_list):
-			self.filter.coefficients[cid-1] = self.slider2coef(self.slider_list[cid].getFloat())
+			self.coef[cid-1] = self.slider2coef(self.slider_list[cid].getFloat())
 			
-		self.filter.seed_filter()
-		self.filter.save_state()
+		
+		if not self.updating:
+			self.updating = True
+			Thread(target=self.update).start()
+		
 		
 	def setZero(self):
 		cid = self.controlId - 1900
 		
 		if cid == 0:
-			self.filter.preamp = 1.0
+			self.preamp = 1.0
 			self.slider_list[0].setInt(50,0,1,100)
 		elif cid < len( self.slider_list):
-			self.filter.coefficients[cid-1] = 1.0
+			self.coef[cid-1] = 1.0
 			self.slider_list[cid].setInt(50,0,1,100)
 			
-		self.filter.seed_filter()
-		self.filter.save_state()
+		
 		
 	def save(self):
 		cid = 0
-		self.filter.preamp = self.slider2coef(self.slider_list[0].getFloat())
+		self.preamp = self.slider2coef(self.slider_list[0].getFloat())
 		
 		for slider in self.slider_list[1:]:
-			self.filter.coefficients[cid] = self.slider2coef(slider.getFloat())
+			self.coef[cid] = self.slider2coef(slider.getFloat())
 			cid = cid + 1
 			
-		self.filter.seed_filter()
-		self.filter.save_state()
-		self.filter.save_profile(self.profile)
+		self.set_filter()
+		self.save_profile()
 		
 		
 	def onAction( self, action ):
@@ -144,7 +165,7 @@ class GUI(  xbmcgui.WindowXMLDialog  ):
 		
 		#Cancel
 		if action.getId() in [92,10]:
-			self.filter.load_profile(self.profile)
+			self.load_profile()
 			self.close()
 		
 		#up/down/left/right
@@ -163,5 +184,5 @@ class GUI(  xbmcgui.WindowXMLDialog  ):
 			self.setZero()
 			
 		
-		xbmc.log( "code :" + str(action.getButtonCode()),xbmc.LOGINFO)
-		xbmc.log( "Id   :" + str(action.getId()),xbmc.LOGINFO)
+		#xbmc.log( "code :" + str(action.getButtonCode()),xbmc.LOGINFO)
+		#xbmc.log( "Id   :" + str(action.getId()),xbmc.LOGINFO)

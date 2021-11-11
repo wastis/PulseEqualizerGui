@@ -1,12 +1,13 @@
-import dbussy as dbus
-from dbussy import DBUS, DBusError
 import os, sys
-import interface as IF
-from pulseerror import PulseDBusError
+
+from . import dbussy as dbus
+from .dbussy import DBUS, DBusError
+from . import interface as IF
+from .pulseerror import PulseDBusError
 
 
 
-class PULSE_DBUS:
+class PulseDBus:
 	def __init__( self, *args, **kwargs ):
 		destination = 'org.PulseAudio1' 
 		object_path = '/org/pulseaudio/server_lookup1' 
@@ -28,6 +29,7 @@ class PULSE_DBUS:
 				reply = conn.send_with_reply_and_block(request)
 
 				address = reply.expect_return_objects("v")[0][1]
+				
 			
 			self.conn = dbus.Connection.open(address,0)
 		except DBusError as e:  self.handle_exception(e,"python3","on connect")

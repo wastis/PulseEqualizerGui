@@ -1,0 +1,117 @@
+
+msgid ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_gb\n"
+
+msgctxt "#32000"
+msgid "Equalizer"
+msgstr "Equalizer"
+
+
+msgctxt "#32001"
+msgid "No playback active"
+msgstr "No playback active"
+
+
+msgctxt "#32002"
+msgid "Configuration needs an active playback. Please start a media playback."
+msgstr "Configuration needs an active playback. Please start a media playback."
+
+
+msgctxt "#32003"
+msgid "The equalizer is currently disabled for this device. Enable it?"
+msgstr "The equalizer is currently disabled for this device. Enable it?"
+
+
+msgctxt "#32004"
+msgid "Error"
+msgstr "Error"
+
+
+
+msgctxt "#32005"
+msgid "There is a problem to start the Equalizer. Please check Kodi log."
+msgstr "There is a problem to start the Equalizer. Please check Kodi log."
+
+
+msgctxt "#32006"
+msgid "Select Profile"
+msgstr "Select Profile"
+
+msgctxt "#32007"
+msgid "Equalizer"
+msgstr "Equalizer"
+
+msgctxt "#32008"
+msgid "Select Output Device"
+msgstr "Select Output Device"
+
+
+msgctxt "#32009"
+msgid "Manage Profiles"
+msgstr "Manage Profiles"
+
+
+msgctxt "#32010"
+msgid "Set Latency Offset"
+msgstr "Set Latency Offset"
+
+
+msgctxt "#32011"
+msgid "Disable Equalizer"
+msgstr "Disable Equalizer"
+
+
+msgctxt "#32012"
+msgid "Select Profile for %s"
+msgstr "Select Profile for %s"
+
+
+msgctxt "#32013"
+msgid "Select Audio Output Device"
+msgstr "Select Audio Output Device"
+
+
+msgctxt "#32014"
+msgid "Add new Profile"
+msgstr "Add new Profile"
+
+
+msgctxt "#32015"
+msgid "Delete Profile"
+msgstr "Delete Profile"
+
+
+msgctxt "#32016"
+msgid "Load default Profiles"
+msgstr "Load default Profiles"
+
+
+msgctxt "#32017"
+msgid "Enter Name for new Profile"
+msgstr "Enter Name for new Profile"
+
+
+msgctxt "#32018"
+msgid "Delete Profile %s"
+msgstr "Delete Profile %s"
+
+
+msgctxt "#32019"
+msgid "Are you shure that you want to delete profile %s ?"
+msgstr "Are you shure that you want to delete profile %s ?"
+
+
+msgctxt "#32020"
+msgid "Delete Profile"
+msgstr "Delete Profile"
+
+
+msgctxt "#32021"
+msgid "No profiles defined!"
+msgstr "No profiles defined!"
+
+msgctxt "#32022"
+msgid "Latency Offset"
+msgstr "Latency Offset"

@@ -1,0 +1,119 @@
+﻿
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_de\n"
+
+msgctxt "#32000"
+msgid ""
+msgstr "Klangregelung"
+
+
+msgctxt "#32001"
+msgid ""
+msgstr "Keine Wiedergabe aktiv"
+
+
+msgctxt "#32002"
+msgid ""
+msgstr "Der Konfigurator braucht eine aktive Wiedergabe. Bitte starten Sie eine."
+
+
+msgctxt "#32003"
+msgid ""
+msgstr "Die Klangregelung für dieses Ausgabegerät ist momentan ausgeschaltet. Soll sie eingeschaltet werden?"
+
+
+msgctxt "#32004"
+msgid ""
+msgstr "Fehler"
+
+
+msgctxt "#32005"
+msgid ""
+msgstr "Es gibt ein Problem die Klangregelung zu starten. Bitte überprüfen Sie die Kodi Logdatei."
+
+
+msgctxt "#32006"
+msgid ""
+msgstr "Profil auswählen"
+
+
+msgctxt "#32007"
+msgid ""
+msgstr "Klangregelung"
+
+
+msgctxt "#32008"
+msgid ""
+msgstr "Wiedergabegerät wählen"
+
+
+msgctxt "#32009"
+msgid ""
+msgstr "Profile verwalten"
+
+
+msgctxt "#32010"
+msgid ""
+msgstr "Zusäzliche Verögerung einstellen"
+
+
+msgctxt "#32011"
+msgid ""
+msgstr "Klangregelung ausschalten"
+
+
+msgctxt "#32012"
+msgid ""
+msgstr "Profil für %s auswählen"
+
+
+msgctxt "#32013"
+msgid ""
+msgstr "Ausgabegerät auswählen"
+
+
+msgctxt "#32014"
+msgid ""
+msgstr "Neues Profil hinzufügen"
+
+
+msgctxt "#32015"
+msgid ""
+msgstr "Profil löschen"
+
+
+msgctxt "#32016"
+msgid ""
+msgstr "Stadardprofile laden"
+
+
+msgctxt "#32017"
+msgid ""
+msgstr "Name für neues Profil eingeben"
+
+
+msgctxt "#32018"
+msgid ""
+msgstr "Profil %s löschen"
+
+
+msgctxt "#32019"
+msgid ""
+msgstr "Sind Sie sicher, dass Sie Profil %s löschen möchten?"
+
+
+msgctxt "#32020"
+msgid ""
+msgstr "Profil löschen"
+
+
+msgctxt "#32021"
+msgid ""
+msgstr "Keine Profile definiert!"
+
+msgctxt "#32022"
+msgid ""
+msgstr "Zusätzliche Verzögerung"
