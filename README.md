@@ -158,7 +158,7 @@ create two files:
 where [username] is your user name.
 	
 ### Raspberry Pi
-For raspberry PI, create a startup script to tell Kodi to user pulseaudio
+For raspberry PI, create a startup script to tell Kodi to use pulseaudio instead of alsa
 	
 /home/pi/start_kodi.sh
 	
