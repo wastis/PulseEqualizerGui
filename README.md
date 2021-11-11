@@ -39,7 +39,7 @@ Launch Kodi >> Add-ons >> Get More >> .. >> Install from zip file
 
 ## Configuration
 
-	In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select an equalizer profile. The equalizer is then automatically inserted into the playback stream. This is different to previouse versions of the addon.   
+In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select an equalizer profile. The equalizer is then automatically inserted into the playback stream. This is different to previouse versions of the addon.   
 
 
 # Advanced configuration
