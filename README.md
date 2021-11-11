@@ -64,7 +64,7 @@ The sc4_1882 filter needs to be installed on the system.
 
 On playback, PulseEqualizer GUI will connect the chain together based on the sink_master, when first element of the chain is selected within Kodi.
 
-Warning: you might experience instability of pulseaudio, when using chains in combination with removable devices (bluetooth, usb-dongle, etc). In this case, disable the module loading of "load-module module-switch-on-connect" and "load-module module-switch-on-port-available" in default.pa by commenting it out.
+Warning: you might experience instability of pulseaudio, when using chains in combination with removable devices (bluetooth, usb-dongle, etc). In this case, disable the module loading of "load-module module-switch-on-connect" and "load-module module-switch-on-port-available" in default.pa by commenting them out.
 
 
 ## Configure Hotkeys
@@ -94,7 +94,7 @@ Create a file ~/.kodi/userdata/keymaps/equalizer.xml
 
 Restart Kodi. 
 
-Do not insert volup / voldown into the <gloal> section, as every time you press the key, an new instance of the script and the pyhton module is started. This may slow the system down. 
+Do not insert volup / voldown into the "gloal" section, as every time you press the key, an new instance of the script and the pyhton module is started. This may slow the system down. 
 If you use volup/voldown on a headless system, you may want to disable the flat volume control of pulseaudio to avoid conflict between Kodi and PulseEqualizerGui. 
 
 This is done by inserting a line into pulse/daemon.conf.
