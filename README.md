@@ -39,7 +39,7 @@ Launch Kodi >> Add-ons >> Get More >> .. >> Install from zip file
 
 ## Configuration
 
-	In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select an equalizer profile. The equalizer is then automatically inserted into the playback stream. This is different to previouse versions of the addon.   
+In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select an equalizer profile. The equalizer is then automatically inserted into the playback stream. This is different to previouse versions of the addon.   
 
 
 # Advanced configuration
@@ -107,6 +107,8 @@ Restart pulseaudio.
 
 ## Headless OS installations
 
+This works with Debian 10 and raspberry Pi 3 with a small modification of the startup script.
+
 Pulseaudio needs to run in a user session together with Kodi.
 
 create two files:
@@ -138,7 +140,8 @@ create two files:
 	[Install]
 	WantedBy=sockets.target
 
-in /etc/rc.local insert
+### Debian 10 
+/etc/rc.local
 
 	#!/bin/sh -e
 	### BEGIN INIT INFO
@@ -152,8 +155,34 @@ in /etc/rc.local insert
 	### END INIT INFO
 	su -c '/usr/bin/kodi' [username] &
 	exit 0
-where [username] is your user name. 
+where [username] is your user name.
+	
+### Raspberry Pi
+For raspberry PI, create a startup script to tell Kodi to user pulseaudio
+	
+/home/pi/start_kodi.sh
+	
+	#!/bin/sh -e
+	KODI_AE_SINK=PULSE
+	export KODI_AE_SINK
+	/usr/bin/kodi 
+	exit 0
+	
+and in /etc/rc.local
 
+	#!/bin/sh -e
+	### BEGIN INIT INFO
+	# Provides:          kodi
+	# Required-Start:    $remote_fs $syslog $inputlirc
+	# Required-Stop:     $remote_fs $syslog $inputlirc
+	# Default-Start:     2 3 4 5
+	# Default-Stop:      0 1 6
+	# Short-Description: Start daemon at boot time
+	# Description:       Enable service provided by daemon.
+	### END INIT INFO
+	su -c '/home/pi/start_kodi.sh' pi &
+	exit 0
+	
 To start pulseaudio run
 
 	systemctl --user daemon-reload
