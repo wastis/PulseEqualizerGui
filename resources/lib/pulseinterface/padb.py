@@ -181,7 +181,12 @@ class paDatabase():
 			old_val = getattr(self,key)
 			setattr(self,key,val)
 			
-			if old_val != val: updates.append(("on_%s_update" % key,[old_val, val]))
+			try: ov = old_val.index
+			except: ov = old_val
+			try: nv = val.index
+			except: nv = val
+		
+			if ov != nv: updates.append(("on_%s_update" % key,[old_val, val]))
 
 		return updates
 	
