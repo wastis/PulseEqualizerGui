@@ -9,27 +9,15 @@
 	<controls>
 		<control type="progress" id="1900">
 			<description>Progress</description>
-			<left>5</left>
-			<top>55</top>
-			<width>200</width>
-			<height>30</height>
-			<orientation>horizontal</orientation>
-			<texturebg>volume-fill-transparent.png</texturebg>
-			<midtexture>volume-fill-blue.png</midtexture>
-			
+			<left>0</left>
+			<top>50</top>
+			<width>310</width>
+			<height>40</height>
+			<reveal>true</reveal>
+			<texturebg>level-background.png</texturebg>
+			<midtexture>level.png</midtexture>
 		</control>
-		<control type="progress" id="1901">
-			<description>Progress</description>
-			<left>205</left>
-			<top>55</top>
-			<width>100</width>
-			<height>30</height>
-			<orientation>horizontal</orientation>
-			<texturebg>volume-fill-transparent.png</texturebg>
-			<midtexture>volume-fill-orange.png</midtexture>
-		</control>
-
-		<control type="label" id="2000">
+		<control type="label" id="1901">
 				<description>Percent</description>
 				<left>200</left>
 				<top>0</top>
@@ -40,20 +28,5 @@
 				<align>right</align>
 				<aligny>top</aligny>
 		</control>
-		
-		<control type="image" id="10">
-			<description>control overlay</description>
-			<left>0</left>
-			<top>50</top>
-			<width>310</width>
-			<height>40</height>
-			<visible>true</visible>
-			<fadetime>0</fadetime>
-			<bordersize>0</bordersize>
-			<texture  border="0">volume-bk.png</texture>
-			
-		</control>
-
-
 	</controls>
 </window>

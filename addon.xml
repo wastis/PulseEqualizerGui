@@ -10,7 +10,7 @@
 		<summary lang="en">Frontend for the Pulseaudio Equalizer.</summary>
 		<summary lang="de_DE">Konfigurator für den Pulseaudio Klangfilter.</summary>
 		<description lang="en">Enables sound adjustments with sliders. Further there are a range of additional configuration options, such as the creation, selection and removal of equalizer profiles.
-		
+
 https://github.com/wastis/PulseEqualizerGui
 </description>
 		<description lang="de_DE">Ermöglicht das Einstellen der Klangfilters mittels Schiebeschalter. Ferner gibt es eine Reihe von zusätzlichen Einstellmöglichkeiten, wie das Erstellen, Auswählen und Löschen von Klangprofilen.
@@ -24,7 +24,7 @@ https://github.com/wastis/PulseEqualizerGui
 		<website>Kodi.tv</website>
 		<email></email>
 		<news>
-2.0.0 (2021-11-11)
+2.0.0 (2021-11-13)
 - added latency-offset slider, save latency based on equalizer in playback chain
 - possibility to switch equalizer on/off
 - change output selection method
@@ -38,7 +38,6 @@ https://github.com/wastis/PulseEqualizerGui
 		<assets>
 			<icon>icon.png</icon>
 			<screenshot>scr0.png</screenshot>
-			<screenshot>scr1.png</screenshot>
 		</assets>
 		<news></news>
 	</extension>

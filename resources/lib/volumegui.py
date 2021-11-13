@@ -11,7 +11,6 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 		log(self.path)
 
 		self.progress1 = None
-		self.progress2 = None
 		self.pipe_comm = kwargs["pipe_comm"]
 		self.updown = kwargs["updown"]
 		
@@ -40,8 +39,7 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 
 	def onInit( self ):
 		self.progress1 = self.getControl(1900)
-		self.progress2 = self.getControl(1901)
-		self.label = self.getControl(2000)
+		self.label = self.getControl(1901)
 
 		self.set_vol_gui()
 
@@ -75,15 +73,10 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 		if self.progress1 is None: return
 		if self.vol is None:return
 		
-		v = self.vol * 100
+		v = (self.vol / 1.5) * 100
+		if v > 100: v = 100
 		
-		v1 = v if v <= 100 else 100
-		v2 = (v - 100) * 2 if v > 100 else 0
-		if v2 > 98: v2 = 98
-		
-		self.progress1.setPercent(v1 if v1 > 0 else 0.1)
-		self.progress2.setPercent(v2 if v2 > 0 else 0.1)
-		
+		self.progress1.setPercent(v if v > 0 else 0.1)
 		self.label.setLabel("{:d} %".format(int(self.vol*100)))
 
 
