@@ -15,6 +15,7 @@ import xbmc
 import xbmcgui
 import math, json
 from threading import Thread
+from time import sleep
 
 from helper import *
 
