@@ -1,6 +1,6 @@
 # Kodi PulseEqualizer GUI Addon
 
-Version 2.0.0 rc
+Version 2.0.0
 
 PulseEqualizer GUI is an addon that provides a pulsaudio configuration frontend for Kodi. 
 
