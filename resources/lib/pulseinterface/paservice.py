@@ -1,6 +1,13 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
-#	pulse audio gui addon for kodi
-#	2021 by wastis
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
 #   --------
 #   | pipe |  -- 
 #   --------    |   ---------    -----------    ------------------
@@ -15,7 +22,7 @@
 #   forward: send messages to MessageCentral, send timeout message 100ms after last pulseaudio message 
 #
 
-import sys, time, os, json
+import sys, time, os, json, pickle
 import xbmc
 from threading import Thread
 
@@ -27,6 +34,7 @@ else:
 import pulsectl
 from helper import *
 
+
 from .pacentral import MessageCentral
 
 from time import time, sleep
@@ -35,41 +43,39 @@ from time import time, sleep
 
 class PulseInterfaceService():
 	
-	def __init__(self, pipe_com):
-		self.q = Queue()
-		#self.pulse_event = pulsectl.Pulse('Event Manager')
-		
-		pipe_com
-		self.pipe_path = pipe_com.path
-		self.pipe_server = pipe_com.server
-		self.pipe_client = pipe_com.client
-		
-		self.mc = MessageCentral(pipe_com)
-		
-		if not os.path.exists(self.pipe_path): os.makedirs(self.pipe_path)
-		if not os.path.exists(self.pipe_server): os.mkfifo(self.pipe_server)
-		self.running = True
+	running = False
+	def __init__(self):
 
-		self.start_event_loop()
+		self.sock = SocketCom("server")
+
+		self.q = Queue()
+		self.mc = MessageCentral()
+
+		#allow only one instance of the server
+		if not self.sock.is_server_running():
+			self.start_event_loop()
+		else: 
+			log("server alreay running, don't start")
 	
 	#start all message loops
 	def start_event_loop(self):
+		self.running = True
 		Thread(target=self.message_forward).start()
-		Thread(target=self.pipe_message_loop).start()
 		Thread(target=self.start_pulse_loop).start()
+		self.sock.start_server(self.on_socket_message)
 
 		
 
 	#stop all message loops
 	def stop_event_loop(self):
-		self.running = False
-		self.q.put(('','exit','',''))
-		
-		with open(self.pipe_server, 'w') as f: f.write("exit")
-		os.remove(self.pipe_server)
-		
-		self.send_message_to_central('message','exit')
-		self.pulse_event.close()
+		if self.running:
+			self.running = False
+			self.q.put(('exit','','', None))
+			
+			self.sock.stop_server()
+			
+			self.send_message_to_central('message','exit')
+			self.pulse_event.close()
 
 
 	#
@@ -82,64 +88,35 @@ class PulseInterfaceService():
 		error_type = type(e)
 		logerror("pulse_event_manager: %s %s %s" % (func_name, error_type, e.message))
 	
-	def send_message_to_central(self, target, func, param = ''):
+	def send_message_to_central(self, target, func, param = '', conn = None):
 		# create a new thread per message. So message_forward thread will not crash in case of message handling crash
-		th = Thread(target=self.mc.on_message, args=(target, func, param))
+		th = Thread(target=self.mc.on_message, args=(target, func, param, conn))
 		th.start()
 		th.join()
+		if conn: conn.close()
 
 	#
 	#	message loops
 	#
 	
-	#messages from the pipe
-	def pipe_message_loop(self):
-		log("start pipe message loop")
-		while True:
-			try:
-				result=''
-				with open(self.pipe_server, 'r') as fifo:
-					while True:
-						c = fifo.read()
-						if len(c)==0:break
-						result = result + c
+	
+	def on_socket_message(self, conn, msg):
+		try:
+			func,target,args = pickle.loads(msg)
+			log("receive from socket: %s" % repr([func,target,args]))
 			
-				result = result.strip()
-				
-				log("received from pipe: "+ result)
+			#if target == "system" and func == "quit":
+			#	self.stop_event_loop()
+			
+			self.q.put((target, func, args, conn))
 
-				if result == "stop-service":
-					self.running = False
-					self.q.put(('','exit','',''))
-					os.remove(self.pipe_server)
-					self.send_message_to_central('message','exit')
-					self.pulse_event.close()
-					break
-					
-				if result == "exit": break
-				
-				arg = result.split(";")
-				
-				try: target =  arg[1] 
-				except: target = ''
-				try: 
-					a = arg[2].strip()
-					if a[0] in "[" : args = json.loads(a)
-					elif a[0] in "{" : args = [json.loads(a)]
-					else: args = a.split(',')
-				except: args = [] 
-				func = arg[0]
-				
-				self.q.put(('pipe',target,func,args))
+		except Exception as e: handle(e)
 
-			except Exception as e: handle(e)
-		
-		log("stop pipe message loop")
 
 	#messages from pulse audio
 	def pulse_event_receive(self,event):
 			if event.facility._value in ["server", "source", "source_output"]: return
-			self.q.put(('pulse',event.facility._value ,event.t._value, [event.index]))
+			self.q.put((event.facility._value ,event.t._value, [event.index], None))
 
 			
 	#start message loop for pulse audio		
@@ -185,7 +162,7 @@ class PulseInterfaceService():
 		while True:
 			try:
 				try:
-					origin, target, func ,param = self.q.get(timeout = timeout)
+					target, func ,param, conn = self.q.get(timeout = timeout)
 				
 				except Empty:
 					# we did not receive any message since 100 ms. Send this info to 
@@ -204,9 +181,9 @@ class PulseInterfaceService():
 				
 				if target == "exit": break
 				
-				if origin == 'pulse': timeout = 0.1 
+				if conn is None: timeout = 0.1   
 
-				self.send_message_to_central(target, func, param)
+				self.send_message_to_central(target, func, param, conn)
 				
 				self.q.task_done()
 				

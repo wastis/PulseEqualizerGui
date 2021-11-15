@@ -42,40 +42,51 @@ class paModuleManager():
 		log("pamm: start paModuleManager")
 		self.load_dyn_equalizer()
 		self.config.load_config()
-		self.load_dbus_module()
+
+		self.load_required_module("module-dbus-protocol")
+
 		self.eq.on_pa_connect()
+		
+		sock = SocketCom("kodi")
+		player = sock.call_func("get","player")
+		if player and len(player) > 0: self.on_player_play()
+		else: self.on_player_stop()
+			
 		
 		
 	def on_message_exit(self):
 		self.unload_dyn_equalizer()
+		
+	def proc_player(self):
+		print(player)
 		
 		
 	#	
 	#	Kodi Play/Pause/Resum/Stop messages
 	#
 		
-	def on_player_play(self,arg):
+	def on_player_play(self):
 		log("pamm: on_player_play")
 		self.is_playing = True
 		self.adjust_routing()
 		
-	def on_player_resume(self,arg):
+	def on_player_resume(self):
 		log("pamm: on_player_play")
 		self.is_playing = True
 		self.adjust_routing()
 		
-	def on_player_pause(self,arg):
+	def on_player_pause(self):
 		log("pamm: on_player_pause")
 		self.is_playing = False
 		self.adjust_routing()
 		
-	def on_player_stop(self,arg):
+	def on_player_stop(self):
 		log("pamm: on_player_stop")
 		self.is_playing = False
 		self.adjust_routing()
 		
-	def on_player_avstart(self,arg): pass
-	def on_player_avchange(self,arg): pass
+	def on_player_avstart(self): pass
+	def on_player_avchange(self): pass
 	
 
 
@@ -200,6 +211,9 @@ class paModuleManager():
 		
 		self.padb.cureq_sink = None
 		self.pc.move_sink_input(self.padb.kodi_stream.index , self.padb.output_sink.index)
+		# auto load equalizer shall be the active and routed to actual ouput sink 
+		if self.padb.autoeq_stream is not None:
+			self.pc.move_sink_input(self.padb.autoeq_stream.index , self.padb.output_sink.index)
 
 
 	#
@@ -251,6 +265,19 @@ class paModuleManager():
 	#
 
 
+	def set_eq_config(self):
+		profile = self.config.get("eq_profile","none", self.padb.output_sink.name)
+		if profile is not None: return
+		
+		if self.padb.cureq_sink:
+			eq_profile = self.eq.on_eq_base_profile_get(self.padb.cureq_sink.index)
+			self.config.set("eq_profile",eq_profile, self.padb.output_sink.name)
+		elif self.padb.autoeq_sink:
+			eq_profile = self.eq.on_eq_base_profile_get(self.padb.autoeq_sink.index)
+			self.config.set("eq_profile",eq_profile, self.padb.output_sink.name)
+		
+		
+	
 	def on_eq_current_get(self):
 		
 		index, desc, eq_enable, is_dyn  = (None , None, "off", self.padb.kodi_is_dynamic)
@@ -258,14 +285,18 @@ class paModuleManager():
 		if self.padb.cureq_sink is not None:
 			index = self.padb.cureq_sink.index
 			desc = self.padb.cureq_sink.proplist["device.description"]
+		elif self.padb.autoeq_sink is not None:
+			index = self.padb.autoeq_sink.index
+			desc = self.padb.autoeq_sink.proplist["device.description"]
 		
+
 		if self.padb.kodi_first_sink is not None:
 		
 			if self.padb.output_sink is not None:
 				eq_enable = self.config.get("eq_enable","off", self.padb.output_sink.name)
 				
 				if eq_enable != "off":
-					eq_enable = self.config.get("eq_profile","none", "%s" % (self.padb.output_sink.name))
+					eq_enable = self.config.get("eq_profile","none", self.padb.output_sink.name)
 				
 		
 		return ( index, desc, self.is_playing, eq_enable, is_dyn) 
@@ -277,6 +308,7 @@ class paModuleManager():
 		log("pamm: on_eq_on_switch")
 
 		self.config.set("eq_enable", "on", self.padb.output_sink.name)
+		self.set_eq_config()
 		self.adjust_routing()
 		
 	def on_eq_off_switch(self):
@@ -326,13 +358,14 @@ class paModuleManager():
 			self.dyn_equalizer = None
 			self.pc.unload_module(index)
 			
-	def load_dbus_module(self):
+	def load_required_module(self, name):
 		for index,module in self.padb.modules.items():
-			if module.name == "module-dbus-protocol": 
-				log("module-dbus-protocol already loaded")
+			if module.name == name: 
+				log("%s already loaded" % name)
 				return
 			
-		self.pc.load_module('module-dbus-protocol')
+		self.pc.load_module(name)
+		
 		
 
 	#

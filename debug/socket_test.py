@@ -10,25 +10,40 @@
 #	or (at your option) any later version.
 #
 #
-import sys 
+
+import sys , pickle
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 import xbmc
 import os
 
-from pulseinterface import PulseInterfaceService
-from helper import PipeCom
+from helper import SocketCom
 
 
+sock_com = SocketCom("main")
 
-em = PulseInterfaceService()
+
+class receiver():
+	
+	def on_service_get(self,args):
+		print("yuhu", args)
+		
+		return {"Name":1, "Val":1}
+
+
+def on_receive(conn, msg):
+	print(msg)
+	conn.send(b"OK")
+	conn.close()
+
+rec = receiver()
+
+sock_com.start_func_server(rec) 
 
 if sys.version_info[0] < 3:
 	raw_input("Press Enter to continue...")
 else:
 	input("Press Enter to continue...")
-
-em.stop_event_loop()
-print("done")
-
-
+	
+	
+sock_com.stop_server()

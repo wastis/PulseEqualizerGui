@@ -1,6 +1,16 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
 import os,json
-import xbmcaddon
 from .handle import handle, log
+from .path import get_settings_path
 
 
 class Config():
@@ -9,7 +19,7 @@ class Config():
 	name = ""
 
 	def __init__(self):
-		path_name = os.path.join(xbmcaddon.Addon().getAddonInfo('path'),"settings")
+		path_name = get_settings_path()
 		if not os.path.exists(path_name): os. makedirs(path_name)
 		self.file_name = os.path.join(path_name,"config.json")
 		

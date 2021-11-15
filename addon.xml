@@ -24,7 +24,7 @@ https://github.com/wastis/PulseEqualizerGui
 		<website>Kodi.tv</website>
 		<email></email>
 		<news>
-2.0.0 (2021-11-13)
+2.0.0 (2021-11-15)
 - added latency-offset slider, save latency based on equalizer in playback chain
 - possibility to switch equalizer on/off
 - change output selection method

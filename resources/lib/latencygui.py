@@ -1,3 +1,14 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
+
 import xbmc
 import xbmcaddon
 import xbmcvfs
@@ -12,8 +23,8 @@ def tr(id):
 class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 
 	def __init__( self, *args, **kwargs ):
-		self.pipe_comm = kwargs["pipe_comm"]
-		self.latency_info = self.pipe_comm.get_from_server("get;latency")
+		self.sock = SocketCom("server")
+		self.latency_info = self.sock.call_func("get","latency")
 		self.save = self.latency_info.copy()
 
 	def onInit( self ):
@@ -31,7 +42,7 @@ class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 		latency = int(self.slider.getInt())
 		self.label.setLabel("{:d} ms".format(latency))
 		self.latency_info["latency"] = latency * 1000
-		self.pipe_comm.send_to_server("set;latency;%s" % (json.dumps(self.latency_info)))
+		self.sock.call_func("set","latency",[self.latency_info])
 		
 		
 	def onAction( self, action ):
@@ -41,7 +52,7 @@ class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 			
 		#Cancel
 		if action.getId() in [92,10]:
-			self.pipe_comm.send_to_server("set;latency;%s" % (json.dumps(self.save)))
+			self.sock.call_func("set","latency",[self.save])
 			self.close()
 		
 		#up/down/left/right

@@ -1,3 +1,14 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
+
 import xbmc
 #import xbmcaddon
 #import xbmcvfs
@@ -9,37 +20,34 @@ from helper import *
 
 class EqGui(  xbmcgui.WindowXMLDialog  ):
 
+	single_freq = False
+
 	def __init__( self,  *args, **kwargs ):
-		
-		self.pipe_comm = kwargs["pipe_comm"]
+		self.sock = SocketCom("server")
 		
 		self.eqid = kwargs["eqid"]
 		self.desc = kwargs["desc"]
-		self.profile = self.pipe_comm.get_from_server("get;eq_base_profile;%d" % (self.eqid))
-		self.frequencies = self.pipe_comm.get_from_server("get;eq_frequencies")
-		self.preamp, self.coef = self.pipe_comm.get_from_server("get;eq_filter;%d" % (self.eqid))
+		try: self.noise = kwargs["noise"]
+		except: self.noise = False
+		
+		self.profile = self.sock.call_func("get","eq_base_profile", [self.eqid])
+		self.frequencies = self.sock.call_func("get","eq_frequencies")
+		self.preamp, self.coef = self.sock.call_func("get","eq_filter", [self.eqid])
 		
 		self.control_state = {}
 		self.controlId = 0
 		
 		self.updating = False
 		
+		
 	def onInit( self ):
 		header = self.getControl(101)
-		
-		'''
-		try:
-			self.filter.load_profile(self.profile)
-		except Exception as e:
-			xbmc.log(e.message,xbmc.LOGERROR)
-			self.profile = "Default"
-			self.filter.reset()
-			self.filter.save_state()
-			self.filter.save_profile(self.profile)
-		'''
-		
 		header.setLabel("%s         Profile:   %s" % (self.desc, self.profile))
 		self.scan_slider()
+		if self.noise:
+			self.sock.call_func("play","start") 
+			
+
 		
 	def scan_slider(self):
 		
@@ -87,14 +95,13 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		slider_list[0].setInt(self.coef2slider(self.preamp), 0, 1, 100) 
 
 	def set_filter(self):
-		self.pipe_comm.send_to_server("set;eq_filter;%s" % (json.dumps([self.eqid, self.preamp, self.coef])))
-		#self.pipe_comm.send_to_server("save;eq_state;%d" % (self.eqid))
+		self.sock.call_func("set","eq_filter",[self.eqid, self.preamp, self.coef]) 
 		
 	def load_profile(self):
-		self.pipe_comm.send_to_server("load;eq_profile;%d,%s" % (self.eqid,self.profile))
+		self.sock.call_func("load","eq_profile",[self.eqid, self.profile]) 
 		
 	def save_profile(self):
-		self.pipe_comm.send_to_server("save;eq_profile;%d,%s" % (self.eqid,self.profile))
+		self.sock.call_func("save","eq_profile",[self.eqid, self.profile]) 
 
 	def onFocus( self, controlId ):
 		if self.controlId == 0: self.controlId = controlId
@@ -122,10 +129,26 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 	def setFilter(self):
 		cid = self.controlId - 1900
 		
-		if cid == 0:
+		
+		if self.single_freq:
+			# filter everything except the current frequency
 			self.preamp = self.slider2coef(self.slider_list[0].getFloat())
-		elif cid < len( self.slider_list):
-			self.coef[cid-1] = self.slider2coef(self.slider_list[cid].getFloat())
+			for i in range(0,len(self.coef)):
+				self.coef[i] = 0
+			
+			if cid == 0:
+				for slider in self.slider_list[1:]:
+					self.coef[cid] = self.slider2coef(slider.getFloat())
+					cid = cid + 1
+			else:
+				self.coef[cid-1] = self.slider2coef(self.slider_list[cid].getFloat())
+			
+		else:
+		
+			if cid == 0:
+				self.preamp = self.slider2coef(self.slider_list[0].getFloat())
+			elif cid < len( self.slider_list):
+				self.coef[cid-1] = self.slider2coef(self.slider_list[cid].getFloat())												
 			
 		
 		if not self.updating:
@@ -161,10 +184,17 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		#OK pressed
 		if action.getId() == 7:
 			self.save()
+			if self.noise: 
+				self.sock.call_func("play","stop") 
+
 			self.close()
 		
 		#Cancel
 		if action.getId() in [92,10]:
+			
+			if self.noise: 
+				self.sock.call_func("play","stop") 
+			
 			self.load_profile()
 			self.close()
 		

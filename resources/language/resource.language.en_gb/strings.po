@@ -84,8 +84,8 @@ msgstr "Delete Profile"
 
 
 msgctxt "#32016"
-msgid "Load default Profiles"
-msgstr "Load default Profiles"
+msgid "Insert predefined Profiles"
+msgstr "Insert predefined Profiles"
 
 
 msgctxt "#32017"
@@ -115,3 +115,19 @@ msgstr "No profiles defined!"
 msgctxt "#32022"
 msgid "Latency Offset"
 msgstr "Latency Offset"
+
+msgctxt "#32023"
+msgid "Noise Generator"
+msgstr "Noise Generator"
+
+msgctxt "#32024"
+msgid "Kodi is playing"
+msgstr "Kodi is playing"
+
+msgctxt "#32025"
+msgid "In order to use the noise generator, Kodi playback must be stopped."
+msgstr "In order to use the noise generator, Kodi playback must be stopped."
+
+msgctxt "#32026"
+msgid "The equalizer has not been loaded automatically. Please check log."
+msgstr "The equalizer has not been loaded automatically. Please check log."

@@ -1,6 +1,12 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
-#	pulse audio gui addon for kodi
-#	2021 by wastis
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
 #
 #
 #   - cache current pulse audio system configuration e.g sinks, sink-inputs cards, modules
@@ -20,7 +26,7 @@ from helper import *
 class paDatabase():
 	
 	target_list = ["card","module","sink","client","sink_input"]
-	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic","kodi_output", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink"]
+	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic","kodi_output", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink"]
 	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "kodi_output", "bt_sink", "chaineq_sink", "cureq_sink"]
 	lookups = ["sink_by_name", "sink_by_module", "stream_by_module"]
 
@@ -78,7 +84,10 @@ class paDatabase():
 		for target in self.target_list:
 			setattr(self, target + "s", {})
 			self.get_pa_object_list(target)
+			
 		self.update_kodi_info()
+		
+		self.proc_device()
 
 
 	# get the current list of objects (sinks, cards...) from pulse audio an create a lookup dictionary by index
@@ -144,6 +153,9 @@ class paDatabase():
 			if sink.name == "eq-auto-load":
 				self.info["autoeq_sink"] = sink
 				self.info["autoeq_stream"] = self.stream_by_module[sink.owner_module]
+				
+			if sink.driver == "module-null-sink.c":
+				self.info["null_sink"] = sink.index
 				
 		
 	def set_kodi_chain(self, sink_input):
@@ -217,6 +229,17 @@ class paDatabase():
 	#
 	#	special messages from kodi player, we need to know the selected sink in kodi
 	#
+	
+
+		
+				
+	def proc_device(self):
+
+		sock = SocketCom("kodi")
+		device = sock.call_func("get","device")
+		if device: self.proc_device_set(device)
+		self.output_sink = device
+
 				
 	def proc_device_set(self,arg):
 		pos = arg.rfind(":")
@@ -238,17 +261,7 @@ class paDatabase():
 		self.proc_device_set(arg)
 		output_sink = self.get_output_sink()
 		
-	def on_player_play(self,arg):
-		self.proc_device_set(arg)
-		
-	def on_player_resume(self,arg):
-		self.proc_device_set(arg)
-		
-	def on_player_pause(self,arg):
-		self.proc_device_set(arg)
-		
-	def on_player_stop(self,arg):
-		self.proc_device_set(arg)
+
 		
 	#
 	#  all messages arrive here, filter the ones from pulseaudio and collect them for later aggregation
@@ -358,3 +371,7 @@ class paDatabase():
 				latency = int(p.latency_offset)
 		
 		return  {"latency":latency,"port":port_name, "card": card.name}
+		
+	def on_eq_autoload_get(self):
+		try: return self.autoeq_sink.index
+		except: return None

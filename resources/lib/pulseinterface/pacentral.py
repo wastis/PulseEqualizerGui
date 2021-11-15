@@ -1,6 +1,13 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
-#	pulse audio gui addon for kodi
-#	2021 by wastis
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
 #
 #    ------------------     ------------        -------------      ---------------
 #    | MessageCentral | --> | dispatch | ->|<-> | paDatabase| <--> | pulse audio | 
@@ -9,7 +16,7 @@
 #                       |                  |--> | self |
 #                       |                  |    -------- 
 #         ----------    |                  |    -------------       --------      ---------------- 
-#     --->| update | -->|                  |--> 1| EqControl |  <--> | dbus | <--> | pa equalizer |
+#     --->| update | -->|                  |--> | EqControl |  <--> | dbus | <--> | pa equalizer |
 #         ---------                        |    -------------       --------      ----------------
 #                                          |    -------------------      ---------------             
 #                                          |--> | paModuleManager | --> | pulse audio |              
@@ -35,11 +42,9 @@ import json, os
 
 
 class MessageCentral():
-	def __init__(self, pipe_com):
+	def __init__(self):
 		# init class structure
 
-		self.pipe_com = pipe_com
-		
 		self.pc = PulseControl()
 		self.eq = EqControl()
 		self.config = Config()
@@ -62,9 +67,10 @@ class MessageCentral():
 	#
 	
 
-	def on_message(self, target, func, arg):
+	def on_message(self, target, func, arg, conn):
 		#print("on_%s_%s"% (target,func))
 		try:
+			# filter messages
 			if self.padb.on_message(target, func, arg): return
 			
 			# other messages are just forwarded
@@ -81,9 +87,10 @@ class MessageCentral():
 				return
 
 			for method in methods:
-				result = method(*arg)
-				if not result is None:
-					self.pipe_com.send("client",json.dumps(result))
+				ret = method(*arg)
+				log(repr(ret))
+				SocketCom.respond(conn, ret)
+					
 
 		except Exception as e: handle(e)
 			
@@ -116,17 +123,6 @@ class MessageCentral():
 	#	message handler of self	
 	#
 
-		
-	def on_introspect_get(self):
-		
-		result = []
-		for cl in [MessageCentral, paModuleManager, EqControl]:
-			for l in vars(cl):
-				if l.startswith("on_"):
-					findex = l.rfind("_")
-					result.append(l[findex+1:]+";"+l[3:findex])
-		return result
-		
 	def on_outlist_get(self):
 		return self.padb.get_outlist() 
 	

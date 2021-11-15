@@ -1,17 +1,26 @@
-
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
 import xbmcgui
 import time, threading
-from helper import log
+from helper import log, SocketCom
 import os
 
 class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 
 	def __init__( self, *args, **kwargs ):
+		self.sock = SocketCom("server")
+		
 		self.path = os.path.join(args[1],"resources/skins/"+args[2]+"/media")
-		log(self.path)
 
 		self.progress1 = None
-		self.pipe_comm = kwargs["pipe_comm"]
 		self.updown = kwargs["updown"]
 		
 		self.key_up = None
@@ -19,7 +28,7 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 		self.updating = False
 
 		
-		self.vol = self.pipe_comm.get_from_server("get;volume")
+		self.vol = self.sock.call_func("get","volume")
 		if self.updown == "up":
 			self.vol_up() 
 		else: 
@@ -46,7 +55,7 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 	# slow down messages to server
 	def update_to_pulse(self):
 		time.sleep(0.3)
-		self.pipe_comm.send_to_server("set;volume;%f" % self.vol)
+		self.sock.call_func("set","volume",[self.vol])
 		self.updating = False
 
 	def update(self):

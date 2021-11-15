@@ -87,7 +87,7 @@ msgstr "Profil löschen"
 
 msgctxt "#32016"
 msgid ""
-msgstr "Stadardprofile laden"
+msgstr "Stadardprofile einfügen"
 
 
 msgctxt "#32017"
@@ -117,3 +117,19 @@ msgstr "Keine Profile definiert!"
 msgctxt "#32022"
 msgid ""
 msgstr "Zusätzliche Verzögerung"
+
+msgctxt "#32023"
+msgid ""
+msgstr "Rauschgenerator"
+
+msgctxt "#32024"
+msgid ""
+msgstr "Kodi spielt"
+
+msgctxt "#32025"
+msgid ""
+msgstr "Um den Rauschgenerator zu nutzen muss die Wiedergabe gestoppt werden."
+
+msgctxt "#32026"
+msgid ""
+msgstr "Die Klangregelung wurde nicht automatisch geladen. Bitte überprüfen Sie die Logdatei."

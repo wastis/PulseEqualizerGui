@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #	This file is part of PulseEqualizerGui for Kodi.
 #	
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
@@ -8,15 +10,18 @@
 #	or (at your option) any later version.
 #
 #
-import sys
 
-if sys.version_info[0] > 2:
-	from .dbus_basic_3 import PulseDBus
-else:
-	from .dbus_basic_2 import PulseDBus
+import sys 
+sys.path.append ('./resources/lib/')
+sys.path.append ('./fakekodi')
+import xbmc
+import os
 
+from helper import SocketCom
 
-from .pulseerror import PulseDBusError
-from . import interface as DBusInterface
+sock_com = SocketCom("main")
 
+result = sock_com.call_func("get","service",[1])
+
+print(result)
 

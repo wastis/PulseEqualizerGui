@@ -1,6 +1,16 @@
-#fast performance handling 
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
+
 import os,sys 
-lock = "/run/shm/pa/lock"
+lock = "/run/user/%d/pa/lock" % os.geteuid()
 
 def run_addon():
 
@@ -12,7 +22,7 @@ def run_addon():
 	sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
 	sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
 
-	from helper import PipeCom, handle, log, logerror
+	from helper import handle, log, logerror
 	from menus import Menu
 
 	xbmc.log("equalizer: start addon" , xbmc.LOGINFO)

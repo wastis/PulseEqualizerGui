@@ -1,3 +1,14 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
+
 import sys, os, threading
 import xbmc
 
@@ -116,17 +127,12 @@ class PulseControl():
 		vol_obj = self.get_info("sink",index).volume
 		return vol_obj.value_flat
 		
-	def update_sink_volume(self, index, delta_vol):
+	#
+	# play sound
+	#
+	
+	def play_sample(self, name, sink=None, volume=1.0, proplist_str=None):
+		self.pulse.play_sample(name, sink)
 		
-		vol_obj = self.get_info("sink",index).volume
-			
-		volume = float( vol_obj.value_flat + delta_vol)
-		if volume < float(0) : volume = float(0)
-		if volume > float(1.50) : volume = float(1.50)
-			
-		vol_obj.value_flat = volume 
-			
-		self.pulse.sink_volume_set(index, vol_obj)
-		return volume
 		
 		

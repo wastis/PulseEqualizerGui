@@ -1,3 +1,14 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
+
 import os, json
 import xbmc
 import xbmcgui
@@ -12,47 +23,10 @@ def tr(id):
 
 class Menu():
 	
+	skin = "Default"
+	
 	def __init__(self, cwd):
-		self.pipe_comm = PipeCom("/run/shm/pa")
 		self.cwd = cwd
-
-	def get_sel_handler(self):
-
-		result = []
-		for func in vars(Menu):
-			if func.startswith('sel'): result.append(func)
-		return result
-
-	def is_eq_availabe(self, display = True):
-		
-		self.current = self.pipe_comm.get_from_server("get;eq_current")
-		eqid, desc, is_playing, eq_profile, is_dyn = ( self.current )
-		
-		if not is_playing:
-		
-			xbmcgui.Dialog().ok(tr(32001), tr(32002))
-			return False
-			
-		if eqid is None:
-			if eq_profile == "off":
-				if not xbmcgui.Dialog().yesno(tr(32000), tr(32003)): 
-					return False
-				else:
-					self.pipe_comm.send_to_server("switch;eq_on")
-
-					count = 10
-					while count > 0:
-						count = count - 1
-						self.current = self.pipe_comm.get_from_server("get;eq_current")
-						eqid, desc, is_playing, eq_profile, is_dyn = ( self.current )
-						if eqid != None: return True
-						sleep(0.1)
-			
-			xbmcgui.Dialog().ok(tr(32004),tr(32005))
-			return False
-			
-		return True
-		_
 			
 	
 	#
@@ -70,28 +44,63 @@ class Menu():
 	def sel_menu(self, command, smenu = False):
 		
 		func = 'sel_' + command
-		if func in self.get_sel_handler():
-			log(func) 
-			getattr(self, func)(smenu)
-		else: 
-			logerror("unkonwn command: '%s'" %(command))
+		try: method = getattr(self, func)
+		except:	
+			method = None
+			logerror("unkonwn command: '%s'" %(func))
+	
+		if method: method(smenu)
+	
+	#
+	#  helper
+	#
+
+	
+	def check_func_available(self):
+		self.current = SocketCom("server").call_func("get","eq_current") 
+		eqid, desc, is_playing, eq_profile, is_dyn = ( self.current )
+		
+		if is_playing and eq_profile=='off' and is_dyn:
+			# Dialog switch on?
+			if not xbmcgui.Dialog().yesno(tr(32000), tr(32003)):
+				return False, eqid, desc, is_playing, eq_profile, is_dyn
+			else:
+				SocketCom("server").call_func("switch","eq_on") 
+
+				count = 10
+				while count > 0:
+					count = count - 1
+					self.current = SocketCom("server").call_func("get","eq_current")
+					eqid, desc, is_playing, eq_profile, is_dyn = ( self.current )
+					if eqid != None: return True , eqid, desc, is_playing, eq_profile, is_dyn
+					sleep(0.1)
+			# Dialog problem switch on
+			xbmcgui.Dialog().ok(tr(32004),tr(32005))
+			return False, eqid, desc, is_playing, eq_profile, is_dyn
+		# all ok
+		return True, eqid, desc, is_playing, eq_profile, is_dyn
 	
 	
 	#
 	#	different Menues
 	#
 	
+	#
+	#	select profile
+	#
+	
 	
 	def sel_profile(self, smenu=False):
 		
+		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		if not func_available: return
 		
-		if not self.is_eq_availabe(): return
-		eqid, desc, is_playing, eq_profile, is_dyn = (self.current)
+		include_switch_off = is_dyn and is_playing
+
+		profiles = SocketCom("server").call_func("get","eq_profiles")
+		profile = SocketCom("server").call_func("get","eq_base_profile", [eqid])			
 		
-		profiles = self.pipe_comm.get_from_server("get;eq_profiles")
-		profile = self.pipe_comm.get_from_server("get;eq_base_profile;%d" % (eqid))
-		
-		if is_dyn: profiles = [tr(32011)] + profiles
+		if include_switch_off: profiles = [tr(32011)] + profiles
 		
 		try: sel = profiles.index(profile)
 		except:	sel = -1
@@ -99,22 +108,29 @@ class Menu():
 		nsel = xbmcgui.Dialog().select(tr(32012) %(desc),profiles,preselect = sel)
 
 		if nsel > -1 and sel != nsel:
-			if is_dyn and nsel == 0: 
-					self.pipe_comm.send_to_server("switch;eq_off")
+			if include_switch_off and nsel == 0: 
+					SocketCom("server").call_func("switch","eq_off")
 					return
 				
-			self.pipe_comm.send_to_server("load;eq_profile;%d,%s" % (eqid,profiles[nsel]))
-		
+			SocketCom("server").call_func("load","eq_profile" , [eqid, profiles[nsel]])
+	#
+	#	configure equalizer
+	#
+	
 	def sel_equalizer(self, menu=False):
 		
-		if not self.is_eq_availabe(): return
-		eqid, desc, is_playing, eq_profile, is_dyn = (self.current)
-		
+		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		if not func_available: return
+
 		from eqgui import EqGui
 		
-		ui = EqGui("equalizer.xml" , self.cwd, "Default", pipe_comm=self.pipe_comm, eqid=eqid, desc=desc)
+		ui = EqGui("equalizer.xml" , self.cwd, self.skin , eqid=eqid, desc=desc)
 		ui.doModal()
 		del ui
+	
+	#
+	#	select output device
+	#
 	
 	def sel_device(self, smenu=False):
 		 
@@ -143,52 +159,101 @@ class Menu():
 					sel_lables.append(o["label"])
 					index = index + 1
 		
+		# device selection Dialog
 		sel = xbmcgui.Dialog().select(tr(32013) ,sel_lables,preselect = preselect)
 		
 		if sel > -1:
 			response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice", "value":"%s"}, "id":1}' %(sel_values[sel]))
-			self.pipe_comm.send_to_server("set;device;%s" % (sel_values[sel]))
+			SocketCom("server").call_func("set","device" , [sel_values[sel]])
 
+	#
+	#	profile manager menu
+	#
+	
+	
 	def sel_manager(self, smenu=False):
 
-		if not self.is_eq_availabe(): return
-		eqid, desc, is_playing, eq_profile, is_dyn = (self.current)
+		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		if not func_available: return
 
+		# Dialog Add_Profile, Delete_Profile, New_Profile, Noise Generator
 		sel = xbmcgui.Dialog().contextmenu([tr(32014),tr(32015),tr(32016)])
 		if sel == 0:
+			# Name for new Profile
 			profile = xbmcgui.Dialog().input(tr(32017))
 			if profile != '':
-				self.pipe_comm.send_to_server("save;eq_profile;%d,%s" % (eqid,profile))
+				SocketCom("server").call_func("save","eq_profile" , [eqid,profile])
 				
 				
 		elif sel == 1:
-			profiles = self.pipe_comm.get_from_server("get;eq_profiles")
-
+			profiles = SocketCom("server").call_func("get","eq_profiles")
+			
 			if len(profiles) > 0:
+				#select profile
 				del_profile = profiles[xbmcgui.Dialog().contextmenu(profiles)]
-				if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile) == True:
-					self.pipe_comm.send_to_server("remove;eq_profile;%s" % (del_profile))
+				if del_profile > -1:
+					# sure to delete
+					if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile) == True:
+						SocketCom("server").call_func("remove","eq_profile" , [del_profile])
 					
-			else: xbmcgui.Dialog().notification(tr(32020),tr(32021), time = 10)
+					
+			else: 
+				#does not exist
+				xbmcgui.Dialog().notification(tr(32020),tr(32021), time = 10)
 
 		elif sel == 2:
-			self.pipe_comm.send_to_server("set;eq_default_profile;%d" % (eqid))
+			# load predefined
+			SocketCom("server").call_func("set","eq_default_profile" , [eqid])
+			
+		#elif sel == 3:
+		#	self.sel_noisetool(False, eqid, desc, is_playing)
+			
+	#
+	#	show noisetool
+	#
+		
+	'''def sel_noisetool(self, menu=False, eqid = None, desc=None, is_playing = False):
+		
+		if eqid is None:
+			eqid, desc, is_playing, eq_profile, is_dyn = SocketCom("server").call_func("get","eq_current" )
+
+		if is_playing:
+			xbmcgui.Dialog().ok(tr(32024),tr(32025))
+			return False
+
+		if eqid is None: 
+			xbmcgui.Dialog().ok(tr(32004), tr(32006))
+			return False
+	
+		from eqgui import EqGui
+		
+		ui = EqGui("equalizer.xml" , self.cwd, self.skin,  eqid=eqid, desc=desc, noise=True)
+		ui.doModal()
+		del ui'''
+		
+	#
+	#	show latency slider
+	#
 			
 	def sel_latency(self, smenu=False):
 		
 		from latencygui import LatencyGui
 		if smenu: 
 			xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "Input.ExecuteAction", "params": {"action":"fullscreen"}, "id":1}')
-		ui = LatencyGui("latency-offset.xml" , self.cwd, "Default", pipe_comm=self.pipe_comm)
+		ui = LatencyGui("latency-offset.xml" , self.cwd, self.skin)
 		ui.doModal()
 		del ui
 		
+	#
+	#	show volume progress bar
+	#
+		
 	def sel_volup(self, smenu=False):
-		self.volgui = VolumeGui("volume.xml" , self.cwd , "Default", updown = "up", pipe_comm=self.pipe_comm)
+		self.volgui = VolumeGui("volume.xml" , self.cwd , self.skin, updown = "up")
 		self.volgui.doModal()
 		
 	def sel_voldown(self, smenu=False):
-		self.volgui = VolumeGui("volume.xml" , self.cwd , "Default", updown = "down", pipe_comm=self.pipe_comm)
+		self.volgui = VolumeGui("volume.xml" , self.cwd , self.skin, updown = "down")
 		self.volgui.doModal()
 
 

@@ -1,8 +1,19 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
+#
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
+#
+#
+
 import xbmc, xbmcgui
 import json, os, sys
 
 from pulseinterface import PulseInterfaceService
-from helper import PipeCom
+from helper import SocketCom
 from time import sleep
 
 
@@ -12,18 +23,18 @@ class PaMonitor( xbmc.Monitor ):
 		#strat process
 		xbmc.Monitor.__init__( self )
 		xbmc.log("Start PulesEqualizer service",xbmc.LOGINFO)
+		self.server_sock = SocketCom("kodi")
+		self.server_sock.start_func_server(self)
+		self.sock = SocketCom("server")
 		
+		em = PulseInterfaceService()
 		
-		self.pipe_com = PipeCom("/run/shm/pa/", pid)
-		em = PulseInterfaceService(self.pipe_com)
-		
-		sleep(0.5)
-		
-		self.pipe_com.send("server", "set;device;%s" % (self.get_device()))
 
 		while not self.abortRequested():
 			if self.waitForAbort( 10 ):
 				break
+		
+		self.server_sock.stop_server()
 		
 		em.stop_event_loop()
 	
@@ -36,13 +47,23 @@ class PaMonitor( xbmc.Monitor ):
 				device = s["value"]
 				break
 		return device
+
+	def on_device_get(self):
+		result = self.get_device()
+		xbmc.log("eq: kodi service: on_device_get %s" % result,xbmc.LOGDEBUG)
+		return result
 		
-	
+	def on_player_get(self):
+		r_dict = json.loads(xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Player.GetActivePlayers","id":0}'))
+		try: return r_dict["result"]
+		except: return None
+			
+		
+	def on_log_write(self, message, level):
+		xbmc.log(message, level)
+
 	def onNotification( self, sender, method, data ):
 		target,func = method.lower().replace("on","").split(".")
 		if target in ["system", "player"]:
-			self.pipe_com.send("server", "%s;%s;%s" % (func,target,self.get_device()))
-		
-
-
+			self.sock.call_func(func, target)
 
