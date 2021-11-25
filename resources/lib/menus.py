@@ -190,9 +190,10 @@ class Menu():
 			
 			if len(profiles) > 0:
 				#select profile
-				del_profile = profiles[xbmcgui.Dialog().contextmenu(profiles)]
-				if del_profile > -1:
+				sel_del_profile = xbmcgui.Dialog().contextmenu(profiles)
+				if sel_del_profile > -1:
 					# sure to delete
+					del_profile = profiles[sel_del_profile]
 					if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile) == True:
 						SocketCom("server").call_func("remove","eq_profile" , [del_profile])
 					
@@ -205,32 +206,8 @@ class Menu():
 			# load predefined
 			SocketCom("server").call_func("set","eq_default_profile" , [eqid])
 			
-		#elif sel == 3:
-		#	self.sel_noisetool(False, eqid, desc, is_playing)
 			
-	#
-	#	show noisetool
-	#
-		
-	'''def sel_noisetool(self, menu=False, eqid = None, desc=None, is_playing = False):
-		
-		if eqid is None:
-			eqid, desc, is_playing, eq_profile, is_dyn = SocketCom("server").call_func("get","eq_current" )
 
-		if is_playing:
-			xbmcgui.Dialog().ok(tr(32024),tr(32025))
-			return False
-
-		if eqid is None: 
-			xbmcgui.Dialog().ok(tr(32004), tr(32006))
-			return False
-	
-		from eqgui import EqGui
-		
-		ui = EqGui("equalizer.xml" , self.cwd, self.skin,  eqid=eqid, desc=desc, noise=True)
-		ui.doModal()
-		del ui'''
-		
 	#
 	#	show latency slider
 	#
