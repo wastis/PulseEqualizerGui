@@ -26,8 +26,8 @@ from helper import *
 class paDatabase():
 	
 	target_list = ["card","module","sink","client","sink_input"]
-	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic","kodi_output", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink"]
-	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "kodi_output", "bt_sink", "chaineq_sink", "cureq_sink"]
+	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic","kodi_output", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink",'parec_stream']
+	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "kodi_output", "bt_sink", "chaineq_sink", "cureq_sink",'parec_stream']
 	lookups = ["sink_by_name", "sink_by_module", "stream_by_module"]
 
 	playback_stream = None
@@ -121,6 +121,7 @@ class paDatabase():
 		for cid,client in self.clients.items():
 			if client.name in ['Kodi', 'KodiSink'] and client.proplist['application.process.id']==pid: 
 				self.info["kodi_client"] = cid
+				
 		
 		#no kodi client with pid matching myself, I might be the develop script, so pick first kodi
 		if self.info['kodi_client'] == None:
@@ -140,6 +141,9 @@ class paDatabase():
 			
 			if si.client == self.info['kodi_client']:
 				if self.info['kodi_stream'] is None:  self.info['kodi_stream'] = si
+				
+			if si.name == "parec" and si.proplist['application.process.id']==self.sg.pid:
+				self.info['parec_stream'] = si
 				
 
 	def parse_sinks(self):
@@ -208,10 +212,15 @@ class paDatabase():
 
 	def on_sink_input_new(self, index):
 		log("padb: on_sink_input_new %d" % index)
+		si = self.sink_inputs[index]
 		
 		if self.info['kodi_stream'] is not None:
 			if index == self.info['kodi_stream'].index:
 				self.set_kodi_chain(self.info['kodi_stream'])
+				
+		if si.name == "parec" and si.proplist['application.process.id']==str(self.sg.pid):
+				self.info['parec_stream'] = si.index
+				
 				
 	def on_sink_new(self, index):
 		sink = self.sinks[index]
@@ -234,11 +243,11 @@ class paDatabase():
 		
 				
 	def proc_device(self):
-
+		self.output_sink = None
 		sock = SocketCom("kodi")
 		device = sock.call_func("get","device")
 		if device: self.proc_device_set(device)
-		self.output_sink = device
+
 
 				
 	def proc_device_set(self,arg):
