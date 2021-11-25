@@ -61,6 +61,7 @@ class SocketCom():
 					break
 				if result == self.life_str:
 					conn.send(self.life_str)
+					continue
 
 				callback(conn, result)
 				
@@ -74,9 +75,11 @@ class SocketCom():
 	def start_server(self, callback):
 		Thread(target = self.listen_loop, args = (callback,)).start()
 		
-	def start_func_server(self, rec_class):
+	def start_func_server(self, rec_class, block = False):
 		self.rec_class = rec_class
-		Thread(target = self.listen_loop, args = (self.dispatch,)).start()
+		th = Thread(target = self.listen_loop, args = (self.dispatch,))
+		th.start()
+		if block: th.join()
 		
 	def stop_server(self):
 		self.send_to_server(self.exit_str)
@@ -99,7 +102,12 @@ class SocketCom():
 	
 	def dispatch(self, conn, msg):
 		try:
-			func,target,args = pickle.loads(msg)
+			try: func,target,args = pickle.loads(msg)
+			except: 
+				try:conn.close()
+				except: pass
+				return
+			
 			cmd = "on_%s_%s" % (target,func)
 			
 			try: method = getattr(self.rec_class,cmd)
