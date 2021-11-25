@@ -19,9 +19,24 @@ if sys.version_info[0] > 2:
 			logerror("in: {}: {}".format(traceback.tb_frame.f_code.co_filename,traceback.tb_lineno))
 			traceback = traceback.tb_next
 		logerror("{}: {}".format(type(e).__name__, e.args))
+
+	def infhandle(e):
+		traceback = e.__traceback__
+		while traceback:
+			log("nce: in: {}: {}".format(traceback.tb_frame.f_code.co_filename,traceback.tb_lineno))
+			traceback = traceback.tb_next
+		log("nce: {}: {}".format(type(e).__name__, e.args))
+
+	
 else:
 	def handle(e):
 		lines = traceback.format_exc().splitlines()
 		for l in lines:
 			logerror(l)
 		logerror("{}: {}".format(type(e).__name__, e.args))
+
+
+	def infhandle(e):	
+		lines = traceback.format_exc().splitlines()
+		for l in lines:log("nce: " + l)
+		log("nce: {}: {}".format(type(e).__name__, e.args))
