@@ -81,7 +81,7 @@ Warning: you might experience instability of pulseaudio, when using chains in co
 
 Other than in games, audio latency on media players is not a big problem, as long as audio and video are in sync. On pulseaudio, I have identified two types of latency, the filter latency introduced by pulseaudio equalizer and the buffer latency between the different pulse filter and sound modules, both with different symptoms.
 
-####1. Latency introduced by pulseaudio equalizer module
+#### 1. Latency introduced by pulseaudio equalizer module
 
 Unfortunately it seems that the pulseaudio module does not report the correct latency back to the media players (not only Kodi). On my different systems, this causes an audio delay of 350ms compared to the video stream. 
 
@@ -91,7 +91,7 @@ This method also provides the possibility do compensate for latencies introduced
 
 This settings will be saved, so whenever I choose *equalizer -> BT-Bose* as output, the correct latency of 500ms will be set in the system.
 
-####2. Latency introduced by pulseaudio buffers
+#### 2. Latency introduced by pulseaudio buffers
 
 Especially in case of chains, the latency between different pulseaudio modules will sum up. This does not affect the audio/video synch, however may be a bit disturbing if you start / stop / seek the playerback, as the audio playback will start and stop a bit later than the video playback. 
 
@@ -210,7 +210,7 @@ To start pulseaudio run
 
 ### Autostart Kodi
 
-#### Debian 10 / 11
+### Debian 10 / 11
 /etc/systemd/system/kodi.service
 
 	[Unit]
@@ -228,8 +228,10 @@ To start pulseaudio run
 	 WantedBy=multi-user.target
 
 where [username] is your user name.
-	
-#### Raspberry Pi
+
+	sudo systemctl enable kodi.service	
+
+### Raspberry Pi
 For raspberry PI, create a startup script to tell Kodi to use pulseaudio instead of alsa
 
 /etc/systemd/system/kodi.service
@@ -330,6 +332,10 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	#create Kodi startup script
 	sudo bash -c "echo -e ""'[Unit]\n Description=kodi startup service\n\n[Service]\n Type=simple\n ExecStart=su -c '/usr/bin/kodi' john &\n TimeoutSec=0\n StandardOutput=tty\n RemainAfterExit=yes\n SysVStartPriority=99\n\n[Install]\n WantedBy=multi-user.target'"" > /etc/systemd/system/kodi.service"
 	
+	# enable kodi startup
+	sudo systemctl enable kodi.service
+	
+	
 	#create pulseaudio user configuration
 	mkdir -p ~/.config/pulse
 	
@@ -338,6 +344,8 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	#create static filter
 	echo -e 'load-module module-equalizer-sink sink_name=eq_1 sink_properties="device.description=EQ-1"\nload-module module-ladspa-sink sink_master=eq_1 sink_name=co_1 sink_properties="device.description=CO-1" plugin=sc4_1882 label=sc4 control=1,1.5,401,-20,20,5,15' >>  ~/.config/pulse/default.pa
 	
+	#finally reboot
+	sudo reboot
 	
 
 
@@ -357,9 +365,3 @@ and change them to
                         <allow_active>yes</allow_active>
                 </defaults>
 
-
-	
-	
-	#finally reboot
-	sudo reboot
-	
