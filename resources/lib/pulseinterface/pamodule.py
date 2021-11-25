@@ -13,7 +13,8 @@
 from .pulsecontrol import PulseControl
 from .padb import paDatabase
 from helper import *
-import os
+import os, time, threading
+
 
 
 class paModuleManager():
@@ -51,14 +52,9 @@ class paModuleManager():
 		player = sock.call_func("get","player")
 		if player and len(player) > 0: self.on_player_play()
 		else: self.on_player_stop()
-			
-		
 		
 	def on_message_exit(self):
 		self.unload_dyn_equalizer()
-		
-	def proc_player(self):
-		print(player)
 		
 		
 	#	
@@ -124,7 +120,9 @@ class paModuleManager():
 			self.config.set("volume",vol, self.padb.output_sink.name)
 			
 		else: log("pamm: on_sink_change %d" % index)
-	
+		
+	def on_sink_input_new(self, index):
+		log("pamm: on_sink_input_new %d" % index)
 	
 
 	#*************************************************************************
@@ -161,40 +159,40 @@ class paModuleManager():
 		#
 		#	switch streams
 		#
-		
 		self.reroute = False
-		
-		if self.padb.kodi_stream is None: return
 		if self.padb.output_sink is None: return
 		
-		if self.is_playing: self.adjust_routing_play()
-		else: self.adjust_routing_stop()
-			
+		if self.padb.kodi_stream is not None: 
+			if self.is_playing: self.adjust_routing_play()
+			else: self.adjust_routing_stop()
 		#
 		#  after rerouting, configure_devices with volume, latency and equalizer profile, dependent on output sink
 		#
-
 		volume = self.config.get("volume",None, self.padb.output_sink.name)
 		if volume is not None:	self.pc.set_sink_volume(self.padb.output_sink.index, volume)
 
 		latency = 0
-		if self.padb.cureq_sink:
+		eq_sink = self.padb.cureq_sink if self.padb.cureq_sink else self.padb.autoeq_sink
+		
+		if eq_sink:
 			eq_profile = self.config.get("eq_profile",None, self.padb.output_sink.name)
-			if eq_profile:
-				self.eq.on_eq_profile_load(self.padb.cureq_sink.index, eq_profile)
-			else:
-				eq_profile = self.eq.on_eq_base_profile_get(self.padb.cureq_sink.index)
-				self.config.get("eq_profile",eq_profile, self.padb.output_sink.name)
+			try:
+				if eq_profile:
+					self.eq.on_eq_profile_load(eq_sink.index, eq_profile)
+				else:
+					self.eq.on_eq_profile_load(eq_sink.index, "default")
+			except Exception as e: infhandle(e)
+				
 			
+		if self.padb.cureq_sink:
 			latency = self.config.get("eq_latency",350000, self.padb.output_sink.name)
-			
 		else:
-			
 			latency = self.config.get("latency",0, self.padb.output_sink.name)
+
+			
 			
 		latency_info = self.padb.get_latency()
 		latency_info["latency"] = latency
-		print(latency_info)
 		self.pc.set_port_latency(latency_info)
 	
 
@@ -203,14 +201,19 @@ class paModuleManager():
 		
 		if self.padb.kodi_is_dynamic: self.aj_play_sound_device()
 		else: self.aj_play_filter_chain()
-		
 	
+	#to avoid artefacts when player is stopped
+	def timer_routing_stop(self):
+		log("reroute in 1 sec")
+		time.sleep(1)
+		self.pc.move_sink_input(self.padb.kodi_stream.index , self.padb.output_sink.index)
 	
 	#in case player is not playing, move kodi output always to sound sink to avoid latency
 	def adjust_routing_stop(self):
 		
 		self.padb.cureq_sink = None
-		self.pc.move_sink_input(self.padb.kodi_stream.index , self.padb.output_sink.index)
+		threading.Thread(target = self.timer_routing_stop).start()
+		
 		# auto load equalizer shall be the active and routed to actual ouput sink 
 		if self.padb.autoeq_stream is not None:
 			self.pc.move_sink_input(self.padb.autoeq_stream.index , self.padb.output_sink.index)
