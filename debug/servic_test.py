@@ -17,8 +17,6 @@ import xbmc
 import os
 
 from pulseinterface import PulseInterfaceService
-from helper import PipeCom
-
 
 
 em = PulseInterfaceService()
