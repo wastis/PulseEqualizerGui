@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.pulseequalizer.gui" name="PulseEqualizer GUI" version="2.0.0" provider-name="wastis">
+<addon id="script.pulseequalizer.gui" name="PulseEqualizer GUI" version="2.0.1" provider-name="wastis">
 
     <extension point="xbmc.python.script" library="addon.py">
 		<provides>executable</provides>
@@ -24,6 +24,8 @@ https://github.com/wastis/PulseEqualizerGui
 		<website>Kodi.tv</website>
 		<email></email>
 		<news>
+2.0.1 (2021-11-25)
+- remove some audio artefacts when start / stop 
 2.0.0 (2021-11-15)
 - added latency-offset slider, save latency based on equalizer in playback chain
 - possibility to switch equalizer on/off
