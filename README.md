@@ -308,7 +308,7 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	#create pulseaudio.service	
 	echo -e '[Unit]\nDescription=Pulseaudio Sound Service\nRequires=pulseaudio.socket\n\n[Service]\nType=notify\nExecStart=/usr/bin/pulseaudio --verbose --daemonize=no\nRestart=on-failure\n\n[Install]\nAlso=pulseaudio.socket\nWantedBy=default.target\n' > ~/.config/systemd/user/pulseaudio.service
 	
-	#create pulseaudio.service	
+	#create pulseaudio.socket	
 	echo -e '[Unit]\nDescription=Pulseaudio Sound System\n\n[Socket]\nPriority=6\nBacklog=5\nListenStream=%t/pulse/native\n\n[Install]\nWantedBy=sockets.target\n' > ~/.config/systemd/user/pulseaudio.socket
 	
 	#enable pulseaudio
