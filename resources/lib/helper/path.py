@@ -10,28 +10,14 @@
 #
 import os, re
 
-try:
-	addon_path = re.findall(".*?/resources/", os.path.realpath(__file__),re.DOTALL | re.I)[0][:-10]
-except: 
-	addon_path = None
-	pass
+try: path_addon = re.findall(".*?/resources/", os.path.realpath(__file__),re.DOTALL | re.I)[0][:-10]
+except: path_addon = None
 
-def get_addon_path():
-	try:
-		return addon_path
-	except: return None
+path_socket = "/run/user/%d/pa/" % os.geteuid()
+path_tmp = "/run/user/%d/pa/" % os.geteuid()
+path_settings = "settings/"
+path_filter = "settings/spectrum/"
+path_lib = "resources/lib/"
+path_skin = "resources/skins/{skin}/1080i/"
+path_skin_root = "resources/skins/"
 
-def get_settings_path():
-	try:
-		return get_addon_path() + "settings/"
-	except: return None
-
-def get_lib_path():
-	try:
-		return get_addon_path() + "resources/lib/"
-	except: return None
-	
-def get_sink_path():
-	try:
-		return get_addon_path() + "resources/skins/"
-	except: return None

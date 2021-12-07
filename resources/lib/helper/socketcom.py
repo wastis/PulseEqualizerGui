@@ -13,7 +13,7 @@ import socket, pickle , os, time
 #
 from threading import Thread
 from .log import log
-from .handle import handle
+from .handle import handle, infhandle
 
 class SocketCom():
 	
@@ -65,7 +65,7 @@ class SocketCom():
 
 				callback(conn, result)
 				
-			except Exception as e: pass
+			except Exception as e: infhandle(e)
 		log("stop socket loop")
 		
 		
@@ -84,6 +84,7 @@ class SocketCom():
 	def stop_server(self):
 		self.send_to_server(self.exit_str)
 	
+	
 	def send_to_server(self, msg):
 		try:
 			s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -95,20 +96,27 @@ class SocketCom():
 			return data
 		except: return None
 		
+	def send(self, func, target, args=[]):
+		self.send_to_server(pickle.dumps([func,target,args], protocol=2))
+		
 	def call_func(self, func, target, args=[]):
 		result = self.send_to_server(pickle.dumps([func,target,args], protocol=2))
-		if result is not None: return pickle.loads(result)
+		if result is not None: 
+			try:	return pickle.loads(result)
+			except Exception as e: infhandle(e)
 		return None
 	
 	def dispatch(self, conn, msg):
 		try:
-			try: func,target,args = pickle.loads(msg)
+			try: 
+				func,target,args = pickle.loads(msg)
+				cmd = "on_%s_%s" % (target,func)
 			except: 
+				#log(repr(msg))
 				try:conn.close()
 				except: pass
 				return
 			
-			cmd = "on_%s_%s" % (target,func)
 			
 			try: method = getattr(self.rec_class,cmd)
 			except: method = None

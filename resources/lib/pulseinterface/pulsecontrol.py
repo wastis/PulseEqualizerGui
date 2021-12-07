@@ -127,6 +127,17 @@ class PulseControl():
 		vol_obj = self.get_info("sink",index).volume
 		return vol_obj.value_flat
 		
+	def get_sink_volume_array(self, index):
+		return self.get_info("sink",index).volume.values
+		
+	def set_sink_volume_array(self, index, volarray):
+		vol_obj = PulseVolumeInfo(volarray)
+		self.pulse.sink_volume_set(index, vol_obj)
+		
+	def get_sink_channel(self, index):
+		return self.get_info("sink",index).channel_list
+
+		
 	#
 	# play sound
 	#

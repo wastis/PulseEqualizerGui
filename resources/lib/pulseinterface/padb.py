@@ -19,6 +19,7 @@
 
 from .pulsecontrol import PulseControl
 from .collector import MessageCollector
+from sound import SoundGen
 import json
 
 from helper import *
@@ -26,8 +27,8 @@ from helper import *
 class paDatabase():
 	
 	target_list = ["card","module","sink","client","sink_input"]
-	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic","kodi_output", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink",'parec_stream']
-	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "kodi_output", "bt_sink", "chaineq_sink", "cureq_sink",'parec_stream']
+	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic","kodi_output", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink"]
+	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "kodi_output", "bt_sink", "chaineq_sink", "cureq_sink"]
 	lookups = ["sink_by_name", "sink_by_module", "stream_by_module"]
 
 	playback_stream = None
@@ -49,10 +50,14 @@ class paDatabase():
 		if self.playback_stream is not None:
 			for stream, sink in self.playback_stream: sl.append("%s(%d) -> %s(%d)" % (stream.name,stream.index,sink.name,sink.index))
 		
-		return json.dumps(dict(self)) + "\nPlayback: " + " -> ".join(sl)
+		r = "{"
+		for attr,val in self:
+			r = r + " ( %s=%s ) " % (attr,repr(val)) 
+		r = r + "}"
+		return  r + "\nPlayback: " + " -> ".join(sl)
 		
 	def __iter__(self):
-		for attr in self.attributes:
+		for attr in self.attributes + ["output_sink"]:
 			val = getattr(self, attr)
 			try:  val=val.name
 			except: pass
@@ -94,7 +99,7 @@ class paDatabase():
 	# this is stored in self. e.g self.sinks, self.cards and has the format e.g. {0:sink, 1:sink ....} 
 	# this is only done once every time the message service connects to pulseaudio 
 	def get_pa_object_list(self,target):
-		log("get objects %s" % target)
+		log("padb: get objects %s" % target)
 		targets = target + "s"
 		result = {}
 		for obj in self.pc.get_list(target):
@@ -141,7 +146,6 @@ class paDatabase():
 			
 			if si.client == self.info['kodi_client']:
 				if self.info['kodi_stream'] is None:  self.info['kodi_stream'] = si
-				
 				
 
 	def parse_sinks(self):
@@ -216,8 +220,6 @@ class paDatabase():
 			if index == self.info['kodi_stream'].index:
 				self.set_kodi_chain(self.info['kodi_stream'])
 				
-				
-				
 	def on_sink_new(self, index):
 		sink = self.sinks[index]
 		log("padb: on_sink_new %s" % sink.name)
@@ -244,8 +246,6 @@ class paDatabase():
 		device = sock.call_func("get","device")
 		if device: self.proc_device_set(device)
 
-
-				
 	def proc_device_set(self,arg):
 		pos = arg.rfind(":")
 		if pos > -1: arg = arg[pos+1:]
@@ -253,18 +253,23 @@ class paDatabase():
 		try: sink = self.sink_by_name[arg]
 		except: return
 		log("padb: on_device_set: device found")
+		self.chaineq_sink = None
 
 		self.kodi_first_sink = sink
 		while True:
-			try: sink = self.sink_by_name[sink.proplist["device.master_device"]]
+			try: 
+				sink = self.sink_by_name[sink.proplist["device.master_device"]]
+				if sink.driver == "module-equalizer-sink.c": 
+					self.chaineq_sink = sink
 			except: break
 		
 		self.kodi_output = sink
+		self.output_sink = self.get_output_sink()
+
 		
 	def on_device_set(self,arg):
 		self.bt_sink = None
 		self.proc_device_set(arg)
-		output_sink = self.get_output_sink()
 		
 
 		
@@ -380,3 +385,32 @@ class paDatabase():
 	def on_eq_autoload_get(self):
 		try: return self.autoeq_sink.index
 		except: return None
+		
+	def on_all_eq_get(self):
+		
+		result = {}
+		
+		for index, sink in self.sinks.items():
+			if sink.driver != "module-equalizer-sink.c": continue
+			
+			result[index]= [
+				sink.name,
+				sink.proplist["device.description"],
+				sink.sample_spec["rate"],
+				sink.channel_list,
+				sink.channel_list_raw,
+				sink.volume.values
+				]
+		
+		return result
+		
+	def on_eq_channel_get(self):
+		sink = self.chaineq_sink if self.chaineq_sink is not None else self.autoeq_sink
+		if sink is None: return None
+		return [sink.index, sink.proplist["device.description"] , sink.channel_list]
+		
+
+		
+		
+		
+		

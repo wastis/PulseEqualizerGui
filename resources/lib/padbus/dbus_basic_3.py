@@ -14,7 +14,7 @@ from . import dbussy as dbus
 from .dbussy import DBUS, DBusError
 from . import interface as IF
 from .pulseerror import PulseDBusError
-
+from helper import *
 
 
 class PulseDBus:
@@ -25,6 +25,7 @@ class PulseDBus:
 		try:
 			if 'PULSE_DBUS_SERVER' in os.environ:
 				address = os.environ['PULSE_DBUS_SERVER']
+				log("got dbus address from environment: %s" % address)
 			else:
 				conn = dbus.Connection.bus_get(DBUS.BUS_SESSION,private = False)
 
@@ -39,10 +40,22 @@ class PulseDBus:
 				reply = conn.send_with_reply_and_block(request)
 
 				address = reply.expect_return_objects("v")[0][1]
-				
+				log("got dbus address from pulseaudio: %s" % address)
 			
 			self.conn = dbus.Connection.open(address,0)
-		except DBusError as e:  self.handle_exception(e,"python3","on connect")
+		except DBusError as e:  
+						
+			fb = "/run/user/%s/pulse/dbus-socket" % os.geteuid()
+			address = 'unix:path=' + fb
+
+			if os.path.exists(fb):
+				try:
+					log("fallback dbus: %s" % address)
+					self.conn = dbus.Connection.open(address,0)
+				except DBusError as ex: self.handle_exception(ex,"python3","on connect")
+			else:
+				log("fallback did not work: %s" % address)
+				self.handle_exception(e,"python3","on connect")
 			
 
 		

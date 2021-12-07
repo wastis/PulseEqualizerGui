@@ -12,25 +12,38 @@ import dbus
 import interface as IF
 import sys,os
 from pulseerror import PulseDBusError
-
+from helper import *
 
 class PulseDBus:
 	def __init__( self, *args, **kwargs ):
 		destination = 'org.PulseAudio1' 
 		object_path = '/org/pulseaudio/server_lookup1' 
 		interface_name = 'org.PulseAudio.ServerLookup1'
-		#address = 'unix:path=/run/user/1000/pulse/dbus-socket'
 		
 		try:
 			if 'PULSE_DBUS_SERVER' in os.environ:
 				address = os.environ['PULSE_DBUS_SERVER']
-				
+				log("got dbus address from environment: %s" % address)
+
 			else:
 				bus = dbus.SessionBus()
 				server_lookup = bus.get_object(destination,object_path)
 				address = server_lookup.Get(interface_name, 'Address', dbus_interface=IF.INTERFACE_PROPERTIES)
+				log("got dbus address from pulseaudio: %s" % address)
 			self.conn = dbus.connection.Connection(address)
-		except dbus.exceptions.DBusException as e:self.handle_exception(e,"python2","on connect")
+		
+		except dbus.exceptions.DBusException as e:
+			fb = "/run/user/%s/pulse/dbus-socket" % os.geteuid()
+			address = 'unix:path=' + fb
+
+			if os.path.exists(fb):
+				try:
+					log("fallback dbus: %s" % address)
+					self.conn = dbus.connection.Connection(address)
+				except dbus.exceptions.DBusException as ex: self.handle_exception(ex,"python2","on connect")
+			else:
+				log("fallback did not work: %s" % address)
+				self.handle_exception(e,"python2","on connect")
 			
 		
 	def print_introspect(self, interface, d_path ):

@@ -37,6 +37,7 @@ from .pamodule import paModuleManager
 from .padb import paDatabase
 from .eqcontrol import EqControl
 from helper import *
+from sound import SoundGen
 
 import json, os
 
@@ -46,10 +47,11 @@ class MessageCentral():
 		# init class structure
 
 		self.pc = PulseControl()
-		self.eq = EqControl()
+		self.eq = EqControl(self.pc)
 		self.config = Config()
 
 		self.padb = paDatabase(self.pc)
+		self.sg = SoundGen(self.padb, self.pc)
 		self.pamm = paModuleManager(self.pc, self.eq, self.padb, self.config)
 		
 	#	
@@ -57,7 +59,7 @@ class MessageCentral():
 	#
 	
 	def on_pulse_connect(self):
-		log("start pulse control")
+		log("pact: start pulse control")
 		self.pc.start()
 		self.padb.on_pa_connect()
 		self.pamm.on_pa_connect()
@@ -78,17 +80,18 @@ class MessageCentral():
 			cmd = "on_" + target + "_" + func
 			methods = []
 			
-			for cl in [self.padb, self, self.pamm, self.eq]:
+			for cl in [self.padb, self, self.pamm, self.eq, self.sg]:
 				try:methods.append( getattr(cl,cmd))
 				except: pass 
 
 			if len(methods) == 0:
-				#log("no message handler for " + cmd)
+				#log("pact: no message handler for " + cmd)
+				SocketCom.respond(conn, None)
 				return
 
 			for method in methods:
 				ret = method(*arg)
-				log(repr(ret))
+				log("pact: return '%s'" % repr(ret))
 				SocketCom.respond(conn, ret)
 					
 
@@ -101,7 +104,7 @@ class MessageCentral():
 				
 	
 	def on_pa_update(self):
-		log("on_pa_update")
+		log("pact: on_pa_update")
 
 		messages = self.padb.do_update()
 
@@ -116,7 +119,14 @@ class MessageCentral():
 			method(*arg)
 			
 		self.pamm.do_update()
-		log(str(self.padb))
+		log("pact: %s" % str(self.padb))
+		
+		for message,arg in messages:
+			try:
+				method = getattr(self.sg, message)
+			except:	continue
+			method(*arg)
+
 	
 		
 	#	
@@ -138,10 +148,20 @@ class MessageCentral():
 			else:
 				self.config.set("latency", int(latency_info["latency"]),self.padb.output_sink.name)
 
-	# just save the current selected profile
+	# just save the current selected profile to config file
 	def on_eq_profile_load(self,index, profile):
 		if self.padb.output_sink:
 			self.config.set("eq_profile", profile,self.padb.output_sink.name)
+
+	# just save the current selected room correction to config file
+	def on_room_correction_set(self,index, name):
+		if self.padb.output_sink:
+			self.config.set("eq_correction", name,self.padb.output_sink.name)
+
+	# just remove the current selected room correction from config file
+	def on_room_correction_unset(self, index):
+		if self.padb.output_sink:
+			self.config.set("eq_correction", None,self.padb.output_sink.name)
 	
 	# helper	
 	def on_pa_module_log(self):

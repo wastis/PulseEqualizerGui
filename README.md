@@ -1,11 +1,12 @@
 # Kodi PulseEqualizer GUI Addon
 
-Version 2.0.1 
+Version 2.1.0 - beta
 
 PulseEqualizer GUI is an addon that provides a pulsaudio configuration frontend for Kodi. 
 
 This includes:
 - Configuration of the pulseaudio equalizer with sliders
+- Digital Room Correction for each channel
 - Manage equalizer profiles (add, remove and change)
 - Switch between equalizer profiles
 - Configure latency-offset (for video/audio sync)
@@ -19,7 +20,7 @@ Supports Kodi 18 and 19
 
 2021 wastis
 
-![Pulse Equalizer](/resources/images/Kodi.png)
+![Pulse Equalizer](/resources/images/Equalizer.png)
 
 # Installation
 
@@ -127,7 +128,41 @@ restart pulseaudio or reboot.
 
 This will reduce the buffer sizes and with this start the audio playback more immediate. If the buffer size becomes to small however, the audio quality can be affected.    
 
-## Configure Hotkeys
+##Digital Room Correction
+
+PulseEqualizer now has some functions that supports digital room correction for each channel. 
+
+1. Play a sweep	- to measure the channel
+2. Import the recorded spectrum of the previous sweep and save it as room correction
+3. Select the room correction per audio device
+
+The digital room correction is then fixed for the channel and not changed by the slider settings or the filter profiles. Those come on top to the room correction and stored separately.
+
+The sweep is a linear sweep and produces a flat horizontal level line for all frequencies between 50Hz and 20kHz. This is different to other programs that produce a logarithmic sweep, so it is not possible to process sweep profiles from other tools with the PulseEqualizer import filter. 
+
+The file format used by PulseEqualizer however is an open csv file format and of course open for manual changes. With this it is possible to configure the filter in any way.
+
+The room correction filter are stored internally as filter coefficients and range from 0 (off) to 1 (no change to volume) to 2(double volume) and so on.
+
+The files to imported are in dB and follow a specific naming convention, one file per channel.
+
+	name.[channel_nr].txt
+	
+	livingroom.1.txt   (front-left)
+	livingroom.2.txt   (front-right)
+	...
+
+Audacity is a tool to produce those files. 
+
+1. record a number of sweeps for one channel, ensure there is no clipping.
+2. amplify the recording so it is easy to see the sweeps. (Effect->Amplify)
+3. select all sweeps for one channel and create Spectrum Plot (Analyse->Plot Spectrum)
+4. Export (Size 1024 is sufficient in most cases)
+5. repeat this for all channels
+  
+ 
+
+##Configure Hotkeys
 
 The following will enable the keyboard keys l,m,n,o,p to launch the different modules. It is also possible to control the system wide volume by f and e:
 

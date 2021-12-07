@@ -10,24 +10,18 @@
 #	or (at your option) any later version.
 #
 #
+import sys,os, json
 
-import sys, threading, time
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 
-from pcontrol import PulseControl
+from helper import *
 
+sc = SocketCom("server")
+if not sc.is_server_running():
+	print("server is not running")
+	sys.exit(0)
 
-pc = PulseControl()
-
-print(vars(pc.get_sink(1)))
-
-vi = pc.get_sink(1).volume.values
-print(vi)
-
-
-
-
-
-
+sc.call_func("set","room_correction",["fix_1"])
+sc.call_func('set', 'frequencies',[[125,250,500,1000,2000,4000,8000,16000]])
 

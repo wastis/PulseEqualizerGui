@@ -10,7 +10,7 @@
 #
 import os,json
 from .handle import handle, log
-from .path import get_settings_path
+from .path import *
 
 
 class Config():
@@ -19,7 +19,7 @@ class Config():
 	name = ""
 
 	def __init__(self):
-		path_name = get_settings_path()
+		path_name = path_addon + path_settings
 		if not os.path.exists(path_name): os. makedirs(path_name)
 		self.file_name = os.path.join(path_name,"config.json")
 		
@@ -27,14 +27,17 @@ class Config():
 		return "%s: $%s" % (self.name , json.dumps(self.config))
 		
 	def load_config(self):
-		log("load_config %s" % self.file_name)
+		log("conf: load_config %s" % self.file_name)
 		try: 
 			with open(self.file_name,'r')as f: self.config = json.loads(f.read())
+		except IOError:
+			log("conf: cannot open config.json, settings is empty")
+			self.config = {}
 		except Exception as e: 
 			handle(e) 
 			self.config = {}
 			
-		log(json.dumps(self.config))
+		#log(json.dumps(self.config))
 
 	def save_config(self):
 		try: 
@@ -45,7 +48,7 @@ class Config():
 		self.name = "%s.%s" % (name_first, name_last)
 		
 	def get(self, key, default = None, name = None):
-		log("get %s %s" % (key, name))
+		#log("conf: get %s %s" % (key, name))
 		if name is None: name = self.name
 		if name is None: return default
 		
@@ -53,7 +56,7 @@ class Config():
 		if self.config == {}: 
 			self.config[name] = {}
 	
-		log(json.dumps(self.config))
+		#log(json.dumps(self.config))
 		try: sec = self.config[name]
 		except: sec = {}
 		

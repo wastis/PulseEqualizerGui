@@ -28,6 +28,8 @@ class PaMonitor( xbmc.Monitor ):
 		self.sock = SocketCom("server")
 		
 		em = PulseInterfaceService()
+		sleep(0.5)
+		self.sock.call_func("set","device",[self.get_device()])
 		
 
 		while not self.abortRequested():

@@ -15,7 +15,8 @@ import xbmc
 from padbus import DBusInterface as IF
 from padbus import PulseDBus
 from helper import *
-
+from sound import SpecManager
+from .pulsecontrol import PulseControl
 
 #
 # Class Filter, to manage the equalizer settings to a given sink 
@@ -26,13 +27,19 @@ presets = [
 {"name":"Bass","preamp":0.5, "coef":[1.0, 2.5, 2.5, 2.3, 1.8, 1.3, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]},
 {"name":"Flat","preamp":1.0, "coef":[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]}]
 
+class FilterParam(): pass
+
 
 class EqControl():
-	
+	default_freq = [31.75,63.5,125,250,500,1e3,2e3,4e3,8e3,16e3]
 	frequencies = [31.75,63.5,125,250,500,1e3,2e3,4e3,8e3,16e3]
 	
-	def __init__(self):
+	current_id = None
+	
+	def __init__(self, pc):
+		self.pc = pc
 		self.eq_param = {}
+		self.spec = SpecManager()
 		
 	def on_pa_connect(self):
 		self.pulse_dbus = PulseDBus()
@@ -41,73 +48,51 @@ class EqControl():
 		
 		try: return self.eq_param[index]
 		except: pass
-
-		path = "/org/pulseaudio/core1/sink" + str(index)
-		channel = self.pulse_dbus.get_property(IF.EQUALIZER_I, path, 'NChannels')
-		sample_rate = self.pulse_dbus.get_property(IF.EQUALIZER_I, path, 'SampleRate')
-		filter_rate = self.pulse_dbus.get_property(IF.EQUALIZER_I, path, 'FilterSampleRate')
 		
-		filter_freq = self.calc_filter_freq(filter_rate, sample_rate, self.frequencies)
+		param = FilterParam()
 
-		self.eq_param[index] = (path, channel, sample_rate, filter_rate, filter_freq)
+		param.path = "/org/pulseaudio/core1/sink" + str(index)
+		param.channels = self.pc.get_sink_channel(index)
+		param.channel = len(param.channels)
+		param.sample_rate = self.pulse_dbus.get_property(IF.EQUALIZER_I, param.path, 'SampleRate')
+		param.filter_rate = self.pulse_dbus.get_property(IF.EQUALIZER_I, param.path, 'FilterSampleRate')
+
+		self.eq_param[index] = param
 		return self.eq_param[index]
 
-	def on_eq_default_profile_set(self, index):
-		
-		for preset in presets:
-			coef = preset["coef"]
-			preamp = preset["preamp"]
-			self.on_eq_filter_set(index,preamp,coef)
-			self.on_eq_profile_save(index,preset["name"])
-
-	
-	def on_eq_frequencies_get(self):
-		return self.frequencies
-		
-
-	def on_eq_channel_set(self, index, ch):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		self.eq_param[index] = (path, ch, sample_rate, filter_rate, filter_freq)
-		
-	def on_eq_channel_get(self, index):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		return channel
-
-	def on_eq_filter_get(self, index):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		
-		coefs,preamp = self.pulse_dbus.call_func(IF.EQUALIZER_I,path,'FilterAtPoints',"uau",channel,filter_freq)
-		
+	def eq_filter_get(self, index, filter_freq):
+		param = self.get_filter_param(index)
+		coefs, preamp = self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'FilterAtPoints',"uau",param.channel,filter_freq)
 		preamp = preamp[1] if sys.version_info[0] > 2 else preamp
-		return(preamp, coefs)
+		return [preamp, coefs]
 	
-	def on_eq_filter_set(self, index, preamp, coefs):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		
-		self.pulse_dbus.call_func(IF.EQUALIZER_I,path,'SeedFilter',"uauadd",channel, filter_freq, coefs, preamp)
+	def eq_filter_set(self, param, filter_freq, preamp, coefs):
+		if len(coefs) == 1:
+			self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'SeedFilter',"uauadd",param.channel, filter_freq, coefs[0], preamp)
+		else:
+			for channel in range(len(coefs)):
+				self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'SeedFilter',"uauadd",channel, filter_freq, coefs[channel], preamp)
 
-	def on_eq_state_save(self, index):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		self.pulse_dbus.call_func(IF.EQUALIZER_I,path,'SaveState')
+	def eq_state_save(self, index):
+		param = self.get_filter_param(index)
+		self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'SaveState')
 
-	def on_eq_profile_load(self,index, profile):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		self.pulse_dbus.call_func(IF.EQUALIZER_I,path,'LoadProfile',"us", channel, profile)
+	def eq_profile_load(self,index, profile):
+		param = self.get_filter_param(index)
+		self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'LoadProfile',"us", param.channel, profile)
 
-		
-	def on_eq_profile_save(self,index, profile):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		self.pulse_dbus.call_func(IF.EQUALIZER_I,path,'SaveProfile',"us",channel,profile)
+	def eq_profile_save(self,index, profile):
+		param = self.get_filter_param(index)
+		self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'SaveProfile',"us",param.channel,profile)
 	
-	def on_eq_base_profile_get(self, index):
-		path, channel, sample_rate, filter_rate, filter_freq = self.get_filter_param(index)
-		return self.pulse_dbus.call_func(IF.EQUALIZER_I,path,'BaseProfile',"u", channel)
+	def eq_base_profile_get(self, index):
+		param = self.get_filter_param(index)
+		return self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'BaseProfile',"u", param.channel)
 
-	
-	def on_eq_profiles_get(self):
+	def eq_profiles_get(self):
 		return self.pulse_dbus.get_property(IF.MANAGER_I,IF.MANAGER_P, 'Profiles')
 		
-	def on_eq_profile_remove(self,profile):
+	def eq_profile_remove(self,profile):
 		self.pulse_dbus.call_func(IF.MANAGER_I,IF.MANAGER_P,'RemoveProfile',"s", profile)
 		
 	@staticmethod
@@ -118,10 +103,72 @@ class EqControl():
 	def translate_rates(dst,src,rates):
 		return list([x*dst/src for x in rates])
 
-
-	def calc_filter_freq(self, filter_rate,sample_rate, frequencies):
+	def calc_filter_freq(self, filter_rate, sample_rate, frequencies):
 		return [int(round(x)) for x in self.translate_rates(filter_rate,sample_rate,self.freq_extend(sample_rate, frequencies))]
 
 
+	#
+	#**************** new ********************************************
+	#
+
+
+	def seed(self, index):
+		param = self.get_filter_param(index)
+		filter_freq, preamp, coefs = self.spec.get_ffreq_coef(param.filter_rate, param.sample_rate)
+		self.eq_filter_set(param, filter_freq, preamp, coefs)
 	
+	def on_room_corrections_get(self):
+		return self.spec.get_fil_specs()
+		
+	def on_room_correction_get(self):
+		return self.spec.get_spec_name()
+		
+	def on_room_correction_set(self,index,name):
+		self.spec.select_spec(name, self.get_filter_param(index).channels)
+		self.seed(index)
+		
+	def on_room_correction_unset(self, index):
+		self.spec.unselect_spec()
+		self.seed(index)
+		
+	def on_room_correction_remove(self,name):
+		self.spec.remove_spec(name)
+		
+	def on_eq_base_profile_get(self):
+		return self.spec.get_base_profile()
+
+	def on_eq_frequencies_get(self):
+		return self.spec.get_frequencies()
+	
+	def on_eq_frequencies_set(self, freqs):
+		return self.spec.set_frequencies(freqs)
+		
+	def on_eq_filter_get(self):
+		return self.spec.get_coefs()
+		
+	def on_eq_filter_set(self, index, preamp, coefs):
+		self.spec.set_coefs(preamp, coefs)
+		self.seed(index)
+		
+	def on_eq_profiles_get(self):
+		return self.spec.profiles_get()
+		
+	def on_eq_profile_load(self, index, name):
+		self.spec.profile_load(name)
+		self.seed(index)
+		
+	def on_eq_profile_unload(self, index):
+		self.spec.profile_unload()
+		self.seed(index)
+		
+	def on_eq_profile_save(self, name):
+		return self.spec.profile_save(name)
+		
+	def on_eq_profile_remove(self, name):
+		self.spec.profile_remove(name)
+		
+	def on_eq_defaults_set(self):
+		self.spec.set_defaults()
+		
+
 

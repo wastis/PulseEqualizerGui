@@ -8,7 +8,15 @@
 #	or (at your option) any later version.
 #
 #
-import xbmc
+try: import xbmc
+except: 
+	class xbmc():
+		LOGDEBUG = "DEBUG"
+		LOGINFO = "INFO"
+		LOGERROR = "ERROR"
+		@staticmethod
+		def log(text, level): print(level, text)
+
 
 def log(text):
 	xbmc.log("eq: " + text, xbmc.LOGDEBUG)

@@ -17,6 +17,8 @@ from helper import *
 from time import sleep
 from volumegui import VolumeGui
 
+from contextmenu import contextMenu
+
 addon = Addon()
 def tr(id):
 	return addon.getLocalizedString(id)
@@ -35,11 +37,12 @@ class Menu():
 	
 	def sel_main_menu(self, menu=False):
 		
-		sel = xbmcgui.Dialog().contextmenu([tr(32006),tr(32007),tr(32008),tr(32009),tr(32010)])
-		
-		if sel > -1:
-			func = ["profile","equalizer","device","manager","latency"]
-			self.sel_menu(func[sel],True)
+		contextMenu(funcs = [(tr(32006),self.sel_profile), 
+							(tr(32007),self.sel_equalizer),
+							(tr(32008),self.sel_device),
+							(tr(32027),self.sel_correction),
+							(tr(32010),self.sel_latency)])
+
 
 	def sel_menu(self, command, smenu = False):
 		
@@ -95,38 +98,69 @@ class Menu():
 		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
 		if not func_available: return
 		
+		self.eqid = eqid
+		
 		include_switch_off = is_dyn and is_playing
 
 		profiles = SocketCom("server").call_func("get","eq_profiles")
-		profile = SocketCom("server").call_func("get","eq_base_profile", [eqid])			
+		profile = SocketCom("server").call_func("get","eq_base_profile")
 		
 		if include_switch_off: profiles = [tr(32011)] + profiles
 		
-		try: sel = profiles.index(profile)
-		except:	sel = -1
+		funcs = [(tr(32014),self.sel_new_profile),(tr(32015),self.sel_delete_profile),(tr(32016),self.sel_load_defaults)]
 		
-		nsel = xbmcgui.Dialog().select(tr(32012) %(desc),profiles,preselect = sel)
+		sel = contextMenu(items = profiles, default = profile, funcs = funcs)
+		
+		if sel is None: return 
+		if include_switch_off and sel == 0: 
+			SocketCom("server").call_func("switch","eq_off")
+		else:
+			SocketCom("server").call_func("load","eq_profile" , [eqid, profiles[sel]])
 
-		if nsel > -1 and sel != nsel:
-			if include_switch_off and nsel == 0: 
-					SocketCom("server").call_func("switch","eq_off")
-					return
-				
-			SocketCom("server").call_func("load","eq_profile" , [eqid, profiles[nsel]])
 	#
-	#	configure equalizer
+	#	room correction
 	#
-	
-	def sel_equalizer(self, menu=False):
+
+
+	def sel_correction(self, smenu=False):
 		
 		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
 		if not func_available: return
 
-		from eqgui import EqGui
+		corrections = SocketCom("server").call_func("get","room_corrections")
+		correction = SocketCom("server").call_func("get","room_correction")
+		if correction is None: correction = tr(32411)
 		
-		ui = EqGui("equalizer.xml" , self.cwd, self.skin , eqid=eqid, desc=desc)
-		ui.doModal()
-		del ui
+		corrections = [tr(32411)] + corrections
+		
+		funcs = [(tr(32033),self.sel_import_correction),(tr(32028), self.sel_delete_correction),(tr(32032),self.sel_playsweep)]
+		
+		sel = contextMenu(items = corrections, default = correction, funcs = funcs)
+
+		if sel is None: return
+		if sel == 0: 
+			SocketCom("server").call_func("unset","room_correction", [eqid])
+			return
+			
+		SocketCom("server").call_func("set","room_correction" , [eqid, corrections[sel]])
+
+
+
+	#
+	#	configure equalizer
+	#
+	
+	def sel_equalizer(self, smenu=False):
+		
+		try:
+			func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+			if not func_available: return
+		
+			from eqdialog import eqDialog
+			eqDialog(eqid = eqid, desc=desc, is_playing=is_playing)
+		except Exception as e: handle(e)
+		
+
 	
 	#
 	#	select output device
@@ -156,81 +190,138 @@ class Menu():
 						preselect = index
 					
 					sel_values.append(o["value"])
-					sel_lables.append(o["label"])
+					sel_lables.append(o["label"].replace("(PULSEAUDIO)",''))
 					index = index + 1
 		
 		# device selection Dialog
-		sel = xbmcgui.Dialog().select(tr(32013) ,sel_lables,preselect = preselect)
 		
-		if sel > -1:
-			response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice", "value":"%s"}, "id":1}' %(sel_values[sel]))
-			SocketCom("server").call_func("set","device" , [sel_values[sel]])
+		sel = contextMenu( items = sel_lables, default = sel_lables[preselect], width = 1000)
+
+		if sel is None: return
+			
+		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice", "value":"%s"}, "id":1}' %(sel_values[sel]))
+		SocketCom("server").call_func("set","device" , [sel_values[sel]])
+
 
 	#
-	#	profile manager menu
+	#	manage profiles
 	#
-	
 	
 	def sel_manager(self, smenu=False):
 
 		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
 		if not func_available: return
+		
+		self.eqid = eqid
+		sel = contextMenu(funcs = [(tr(32014),self.sel_new_profile),(tr(32015),self.sel_delete_profile),(tr(32016),self.sel_load_defaults)])
+		
 
-		# Dialog Add_Profile, Delete_Profile, New_Profile, Noise Generator
-		sel = xbmcgui.Dialog().contextmenu([tr(32014),tr(32015),tr(32016)])
-		if sel == 0:
-			# Name for new Profile
-			profile = xbmcgui.Dialog().input(tr(32017))
-			if profile != '':
-				SocketCom("server").call_func("save","eq_profile" , [eqid,profile])
-				
-				
-		elif sel == 1:
-			profiles = SocketCom("server").call_func("get","eq_profiles")
-			
-			if len(profiles) > 0:
-				#select profile
-				sel_del_profile = xbmcgui.Dialog().contextmenu(profiles)
-				if sel_del_profile > -1:
-					# sure to delete
-					del_profile = profiles[sel_del_profile]
-					if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile) == True:
-						SocketCom("server").call_func("remove","eq_profile" , [del_profile])
-					
-					
-			else: 
-				#does not exist
-				xbmcgui.Dialog().notification(tr(32020),tr(32021), time = 10)
+	def sel_new_profile(self):
+		# Name for new Profile
+		profile = xbmcgui.Dialog().input(tr(32017))
+		if profile != '':
+			SocketCom("server").call_func("save","eq_profile" , [profile])
+			SocketCom("server").call_func("load","eq_profile" , [self.eqid, profile])
+	
+	def sel_delete_profile(self):
+		profiles = SocketCom("server").call_func("get","eq_profiles")
+		
+		
+		if not profiles: return
 
-		elif sel == 2:
-			# load predefined
-			SocketCom("server").call_func("set","eq_default_profile" , [eqid])
-			
-			
+		nr = contextMenu(items = profiles)
+		if nr is None: return
 
+		# sure to delete
+		del_profile = profiles[nr]
+		if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile) == True:
+				SocketCom("server").call_func("remove","eq_profile" , [del_profile])
+		
+	def sel_load_defaults(self):
+		# load predefined
+		SocketCom("server").call_func("set","eq_defaults")
+			
+	#
+	#	manage corrections
+	#
+
+	def sel_cor_manager(self, smenu=False):
+		sel = contextMenu(funcs = [(tr(32033),self.sel_import_correction),(tr(32028), self.sel_delete_correction),(tr(32032),self.sel_playsweep)])
+
+
+	def sel_delete_correction(self, smenu=False):
+		corrections = SocketCom("server").call_func("get","room_corrections")
+		
+		if not corrections: return 
+
+		nr = contextMenu(items = corrections)
+		if nr is None: return
+
+		del_correction = corrections[nr]
+		# sure to delete
+		if xbmcgui.Dialog().yesno(tr(32030) % del_correction,tr(32031) % del_correction) == True:
+			SocketCom("server").call_func("remove","room_correction" , [del_correction])
+
+	def sel_playsweep(self, smenu=False):
+		from sweepgengui import SweepGenGui
+		from rundialog import runDialog
+		runDialog(SweepGenGui,"SweepGen")
+			
+	def sel_import_correction(self, smenu=False):
+		from importgui import ImportGui
+		from rundialog import runDialog
+		runDialog(ImportGui,"ImportDialog")
+
+		
 	#
 	#	show latency slider
 	#
 			
 	def sel_latency(self, smenu=False):
-		
 		from latencygui import LatencyGui
-		if smenu: 
-			xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "Input.ExecuteAction", "params": {"action":"fullscreen"}, "id":1}')
-		ui = LatencyGui("latency-offset.xml" , self.cwd, self.skin)
-		ui.doModal()
-		del ui
+		from rundialog import runDialog
+		runDialog(LatencyGui,"OsdLatencyOffset")
 		
 	#
 	#	show volume progress bar
 	#
 		
 	def sel_volup(self, smenu=False):
-		self.volgui = VolumeGui("volume.xml" , self.cwd , self.skin, updown = "up")
+		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "up")
 		self.volgui.doModal()
 		
 	def sel_voldown(self, smenu=False):
-		self.volgui = VolumeGui("volume.xml" , self.cwd , self.skin, updown = "down")
+		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "down")
 		self.volgui.doModal()
+		
+	#
+	#	show graph
+	#
+	
+	def sel_graph(self, smenu=False):
+		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		if not func_available: return
+		
+		from graphgui import GraphGui
+		ui = GraphGui("graph.xml" , self.cwd, self.skin, eqid = eqid, desc = desc)
+		ui.doModal()
 
+	def sel_test(self, smenu = False):
+		
+
+		contextMenu(self.skin, items = ["test1","test2","test3"], funcs=["settings"], default = "test2")
+		#ui = TestGui("DialogContextM.xml" , self.cwd, self.skin)
+		#ui.doModal()
+		
+	def introspect(self):
+		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Textures.GetTextures", "id":1}')
+		d = json.loads(response)
+		with open("/run/shm/all.txt","w") as f: f.write(json.dumps(d,indent = 4))
+		
+		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettingValue", "params":{ "setting":"lookandfeel.skin"}, "id":1}')
+		d = json.loads(response)
+		with open("/run/shm/result.txt","w") as f: f.write(json.dumps(d,indent = 4))
+		
+		log("*** %s"% re.findall(".*?skin\.(.*?)\"",xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettingValue", "params":{ "setting":"lookandfeel.skin"}, "id":1}'))[0])
+		
 

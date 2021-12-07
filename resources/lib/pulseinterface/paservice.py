@@ -44,6 +44,7 @@ from time import time, sleep
 class PulseInterfaceService():
 	
 	running = False
+	service_owner = False
 	def __init__(self):
 
 		self.sock = SocketCom("server")
@@ -54,6 +55,7 @@ class PulseInterfaceService():
 		#allow only one instance of the server
 		if not self.sock.is_server_running():
 			self.start_event_loop()
+			service_owner = True
 		else: 
 			log("server alreay running, don't start")
 	
