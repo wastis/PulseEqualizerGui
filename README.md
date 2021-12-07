@@ -27,10 +27,12 @@ Supports Kodi 18 and 19
 This addon requires pulseaudio-equalizer installed on the system
 
 	sudo apt install pulseaudio-equalizer
+	sudo apt install python3-pil
 
 If you run Kodi 18, the module python-dbus is required
 	
 	sudo apt install python-dbus
+	sudo apt install python-pil
 
 Since version 2.0.0 the modules "module-equalizer-sink" and "module-dbus-protocol" are loaded automatically when the addon is started, no need to configure pulseaudio for this.
 
