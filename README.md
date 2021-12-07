@@ -266,6 +266,7 @@ To start pulseaudio run
 	[Install]
 	 WantedBy=default.target
 
+
 	systemctl --user daemon-reload
 	systemctl --user enable kodi.service	
 
