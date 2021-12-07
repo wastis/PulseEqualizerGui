@@ -142,8 +142,6 @@ class paDatabase():
 			if si.client == self.info['kodi_client']:
 				if self.info['kodi_stream'] is None:  self.info['kodi_stream'] = si
 				
-			if si.name == "parec" and si.proplist['application.process.id']==self.sg.pid:
-				self.info['parec_stream'] = si
 				
 
 	def parse_sinks(self):
@@ -218,8 +216,6 @@ class paDatabase():
 			if index == self.info['kodi_stream'].index:
 				self.set_kodi_chain(self.info['kodi_stream'])
 				
-		if si.name == "parec" and si.proplist['application.process.id']==str(self.sg.pid):
-				self.info['parec_stream'] = si.index
 				
 				
 	def on_sink_new(self, index):
