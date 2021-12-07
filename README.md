@@ -162,7 +162,7 @@ Audacity is a tool to produce those files.
   
  
 
-##Configure Hotkeys
+## Configure Hotkeys
 
 The following will enable the keyboard keys l,m,n,o,p to launch the different modules. It is also possible to control the system wide volume by f and e:
 
