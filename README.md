@@ -205,9 +205,9 @@ Restart pulseaudio.
 
 # Headless OS installations
 
-This works with Debian 10 and raspberry Pi 3 with a small modification of the startup script.
+This works with Debian 10/11 and raspberry Pi 3.
 
-Pulseaudio needs to run in a user session together with Kodi.
+In general, pulseaudio needs to run in a user session together with Kodi. Here we create systemd start-up scripts in the user folder and use linger to execute the script as user. 
 
 create two files:
 ~/.config/systemd/user/pulseaudio.service
@@ -243,50 +243,35 @@ To start pulseaudio run
 	systemctl --user daemon-reload
 	systemctl --user enable pulseaudio.service
 	systemctl --user enable pulseaudio.socket
-	systemctl --user start pulseaudio.service
-	systemctl --user status pulseaudio.{service,socket}
+	systemctl --user start pulseaudio.service	
 
 ### Autostart Kodi
 
-### Debian 10 / 11
-/etc/systemd/system/kodi.service
+~/.config/systemd/user/kodi.service
 
 	[Unit]
 	 Description=kodi startup service
+	 After = pulseaudio.service
 	
 	[Service]
-	 Type=simple
-	 ExecStart=su -c '/usr/bin/kodi' [username] &
+	 Environment = KODI_AE_SINK=PULSE
+	 ExecStart=/usr/bin/kodi
 	 TimeoutSec=0
-	 StandardOutput=tty
+	 StandardOutput=journal
+	 StandardError=journal
+	 Restart = on-abort
 	 RemainAfterExit=yes
 	 SysVStartPriority=99
 	
 	[Install]
-	 WantedBy=multi-user.target
+	 WantedBy=default.target
+
+	systemctl --user daemon-reload
+	systemctl --user enable kodi.service	
+
+	loginctl enable-linger [username]
 
 where [username] is your user name.
-
-	sudo systemctl enable kodi.service	
-
-### Raspberry Pi
-For raspberry PI, create a startup script to tell Kodi to use pulseaudio instead of alsa
-
-/etc/systemd/system/kodi.service
-
-	[Unit]
-	 Description=kodi startup service
-	
-	[Service]
-	 Type=simple
-	 ExecStart=su -c 'KODI_AE_SINK=PULSE /usr/bin/kodi' pi &
-	 TimeoutSec=0
-	 StandardOutput=tty
-	 RemainAfterExit=yes
-	 SysVStartPriority=99
-	
-	[Install]
-	 WantedBy=multi-user.target
 
 
 ## Raspberry specials
@@ -349,11 +334,19 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	#create pulseaudio.socket	
 	echo -e '[Unit]\nDescription=Pulseaudio Sound System\n\n[Socket]\nPriority=6\nBacklog=5\nListenStream=%t/pulse/native\n\n[Install]\nWantedBy=sockets.target\n' > ~/.config/systemd/user/pulseaudio.socket
 	
+	#create Kodi startup script
+	echo -e '[Unit]\n Description=kodi startup service\n After = pulseaudio.service\n\n[Service]\n Environment = KODI_AE_SINK=PULSE\n ExecStart=/usr/bin/kodi\n TimeoutSec=0\n StandardOutput=journal\n StandardError=journal\n Restart = on-abort\n RemainAfterExit=yes\n SysVStartPriority=99\n\n[Install]\n WantedBy=default.target\n' > ~/.config/systemd/user/kodi.service
+		
+	
+	
 	#enable pulseaudio
 	systemctl --user daemon-reload
 	systemctl --user enable pulseaudio.service
 	systemctl --user enable pulseaudio.socket
-	systemctl --user start pulseaudio.service
+	systemctl --user enable kodi.service	
+	
+	loginctl enable-linger john
+
 	
 	#configure samba to have public access to ~/.kodi folder 
 	sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.bk
@@ -367,13 +360,8 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	sudo bash -c "echo -e ""'GRUB_HIDDEN_TIMEOUT_QUIET=true\nGRUB_TIMEOUT=0\nGRUB_CMDLINE_LINUX_DEFAULT="quiet"\nGRUB_CMDLINE_LINUX="quite"\nGRUB_RECORDFAIL_TIMEOUT=0'"" > /etc/default/grub"
 	sudo update-grub
 	
-	#create Kodi startup script
-	sudo bash -c "echo -e ""'[Unit]\n Description=kodi startup service\n\n[Service]\n Type=simple\n ExecStart=su -c '/usr/bin/kodi' john &\n TimeoutSec=0\n StandardOutput=tty\n RemainAfterExit=yes\n SysVStartPriority=99\n\n[Install]\n WantedBy=multi-user.target'"" > /etc/systemd/system/kodi.service"
-	
-	# enable kodi startup
-	sudo systemctl enable kodi.service
-	
-	
+
+		
 	#create pulseaudio user configuration
 	mkdir -p ~/.config/pulse
 	
