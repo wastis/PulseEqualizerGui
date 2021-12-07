@@ -159,8 +159,9 @@ Audacity is a tool to produce those files.
 3. select all sweeps for one channel and create Spectrum Plot (Analyse->Plot Spectrum)
 4. Export (Size 1024 is sufficient in most cases)
 5. repeat this for all channels
-  
  
+More info can be found here. 
+https://forum.kodi.tv/showthread.php?tid=365874
 
 ## Configure Hotkeys
 
