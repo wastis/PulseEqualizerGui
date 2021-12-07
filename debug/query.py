@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 #	This file is part of PulseEqualizerGui for Kodi.
 #	
@@ -10,23 +10,33 @@
 #	or (at your option) any later version.
 #
 #
-import sys 
+import sys,os, json
+
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
-import xbmc
-import os
 
-from pulseinterface import PulseInterfaceService
+from helper import *
 
 
-em = PulseInterfaceService()
+sc = SocketCom("server")
+if not sc.is_server_running():
+	print("server is not running")
+	sys.exit(0)
 
-if sys.version_info[0] < 3:
-	raw_input("Press Enter to continue...")
-else:
-	input("Press Enter to continue...")
-
-em.stop_event_loop()
-print("done")
-
-
+try:
+	func = sys.argv[1]
+	
+	if func == "exit": 
+		sc.stop_server()
+		sys.exit(0)
+	
+	target = sys.argv[2]
+	try: args = sys.argv[3:]
+	except: args = []
+except: 
+	print('usage: query.py func target args...')
+	sys.exit(0)
+	
+print(func,target,args)
+	
+print(sc.call_func(func,target,args))

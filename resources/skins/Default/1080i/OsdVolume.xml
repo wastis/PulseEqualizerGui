@@ -14,8 +14,8 @@
 			<width>310</width>
 			<height>40</height>
 			<reveal>true</reveal>
-			<texturebg>level-background.png</texturebg>
-			<midtexture>level.png</midtexture>
+			<texturebg>volume/level-background.png</texturebg>
+			<midtexture>volume/level.png</midtexture>
 		</control>
 		<control type="label" id="1901">
 				<description>Percent</description>

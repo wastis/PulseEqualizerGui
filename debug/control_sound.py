@@ -11,6 +11,7 @@
 #
 #
 import sys,os, json
+import numpy as np
 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
@@ -18,30 +19,30 @@ sys.path.append ('./fakekodi')
 from helper import *
 
 
-pipe_com = PipeCom("/run/shm/pa/")
-
-
-if not os.path.exists(pipe_com.path): 
-	print("no server")
+#sc = SocketCom("sound")
+sc = SocketCom("server")
+if not sc.is_server_running():
+	print("server is not running")
 	sys.exit(0)
 
-if not os.path.exists(pipe_com.client): os.mkfifo(pipe_com.client)
 
 try:
-	cmd = sys.argv[1]
+	func = sys.argv[1]
+	
+	if func == "exit": 
+		sc.stop_server()
+		sys.exit(0)
+	
+	target = sys.argv[2]
+	try: 
+		args = []
+		for arg in sys.argv[3:]:
+			args.append(float(arg))
+	except: args = []
 except: 
-	print('usage: get_info.py "get;introspect"\nor:    get_info.py "get;outlist"')
-	os.remove(pipe_com.client)
+	print('usage: control_sound.py "start" "tone" 1000 0.5')
 	sys.exit(0)
 	
-if not pipe_com.send("server", cmd):
-	print("send failed")
-	sys.exit(0)
+print(func,target,args)
 	
-if 'get;' in cmd:
-	result = pipe_com.read("client")
-	if result: 
-		print(result)
-	else: print("receive timeout")
-
-os.remove(pipe_com.client)
+sc.call_func(func,target,args)

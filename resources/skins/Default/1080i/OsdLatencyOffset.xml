@@ -1,5 +1,5 @@
 <window>
-	<defaultcontrol always="true">901</defaultcontrol>
+	<defaultcontrol always="true">1900</defaultcontrol>
 	<animation effect="fade" time="200">WindowOpen</animation>
 	<animation effect="fade" time="200">WindowClose</animation>
 	<coordinates>
@@ -40,11 +40,9 @@
 				<width>600</width>
 				<height>40</height>
 				<orientation>horizontal</orientation>
-				<texturesliderbar>equalizer-slider-background-hori.png</texturesliderbar>
-				<textureslidernib>equalizer-slider-nib-nofocus.png</textureslidernib>
-				<textureslidernibfocus>equalizer-slider-nib-focus.png</textureslidernibfocus>
-				<onup>901</onup>
-				<ondown>901</ondown>
+				<texturesliderbar>slider/bk-horizontal.png</texturesliderbar>
+				<textureslidernib colordiffuse="{col_textureslidernib}">slider/nofocus.png</textureslidernib>
+				<textureslidernibfocus colordiffuse="{col_textureslidernibfocus}">slider/focus.png</textureslidernibfocus>
 			</control>
 		</control>
 	</controls>

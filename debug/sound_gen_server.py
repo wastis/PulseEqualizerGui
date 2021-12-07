@@ -10,23 +10,22 @@
 #	or (at your option) any later version.
 #
 #
-import sys 
+import os, sys 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 import xbmc
-import os
 
-from pulseinterface import PulseInterfaceService
+from helper import SocketCom
+from sound import SoundGen
+
+		
+sg = SoundGen()
+sc = SocketCom("sound")
+
+sc.start_func_server(sg,block = True)
+sg.end_server()
 
 
-em = PulseInterfaceService()
 
-if sys.version_info[0] < 3:
-	raw_input("Press Enter to continue...")
-else:
-	input("Press Enter to continue...")
-
-em.stop_event_loop()
-print("done")
 
 
