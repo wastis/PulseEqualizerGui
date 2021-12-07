@@ -128,7 +128,7 @@ restart pulseaudio or reboot.
 
 This will reduce the buffer sizes and with this start the audio playback more immediate. If the buffer size becomes to small however, the audio quality can be affected.    
 
-##Digital Room Correction
+## Digital Room Correction
 
 PulseEqualizer now has some functions that supports digital room correction for each channel. 
 
