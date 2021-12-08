@@ -99,7 +99,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		else: relvol = 0
 		
 		if self.mic_file:
-			spec = spec + self.mic_file
+			spec = spec - self.mic_file
 		
 		if  self.getControl(3101).isSelected():
 			spec = spec.smooth()
