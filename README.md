@@ -1,26 +1,40 @@
 # Kodi PulseEqualizer GUI Addon
 
-Version 2.1.0 - beta
+Version 2.1.0 - beta - currently quite stable, so far no technical issues found.
 
 PulseEqualizer GUI is an addon that provides a pulsaudio configuration frontend for Kodi. 
 
 This includes:
 - Configuration of the pulseaudio equalizer with sliders
-- Digital Room Correction for each channel
-- Manage equalizer profiles (add, remove and change)
 - Switch between equalizer profiles
+- Manage equalizer profiles (add, remove and change)
+
+- [Digital Room Correction](#digital-room-correction) for each channel
+- Import, remove and select digital room correction profile
+
 - Configure latency-offset (for video/audio sync)
+
 - Control system volume (needed if a compressor is used in the filter chain)
 - Hotkey support for each
 
-- tested on i386 Linux Mint / Debian 10 server / raspberry PI 3 OS v. May 7th 2021  
-
-Supports Kodi 18 and 19
-
+- tested on i386 Linux Mint / Debian 10/11 server / raspberry PI 3 OS v. May 7th 2021 / Ubuntu 18 server  
 
 2021 wastis
 
 ![Pulse Equalizer](/resources/images/Equalizer.png)
+
+# Content of this readme
+
+[Installation](#installation)
+[Configuration](#configuration)
+[Advanced configuration (optional)](#advanced-configuration)
+[Filter chains](#filter-chains)
+[Latency optimizations](#latency-optimizations)
+[Digital Room Correction](#digital-room-correction)
+[Configure Hotkeys](#configure-hotkeys)
+[Headless OS installations](#headless-os-installations)
+[Forum](#finally)
+
 
 # Installation
 
@@ -49,7 +63,7 @@ With *Addon >> Manage Profiles >> Insert predefined Profiles*, it is possible to
 For basic equalizer functionality, no further configuration is required. This is different to previous versions of the addon.   
 
 
-# Advanced configuration (optional)
+# Advanced configuration
 
 Fist make sure you have the configuration files *daemon.conf* *default.pa* and in ~/.config/pulse/. If not, create directory and copy the two files from /etc/pulse/
 
@@ -167,9 +181,21 @@ https://forum.kodi.tv/showthread.php?tid=365874
 
 ## Configure Hotkeys
 
-The following will enable the keyboard keys l,m,n,o,p to launch the different modules. It is also possible to control the system wide volume by f and e:
+PulseEqualizer allows direct access to the main menus via hotkey configurations.
 
-Create a file ~/.kodi/userdata/keymaps/equalizer.xml
+Following commands are available and can be inserted in the keymaps.xml:
+	
+- xbmc.RunScript(script.pulseequalizer.gui)			: 	Main menu
+- xbmc.RunScript(script.pulseequalizer.gui,profile)	:	Profile selection menu
+- xbmc.RunScript(script.pulseequalizer.gui,equalizer)	:	Equalizer Window
+- xbmc.RunScript(script.pulseequalizer.gui,device)	:	Output device selection
+- xbmc.RunScript(script.pulseequalizer.gui,correction):	Room Correction menu
+- xbmc.RunScript(script.pulseequalizer.gui,latency)	:	latency slider
+
+- xbmc.RunScript(script.pulseequalizer.gui,volup)		:	increase system volume
+- xbmc.RunScript(script.pulseequalizer.gui,voldown)	:	decrease system volume
+ 
+Example of a file keymap file: ~/.kodi/userdata/keymaps/equalizer.xml
 
 	<keymap>
 		<global>
@@ -177,7 +203,6 @@ Create a file ~/.kodi/userdata/keymaps/equalizer.xml
 				<l>xbmc.RunScript(script.pulseequalizer.gui,profile)</l>
 				<m>xbmc.RunScript(script.pulseequalizer.gui,equalizer)</m>
 				<n>xbmc.RunScript(script.pulseequalizer.gui,device)</n>
-				<o>xbmc.RunScript(script.pulseequalizer.gui,manager)</o>
 				<p>xbmc.RunScript(script.pulseequalizer.gui,latency)</p>
 			</keyboard>
 		</global>
@@ -189,19 +214,16 @@ Create a file ~/.kodi/userdata/keymaps/equalizer.xml
 		</FullscreenVideo>
 	</keymap>
 
-
-Restart Kodi. 
-
 Do not insert volup / voldown into the "gloal" section, as every time you press the key, an new instance of the script and the pyhton module is started. This may slow the system down. 
+
 If you use volup/voldown on a headless system, you may want to disable the flat volume control of pulseaudio to avoid conflict between Kodi and PulseEqualizerGui. 
 
-This is done by inserting a line into pulse/daemon.conf.
+This is done by inserting a line into pulse/daemon.conf followed by a pulseaudio restart.
 
 	...
 	flat-volumes = no
 	...
 
-Restart pulseaudio.
 
 # Headless OS installations
 
@@ -271,6 +293,8 @@ Enable kodi service
 	systemctl --user daemon-reload
 	systemctl --user enable kodi.service	
 
+Enable linger, this will start the user's systemd start up scripts
+
 	loginctl enable-linger [username]
 
 where [username] is your user name.
@@ -294,6 +318,9 @@ Enjoy
 Feel free to ask any questions in the Kodi Forums.
 
 https://forum.kodi.tv/showthread.php?tid=360514
+
+Digital room correction related topics go here
+https://forum.kodi.tv/showthread.php?tid=365874
 
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -347,8 +374,9 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	systemctl --user enable pulseaudio.socket
 	systemctl --user enable kodi.service	
 	
+	#enable user linger for john. this will load the user's systemd scripts at start up
 	loginctl enable-linger john
-
+	
 	
 	#configure samba to have public access to ~/.kodi folder 
 	sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.bk
@@ -362,7 +390,7 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	sudo bash -c "echo -e ""'GRUB_HIDDEN_TIMEOUT_QUIET=true\nGRUB_TIMEOUT=0\nGRUB_CMDLINE_LINUX_DEFAULT="quiet"\nGRUB_CMDLINE_LINUX="quite"\nGRUB_RECORDFAIL_TIMEOUT=0'"" > /etc/default/grub"
 	sudo update-grub
 	
-
+	
 		
 	#create pulseaudio user configuration
 	mkdir -p ~/.config/pulse
