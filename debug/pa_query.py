@@ -25,6 +25,11 @@ pc = PulseControl()
 pc.start()
 
 try:
+	
+	si = pc.get_server_info()
+	for key in vars(si):
+		print(key, getattr(si,key))
+	
 	print(sys.argv)
 	cmd =  sys.argv[1]
 	result = pc.get_list(cmd)

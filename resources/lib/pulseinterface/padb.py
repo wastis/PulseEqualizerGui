@@ -33,6 +33,7 @@ class paDatabase():
 
 	playback_stream = None
 	output_sink = None
+	default_sink = None
 	
 	def __init__(self, pulsecontrol):
 		self.pc = pulsecontrol
@@ -105,6 +106,8 @@ class paDatabase():
 		for obj in self.pc.get_list(target):
 			result[obj.index] = obj
 		setattr(self, targets, result)
+		
+		
 
 		
 	#
@@ -133,7 +136,7 @@ class paDatabase():
 			for cid,client in self.clients.items():
 				if client.name in ['Kodi','KodiSink']: 
 					self.info['kodi_client'] = cid
-			
+	
 
 	
 	def parse_sink_inputs(self):
@@ -162,6 +165,9 @@ class paDatabase():
 				
 			if sink.driver == "module-null-sink.c":
 				self.info["null_sink"] = sink.index
+				
+		self.default_sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
+		
 				
 		
 	def set_kodi_chain(self, sink_input):
@@ -250,9 +256,24 @@ class paDatabase():
 		pos = arg.rfind(":")
 		if pos > -1: arg = arg[pos+1:]
 		
-		try: sink = self.sink_by_name[arg]
-		except: return
-		log("padb: on_device_set: device found")
+		if arg == 'Default':
+			try:
+				self.default_sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
+				log("padb: on_device_set: default sink found")
+			except:
+				log("padb: on_device_set: default sink not found")
+				self.default_sink = None
+				return
+				
+			sink = self.default_sink
+		else:
+			try: 
+				sink = self.sink_by_name[arg]
+				log("padb: on_device_set: device found")
+			except: 
+				log("padb: on_device_set: device not found")
+				return
+
 		self.chaineq_sink = None
 
 		self.kodi_first_sink = sink

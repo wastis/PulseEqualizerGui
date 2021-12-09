@@ -94,6 +94,14 @@ class PulseControl():
 			except :pass
 			return result
 			
+			
+	def get_server_info(self):
+		self.lock.acquire()
+		result = self.pulse.server_info()
+		self.lock.release()
+		
+		return result
+		
 	#
 	# module loading
 	#
