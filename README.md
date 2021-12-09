@@ -28,13 +28,21 @@ This includes:
 # Content of this readme
 
 [Installation](#installation)
+
 [Configuration](#configuration)
+
 [Advanced configuration (optional)](#advanced-configuration)
+
 [Filter chains](#filter-chains)
+
 [Latency optimizations](#latency-optimizations)
+
 [Digital Room Correction](#digital-room-correction)
+
 [Configure Hotkeys](#configure-hotkeys)
+
 [Headless OS installations](#headless-os-installations)
+
 [Forum](#finally)
 
 
