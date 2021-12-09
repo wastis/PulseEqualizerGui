@@ -19,15 +19,16 @@ from helper import *
 
 class SpecGroup():
 	
-	name = None
-	preamp = 1.0
-	speclist = {}
-	
-	filenames = {}
-	relvol = {}
-	
-	count = 0
 	def __init__(self, speclist={}, src=None):
+		
+		self.name = None
+		self.preamp = 1.0
+		self.speclist = {}
+	
+		self.filenames = {}
+		self.relvol = {}
+		self.count = 0
+		
 		if src :
 			self.name = src.name
 			self.preamp = src.preamp
@@ -37,6 +38,7 @@ class SpecGroup():
 			self.relvol = src.relvol
 
 		if speclist: self.speclist = speclist
+		log("SPEC %s" % repr(self.speclist))
 		
 	
 	def load(self, filename):

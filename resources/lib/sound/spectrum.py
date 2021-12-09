@@ -15,14 +15,15 @@ from helper import *
 
 
 class Spectrum():
-	freq_db = []
-	index = -1
-	size = 0
-	
-	maxval=None
-	minval=None
 	
 	def __init__(self, freq_db = []):
+		self.freq_db = []
+		self.index = -1
+		self.size = 0
+		
+		self.maxval=None
+		self.minval=None
+
 		self.freq_db = freq_db
 		self.size = len(freq_db)
 		

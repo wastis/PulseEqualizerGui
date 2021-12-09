@@ -18,19 +18,20 @@ from array import array
 
 from helper import *
 class SoundGen():
-	fs = 44100
-	duration = 0.1
-	player_proc = None
-	
-	playing = False
-	stop = False
 
-	pid = 0
-	cur_eq = None
-	cur_eq_index = None
-	cur_eq_stream = None
-	
 	def __init__(self, padb, pc):
+		self.fs = 44100
+		self.duration = 0.1
+		self.player_proc = None
+
+		self.playing = False
+		self.stop = False
+
+		self.pid = 0
+		self.cur_eq = None
+		self.cur_eq_index = None
+		self.cur_eq_stream = None
+		
 		self.padb = padb
 		self.pc = pc
 	

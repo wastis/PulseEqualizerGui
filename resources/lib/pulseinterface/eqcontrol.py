@@ -18,23 +18,14 @@ from helper import *
 from sound import SpecManager
 from .pulsecontrol import PulseControl
 
-#
-# Class Filter, to manage the equalizer settings to a given sink 
-#
-
-presets = [
-{"name":"Treble","preamp":0.5, "coef":[1.0, 1.0, 1.0, 1.0, 1.0, 1.3, 1.8, 2.3, 2.5, 2.5, 2.5, 2.5]},
-{"name":"Bass","preamp":0.5, "coef":[1.0, 2.5, 2.5, 2.3, 1.8, 1.3, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]},
-{"name":"Flat","preamp":1.0, "coef":[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]}]
 
 class FilterParam(): pass
-
 
 class EqControl():
 	default_freq = [31.75,63.5,125,250,500,1e3,2e3,4e3,8e3,16e3]
 	frequencies = [31.75,63.5,125,250,500,1e3,2e3,4e3,8e3,16e3]
 	
-	current_id = None
+	#current_id = None
 	
 	def __init__(self, pc):
 		self.pc = pc

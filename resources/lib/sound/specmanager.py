@@ -31,18 +31,17 @@ class EqProfile():
 		
 
 class SpecManager():
-	
-	cur_spec = None
-	name = None
-	
-	filter_freq = None
-	filter_rate = None
-	sample_rate = None
-	
-	profile = None
-	profiles = {}
-	
 	def __init__(self):
+		self.cur_spec = None
+		self.name = None
+		
+		self.filter_freq = None
+		self.filter_rate = None
+		self.sample_rate = None
+		
+		self.profile = None
+		self.profiles = {}
+
 		self.spec_path = path_addon + path_filter
 		if not os.path.exists(self.spec_path): os.makedirs(self.spec_path)
 		
