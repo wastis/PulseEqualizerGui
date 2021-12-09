@@ -1,3 +1,5 @@
+Before upgrade, please backup your setting directory in (~/.kodi/addon/script.pulseequalizer.gui/settings)
+
 # Kodi PulseEqualizer GUI Addon
 
 Version 2.1.0 - beta - currently quite stable, so far no technical issues found.
