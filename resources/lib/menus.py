@@ -294,25 +294,6 @@ class Menu():
 		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "down")
 		self.volgui.doModal()
 		
-	#
-	#	show graph
-	#
-	
-	def sel_graph(self, smenu=False):
-		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
-		if not func_available: return
-		
-		from graphgui import GraphGui
-		ui = GraphGui("graph.xml" , self.cwd, self.skin, eqid = eqid, desc = desc)
-		ui.doModal()
-
-	def sel_test(self, smenu = False):
-		
-
-		contextMenu(self.skin, items = ["test1","test2","test3"], funcs=["settings"], default = "test2")
-		#ui = TestGui("DialogContextM.xml" , self.cwd, self.skin)
-		#ui.doModal()
-		
 	def introspect(self):
 		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Textures.GetTextures", "id":1}')
 		d = json.loads(response)

@@ -168,15 +168,12 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		self.file_name=[]
 		self.load_channel_name = []
 		fns =  self.spec_group.filenames
-		log("fns->%s"%repr(fns))
 		for i in range(len(self.channel_name)):
 			try: 
 				self.file_name.append(fns[i])
 				self.load_channel_name.append(self.channel_name[i])
 			except: pass
 		
-		log("->%s"%repr(self.load_channel_name))
-			
 		ctl = self.getControl(2100)
 		ctl.reset()
 		ctl.addItems([xbmcgui.ListItem(self.load_channel_name[i],self.file_name[i]) for i in range(len(self.load_channel_name))])
