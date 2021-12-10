@@ -189,7 +189,7 @@ Audacity is a tool to produce those files.
 5. repeat this for all channels
  
 More info can be found here. 
-https://forum.kodi.tv/showthread.php?tid=365874
+[HOWTO Digital Room Correction](https://forum.kodi.tv/showthread.php?tid=365874)
 
 ## Configure Hotkeys
 
@@ -329,10 +329,10 @@ Enjoy
 
 Feel free to ask any questions in the Kodi Forums.
 
-https://forum.kodi.tv/showthread.php?tid=360514
+[Trouble shooting](https://forum.kodi.tv/showthread.php?tid=360514&pid=3075095#pid3075095)
 
 Digital room correction related topics go here
-https://forum.kodi.tv/showthread.php?tid=365874
+[HOWTO Digital Room Correction](https://forum.kodi.tv/showthread.php?tid=365874)
 
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
