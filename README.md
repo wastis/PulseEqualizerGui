@@ -2,7 +2,9 @@
 
 # Kodi PulseEqualizer GUI Addon
 
-Version 2.1.0 - beta - currently quite stable, so far no technical issues found. Before upgrade, please backup your setting directory in (~/.kodi/addon/script.pulseequalizer.gui/settings)
+Version 2.1.0
+
+**Before upgrade, please backup your setting directory in (~/.kodi/addon/script.pulseequalizer.gui/settings)**
 
 PulseEqualizer GUI is an addon that provides a pulsaudio configuration frontend for Kodi. 
 
