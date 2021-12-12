@@ -239,11 +239,11 @@ This is done by inserting a line into pulse/daemon.conf followed by a pulseaudio
 
 # Headless OS installations
 
-This works with Debian 10/11 and raspberry Pi 3.
+This works with Debian 10/11 
 
 In general, pulseaudio needs to run in a user session together with Kodi. Here we create systemd start-up scripts in the user folder and use linger to execute the script as user. 
 
-Enable pulseaudio for user
+### Enable Pulseaudio
 
 	systemctl --user daemon-reload
 	systemctl --user enable pulseaudio.service
@@ -253,7 +253,7 @@ Enable pulseaudio for user
 
 	mkdir -p ~/.config/systemd/user/
 
-~/.config/systemd/user/kodi.service
+create ~/.config/systemd/user/kodi.service with following content
 
 	[Unit]
 	 Description=kodi startup service
@@ -267,7 +267,6 @@ Enable pulseaudio for user
 	 StandardError=journal
 	 Restart = on-abort
 	 RemainAfterExit=yes
-	 SysVStartPriority=99
 	
 	[Install]
 	 WantedBy=default.target
@@ -284,7 +283,7 @@ Enable linger, this will start the user's systemd start up scripts
 where [username] is your user name.
 
 
-## Raspberry specials
+## Raspberry Pi 3
 
 Tested on Raspberry Pi OS Lite
     Release date: October 30th 2021
@@ -292,9 +291,19 @@ Tested on Raspberry Pi OS Lite
     
     Kodi version Matrix 19.3
     
-Startupscript:
+    login as user pi
+    
+### Enable Pulseaudio
 
-~/.config/systemd/user/kodi.service
+	systemctl --user daemon-reload
+	systemctl --user enable pulseaudio.service
+	systemctl --user enable pulseaudio.socket
+
+### Autostart Kodi
+
+	mkdir -p ~/.config/systemd/user/
+
+create ~/.config/systemd/user/kodi.service with following content
 
 	[Unit]
 	 Description=kodi startup service
@@ -324,7 +333,7 @@ Enable linger, this will start the user's systemd start up scripts
 
 #### Raspberry PI 3 performance
 
-Pulseaudio with equalizer enabled consumes about 20% of one CPU core. 
+Pulseaudio with equalizer enabled consumes about 20% of one CPU core, 6% overall when used on 2 channels. 
 
 #### LibreELEC, OSMC and OpenELEC
  
