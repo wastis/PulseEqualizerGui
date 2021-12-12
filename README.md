@@ -243,43 +243,15 @@ This works with Debian 10/11 and raspberry Pi 3.
 
 In general, pulseaudio needs to run in a user session together with Kodi. Here we create systemd start-up scripts in the user folder and use linger to execute the script as user. 
 
-create two files:
-~/.config/systemd/user/pulseaudio.service
-
-	[Unit]
-	Description=Pulseaudio Sound Service
-	Requires=pulseaudio.socket
-	
-	[Service]
-	Type=notify
-	ExecStart=/usr/bin/pulseaudio --verbose --daemonize=no
-	Restart=on-failure
-	
-	[Install]
-	Also=pulseaudio.socket
-	WantedBy=default.target
-
-~/.config/systemd/user/pulseaudio.socket
-
-	[Unit]
-	Description=Pulseaudio Sound System
-	
-	[Socket]
-	Priority=6
-	Backlog=5
-	ListenStream=%t/pulse/native
-	
-	[Install]
-	WantedBy=sockets.target
-
-To start pulseaudio run
+Enable pulseaudio for user
 
 	systemctl --user daemon-reload
 	systemctl --user enable pulseaudio.service
 	systemctl --user enable pulseaudio.socket
-	systemctl --user start pulseaudio.service	
 
 ### Autostart Kodi
+
+	mkdir -p ~/.config/systemd/user/
 
 ~/.config/systemd/user/kodi.service
 
@@ -314,7 +286,41 @@ where [username] is your user name.
 
 ## Raspberry specials
 
-If you install Kodi on the headless OS Lite, you might want to increase the video memory from 64MB to 256MB to avoid crashes. 
+Tested on Raspberry Pi OS Lite
+    Release date: October 30th 2021
+    Kernel version: 5.10 
+    
+    Kodi version Matrix 19.3
+    
+Startupscript:
+
+~/.config/systemd/user/kodi.service
+
+	[Unit]
+	 Description=kodi startup service
+	 After = pulseaudio.service
+
+	[Service]
+	 Environment = KODI_AE_SINK=PULSE
+	 ExecStart=/usr/lib/arm-linux-gnueabihf/kodi/kodi.bin
+	 TimeoutSec=0
+	 StandardOutput=journal
+	 StandardError=journal
+	 Restart = on-abort
+	 RemainAfterExit=yes
+
+	[Install]
+	 WantedBy=default.target
+
+Enable kodi service
+
+	systemctl --user daemon-reload
+	systemctl --user enable kodi.service	
+
+Enable linger, this will start the user's systemd start up scripts
+
+	loginctl enable-linger pi
+
 
 #### Raspberry PI 3 performance
 
@@ -369,16 +375,8 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	#prepare pulseaudio startup in user session
 	mkdir -p ~/.config/systemd/user/
 		
-	#create pulseaudio.service	
-	echo -e '[Unit]\nDescription=Pulseaudio Sound Service\nRequires=pulseaudio.socket\n\n[Service]\nType=notify\nExecStart=/usr/bin/pulseaudio --verbose --daemonize=no\nRestart=on-failure\n\n[Install]\nAlso=pulseaudio.socket\nWantedBy=default.target\n' > ~/.config/systemd/user/pulseaudio.service
-	
-	#create pulseaudio.socket	
-	echo -e '[Unit]\nDescription=Pulseaudio Sound System\n\n[Socket]\nPriority=6\nBacklog=5\nListenStream=%t/pulse/native\n\n[Install]\nWantedBy=sockets.target\n' > ~/.config/systemd/user/pulseaudio.socket
-	
 	#create Kodi startup script
 	echo -e '[Unit]\n Description=kodi startup service\n After = pulseaudio.service\n\n[Service]\n Environment = KODI_AE_SINK=PULSE\n ExecStart=/usr/bin/kodi\n TimeoutSec=0\n StandardOutput=journal\n StandardError=journal\n Restart = on-abort\n RemainAfterExit=yes\n SysVStartPriority=99\n\n[Install]\n WantedBy=default.target\n' > ~/.config/systemd/user/kodi.service
-		
-	
 	
 	#enable pulseaudio
 	systemctl --user daemon-reload
@@ -402,8 +400,6 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	sudo bash -c "echo -e ""'GRUB_HIDDEN_TIMEOUT_QUIET=true\nGRUB_TIMEOUT=0\nGRUB_CMDLINE_LINUX_DEFAULT="quiet"\nGRUB_CMDLINE_LINUX="quite"\nGRUB_RECORDFAIL_TIMEOUT=0'"" > /etc/default/grub"
 	sudo update-grub
 	
-	
-		
 	#create pulseaudio user configuration
 	mkdir -p ~/.config/pulse
 	
