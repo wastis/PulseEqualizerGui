@@ -8,15 +8,36 @@
 #	or (at your option) any later version.
 #
 #
+
 try: import xbmc
 except: 
+	import socket, pickle
+	from helper.path import *
+	
 	class xbmc():
-		LOGDEBUG = "DEBUG"
-		LOGINFO = "INFO"
-		LOGERROR = "ERROR"
-		@staticmethod
-		def log(text, level): print(level, text)
+		LOGDEBUG = 0
+		LOGERROR = 3
+		LOGFATAL = 4
+		LOGINFO = 1
+		LOGNONE = 5
+		LOGWARNING = 2
+		
+		sock_name = path_socket + "kodi.0"
 
+	
+		@staticmethod
+		def log(text, level): 
+			msg = pickle.dumps(["write","log",[text,level]], protocol=2)
+			try:
+				s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+				s.settimeout(1.0)
+				s.connect(xbmc.sock_name)
+				s.send(msg)
+				s.close()
+			except: pass
+
+			
+			
 
 def log(text):
 	xbmc.log("eq: " + text, xbmc.LOGDEBUG)

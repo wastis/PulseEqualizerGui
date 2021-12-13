@@ -8,7 +8,13 @@
 #	or (at your option) any later version.
 #
 #
-import dbus
+
+from helper.log import *
+try:
+	import dbus
+except ImportError: 
+	logerror("please install python-dbus")
+
 import interface as IF
 import sys,os
 from pulseerror import PulseDBusError

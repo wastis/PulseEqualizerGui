@@ -2,7 +2,7 @@
 
 # Kodi PulseEqualizer GUI Addon
 
-Version 2.1.0
+Version 2.1.1 beta
 
 **Before upgrade, please backup your setting directory in (~/.kodi/addon/script.pulseequalizer.gui/settings)**
 
@@ -330,6 +330,10 @@ Enable linger, this will start the user's systemd start up scripts
 
 	loginctl enable-linger pi
 
+### Pulseaudio buffer optimization
+
+In case of clicking noise increase the pulseaudio buffers (see above)
+
 
 #### Raspberry PI 3 performance
 
@@ -364,9 +368,6 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	# basic tools
 	apt install sudo net-tools
 	
-	# add john to the required groups 
-	usermod -a -G sudo,input,pulse john
-	
 	#check ip address
 	ifconfig
 	exit
@@ -376,7 +377,10 @@ Install Debian without desktop environment but with ssh and a user named e.g. "j
 	#
 		
 	#install required packages
-	sudo apt install vim samba kodi pulseaudio pulseaudio-equalizer swh-plugins
+	sudo apt install vim samba kodi pulseaudio pulseaudio-equalizer swh-plugins python3-pil
+	
+	# add john to the required groups 
+	usermod -a -G sudo,input,pulse john
 	
 	#disable vim visuell mode
 	echo "set mouse-=a" >> ~/.vimrc

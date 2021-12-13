@@ -1,6 +1,3 @@
-
-import socket, pickle , os, time
-
 #	This file is part of PulseEqualizerGui for Kodi.
 #	
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
@@ -11,6 +8,8 @@ import socket, pickle , os, time
 #	or (at your option) any later version.
 #
 #
+
+import socket, pickle , os, time
 from threading import Thread
 from .log import log
 from .handle import handle, infhandle
@@ -39,8 +38,9 @@ class SocketCom():
 		
 		sock.listen(1)
 		conn, addr = sock.accept()
-		data = conn.recv(1024)
-		return data, conn
+		
+		result = conn.recv(8192)
+		return result, conn
 
 	def listen_loop(self, callback):
 		log("start socket loop")

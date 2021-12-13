@@ -23,7 +23,6 @@
 #
 
 import sys, time, os, json, pickle
-import xbmc
 from threading import Thread
 
 if sys.version_info[0] < 3:
@@ -43,10 +42,12 @@ from time import time, sleep
 
 class PulseInterfaceService():
 	
-	running = False
-	service_owner = False
-	def __init__(self):
-
+	def __init__(self, gid = 0):
+		self.service_owner = False
+		self.running = False
+		self.pulseloop = False
+	
+		self.gid = gid
 		self.sock = SocketCom("server")
 
 		self.q = Queue()
@@ -55,7 +56,7 @@ class PulseInterfaceService():
 		#allow only one instance of the server
 		if not self.sock.is_server_running():
 			self.start_event_loop()
-			service_owner = True
+			self.service_owner = True
 		else: 
 			log("server alreay running, don't start")
 	
@@ -72,6 +73,7 @@ class PulseInterfaceService():
 	def stop_event_loop(self):
 		if self.running:
 			self.running = False
+			self.pulseloop = True
 			self.q.put(('exit','','', None))
 			
 			self.sock.stop_server()
@@ -107,8 +109,11 @@ class PulseInterfaceService():
 			func,target,args = pickle.loads(msg)
 			log("receive from socket: %s" % repr([func,target,args]))
 			
-			#if target == "system" and func == "quit":
-			#	self.stop_event_loop()
+			if target == "service" and func == "stop" and args[0]== self.gid:
+				log("stop_service received - stopping service")
+				conn.close()
+				self.stop_event_loop()
+				
 			
 			self.q.put((target, func, args, conn))
 
@@ -140,6 +145,7 @@ class PulseInterfaceService():
 			except pulsectl.PulseDisconnected:
 					log("pulse disconnected")
 					if not self.running: 
+						self.pulseloop = False
 						log("stop pulse loop")
 						return
 			except Exception as e: 

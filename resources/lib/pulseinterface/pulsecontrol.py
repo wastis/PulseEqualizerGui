@@ -10,7 +10,6 @@
 #
 
 import sys, os, threading
-import xbmc
 
 import pulsectl
 from pulsectl import PulseIndexError, PulseVolumeInfo
@@ -35,7 +34,7 @@ class PulseControl():
 		
 		
 		
-	def __del__(self):
+	def stop(self):
 		try:
 			self.pulse.close()
 		except: pass

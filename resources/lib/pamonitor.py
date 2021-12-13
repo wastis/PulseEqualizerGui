@@ -12,7 +12,7 @@
 import xbmc, xbmcgui
 import json, os, sys
 
-from pulseinterface import PulseInterfaceService
+from pulseservice import PulseService
 from helper import SocketCom
 from time import sleep
 
@@ -23,11 +23,16 @@ class PaMonitor( xbmc.Monitor ):
 		#strat process
 		xbmc.Monitor.__init__( self )
 		xbmc.log("Start PulesEqualizer service",xbmc.LOGINFO)
+		
 		self.server_sock = SocketCom("kodi")
-		self.server_sock.start_func_server(self)
+		if not self.server_sock.is_server_running():
+			self.server_sock.start_func_server(self)
+		else: self.server_sock = None
+		
 		self.sock = SocketCom("server")
 		
-		em = PulseInterfaceService()
+		ps = PulseService()
+		ps.start()
 		sleep(0.5)
 		self.sock.call_func("set","device",[self.get_device()])
 		
@@ -36,9 +41,9 @@ class PaMonitor( xbmc.Monitor ):
 			if self.waitForAbort( 10 ):
 				break
 		
-		self.server_sock.stop_server()
-		
-		em.stop_event_loop()
+		ps.stop()
+		if self.server_sock:
+			self.server_sock.stop_server()
 	
 	@staticmethod
 	def get_device():

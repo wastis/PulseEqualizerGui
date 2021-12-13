@@ -15,17 +15,26 @@ from .log import *
 if sys.version_info[0] > 2:
 	def handle(e):
 		traceback = e.__traceback__
+		result = "in: "
 		while traceback:
-			logerror("in: {}: {}".format(traceback.tb_frame.f_code.co_filename,traceback.tb_lineno))
+			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
+			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
 			traceback = traceback.tb_next
-		logerror("{}: {}".format(type(e).__name__, e.args))
+		
+		result = result + "{}: {}".format(type(e).__name__, e.args)
+		logerror(result)
+		
 
 	def infhandle(e):
 		traceback = e.__traceback__
+		result = "nce: in: "
 		while traceback:
-			log("nce: in: {}: {}".format(traceback.tb_frame.f_code.co_filename,traceback.tb_lineno))
+			p,fn = path.os.split(traceback.tb_frame.f_code.co_filename)
+			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
 			traceback = traceback.tb_next
-		log("nce: {}: {}".format(type(e).__name__, e.args))
+
+		result = result + "{}: {}".format(type(e).__name__, e.args)
+		log(result)
 
 	
 else:

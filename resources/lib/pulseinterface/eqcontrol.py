@@ -10,7 +10,6 @@
 #
 import sys,json
 import padbus
-import xbmc
 
 from padbus import DBusInterface as IF
 from padbus import PulseDBus

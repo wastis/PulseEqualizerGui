@@ -210,7 +210,9 @@ class paDatabase():
 			try: nv = val.index
 			except: nv = val
 		
-			if ov != nv: updates.append(("on_%s_update" % key,[old_val, val]))
+			if ov != nv: 
+				#log("padb: on_%s_update" % key)
+				updates.append(("on_%s_update" % key,[old_val, val]))
 
 		return updates
 	
@@ -379,6 +381,8 @@ class paDatabase():
 			
 		msg_list = self.update_attr() + msg_list
 		msg_list = self.update_output_sink() + msg_list
+		
+		log(str(self))
 		
 		return msg_list
 	

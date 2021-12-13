@@ -9,7 +9,6 @@
 #
 #
 import os, pickle, json, shutil
-import xbmcaddon
 from helper import *
 from .spectrum import Spectrum
 from .specgroup import SpecGroup
