@@ -288,11 +288,10 @@ where [username] is your user name.
 Tested on Raspberry Pi OS Lite
     Release date: October 30th 2021
     Kernel version: 5.10 
-    
     Kodi version Matrix 19.3
-    
+   
     login as user pi
-    
+   
 ### Enable Pulseaudio
 
 	systemctl --user daemon-reload
@@ -332,7 +331,12 @@ Enable linger, this will start the user's systemd start up scripts
 
 ### Pulseaudio buffer optimization
 
-In case of clicking noise increase the pulseaudio buffers (see above)
+In case of clicking noise increase the pulseaudio buffers
+
+In .config/pulse/daemon.conf, uncomment and set
+
+	default-fragments = 8
+ 
 
 
 #### Raspberry PI 3 performance
