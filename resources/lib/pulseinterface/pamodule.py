@@ -293,12 +293,8 @@ class paModuleManager():
 		profile = self.config.get("eq_profile","none", self.padb.output_sink.name)
 		if profile is not None: return
 		
-		if self.padb.cureq_sink:
-			eq_profile = self.eq.on_eq_base_profile_get(self.padb.cureq_sink.index)
-			self.config.set("eq_profile",eq_profile, self.padb.output_sink.name)
-		elif self.padb.autoeq_sink:
-			eq_profile = self.eq.on_eq_base_profile_get(self.padb.autoeq_sink.index)
-			self.config.set("eq_profile",eq_profile, self.padb.output_sink.name)
+		eq_profile = self.eq.on_eq_base_profile_get()
+		self.config.set("eq_profile",eq_profile, self.padb.output_sink.name)
 		
 		
 	
