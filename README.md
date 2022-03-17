@@ -21,9 +21,9 @@ This includes:
 - Control system volume (needed if a compressor is used in the filter chain)
 - Hotkey support for each
 
-- tested on i386 Linux Mint / Debian 10/11 server / raspberry PI 3 OS v. May 7th 2021 / Ubuntu 18 server  
+- tested on i386 Linux Mint / Debian 10/11 server / Raspberry PI 2b and 3b, OS v. Jan 22 / Ubuntu 18 server  
 
-2021 wastis
+2022 wastis
 
 ![Pulse Equalizer](/resources/images/Equalizer.png)
 
@@ -44,6 +44,8 @@ This includes:
 [Configure Hotkeys](#configure-hotkeys)
 
 [Headless OS installations](#headless-os-installations)
+
+[Raspberry PI 2b & 3](https://github.com/wastis/PulseEqualizerGui/wiki/Raspberry-PI)
 
 [Forum](#finally)
 
@@ -283,65 +285,9 @@ Enable linger, this will start the user's systemd start up scripts
 where [username] is your user name.
 
 
-## Raspberry Pi 3
+## Raspberry Pi 2 / 3
 
-Tested on Raspberry Pi OS Lite
-    Release date: October 30th 2021
-    Kernel version: 5.10 
-    Kodi version Matrix 19.3
-   
-    login as user pi
-   
-### Enable Pulseaudio
-
-	systemctl --user daemon-reload
-	systemctl --user enable pulseaudio.service
-	systemctl --user enable pulseaudio.socket
-
-### Autostart Kodi
-
-	mkdir -p ~/.config/systemd/user/
-
-create ~/.config/systemd/user/kodi.service with following content
-
-	[Unit]
-	 Description=kodi startup service
-	 After = pulseaudio.service
-
-	[Service]
-	 Environment = KODI_AE_SINK=PULSE
-	 ExecStart=/usr/lib/arm-linux-gnueabihf/kodi/kodi.bin
-	 TimeoutSec=0
-	 StandardOutput=journal
-	 StandardError=journal
-	 Restart = on-abort
-	 RemainAfterExit=yes
-
-	[Install]
-	 WantedBy=default.target
-
-Enable kodi service
-
-	systemctl --user daemon-reload
-	systemctl --user enable kodi.service	
-
-Enable linger, this will start the user's systemd start up scripts
-
-	loginctl enable-linger pi
-
-### Pulseaudio buffer optimization
-
-In case of clicking noise increase the pulseaudio buffers
-
-In .config/pulse/daemon.conf, uncomment and set
-
-	default-fragments = 8
- 
-
-
-#### Raspberry PI 3 performance
-
-Pulseaudio with equalizer enabled consumes about 20% of one CPU core, 6% overall when used on 2 channels. 
+Please read the [Wiki page](https://github.com/wastis/PulseEqualizerGui/wiki/Raspberry-PI)
 
 #### LibreELEC, OSMC and OpenELEC
  
