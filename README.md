@@ -11,7 +11,7 @@ This includes:
 - Switch between equalizer profiles
 - Manage equalizer profiles (add, remove and change)
 
-- [Digital Room Correction](#digital-room-correction) for each channel
+- Digital Room Correction for each channel
 - Import, remove and select digital room correction profile
 
 - Configure latency-offset (for video/audio sync)
@@ -51,4 +51,6 @@ With *Addon >> Manage Profiles >> Insert predefined Profiles*, it is possible to
 For basic equalizer functionality, no further configuration is required. This is different to previous versions of the addon.  
 
 More information can be found on [Wiki](https://github.com/wastis/PulseEqualizerGui/wiki)
+
+Help can be found in the Kodi forum in this [thread](https://forum.kodi.tv/showthread.php?tid=360514&pid=3076706#pid3076706)
 
