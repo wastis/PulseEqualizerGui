@@ -21,9 +21,10 @@ https://github.com/wastis/PulseEqualizerGui
 		<forum>https://forum.kodi.tv/showthread.php?tid=360514</forum>
 		<source>https://github.com/wastis/PulseEqualizerGui</source>
 		<news>
-v2.1.2  (2022-03-18)
+v2.1.2  (2022-03-19)
 - Improved error message, in case pulse-equalizer is not installed
 - Source code clean-ups
+- Change of file structure to match standad
 
 v2.1.1  (2021-12-16)
 - fix some problems with Kodi 19.3 on raspberry (audio device conflicts, bt-device on/off issues)
@@ -45,10 +46,10 @@ v2.0.0 (2021-11-13)
 - architectual change
 	</news>
 	<assets>
-		<icon>icon.png</icon>
-		<fanart>fanart.jpg</fanart>
-		<screenshot>scr0.png</screenshot>
-		<screenshot>scr1.png</screenshot>
+		<icon>resources/media/icon.png</icon>
+		<fanart>resources/media/fanart.jpg</fanart>
+		<screenshot>resources/media/scr0.png</screenshot>
+		<screenshot>resources/media/scr1.png</screenshot>
 	</assets>
 	</extension>
 </addon>
