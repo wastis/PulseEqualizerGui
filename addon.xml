@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.pulseequalizer.gui" name="PulseEqualizer GUI" version="2.1.1" provider-name="wastis">
+<addon id="script.pulseequalizer.gui" name="PulseEqualizer GUI" version="2.1.2" provider-name="wastis">
 
-    <extension point="xbmc.python.script" library="addon.py">
+	<extension point="xbmc.python.script" library="addon.py">
 		<provides>executable</provides>
 	</extension>
-    <extension point="xbmc.service" library="service.py" />
+	<extension point="xbmc.service" library="service.py" />
 	<extension point="xbmc.addon.metadata">
 		<platform>linux</platform>
-		<summary lang="en">Frontend for the Pulseaudio Equalizer.</summary>
-		<summary lang="de_DE">Konfigurator für den Pulseaudio Klangfilter.</summary>
-		<description lang="en">Enables sound adjustments with sliders. Further there are a range of additional configuration options, such as the creation, selection and removal of equalizer profiles.
+		<summary lang="en">Graphical frontend for the Pulseaudio Equalizer.</summary>
+		<summary lang="de_DE">Graphische Oberfläche für den Pulseaudio Klangfilter.</summary>
+		<description lang="en">Provides functionality for audio adjustments, digital room correction and profile management. Requires pulseaudio-equalizer to be installed on the system.
 
 https://github.com/wastis/PulseEqualizerGui
 </description>
-		<description lang="de_DE">Ermöglicht das Einstellen der Klangfilters mittels Schiebeschalter. Ferner gibt es eine Reihe von zusätzlichen Einstellmöglichkeiten, wie das Erstellen, Auswählen und Löschen von Klangprofilen.
+		<description lang="de_DE">Enthält Funktionalität zur Klangeinstellung, der digitalen Raumkorrektur sowie ein Profilmanagement. Benötigt den pulseaudio-equalizer auf dem System.  
 
 https://github.com/wastis/PulseEqualizerGui
 </description>
-		<license>GNU General Public License, v3</license>
-		<language></language>
+		<license>GPL-3.0-or-later</license>
 		<forum>https://forum.kodi.tv/showthread.php?tid=360514</forum>
 		<source>https://github.com/wastis/PulseEqualizerGui</source>
-		<website>Kodi.tv</website>
-		<email></email>
 		<news>
-2.1.1  ()
+v2.1.2  (2022-03-18)
+- Improved error message, in case pulse-equalizer is not installed
+- Source code clean-ups
+
+v2.1.1  (2021-12-16)
 - fix some problems with Kodi 19.3 on raspberry (audio device conflicts, bt-device on/off issues)
-2.1.0 (2021-12-06)
+
+v2.1.0 (2021-12-06)
 - added Room Correction functionality
 - more flexibility in filter frequency selection
 - some user interface changes
-2.0.0 (2021-11-13)
+
+v2.0.0 (2021-11-13)
 - added latency-offset slider, save latency based on equalizer in playback chain
 - possibility to switch equalizer on/off
 - change output selection method
@@ -41,11 +44,10 @@ https://github.com/wastis/PulseEqualizerGui
 - skip filter if no playback (no latency on GUI sounds)
 - architectual change
 	</news>
-		<assets>
-			<icon>icon.png</icon>
-			<screenshot>scr0.png</screenshot>
-			<screenshot>scr1.png</screenshot>
-		</assets>
-		<news></news>
+	<assets>
+		<icon>icon.png</icon>
+		<screenshot>scr0.png</screenshot>
+		<screenshot>scr1.png</screenshot>
+	</assets>
 	</extension>
 </addon>

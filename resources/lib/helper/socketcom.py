@@ -93,6 +93,7 @@ class SocketCom():
 			s.send(msg)
 			data = s.recv(2048)
 			s.close()
+			if data == b'': return None
 			return data
 		except: return None
 		

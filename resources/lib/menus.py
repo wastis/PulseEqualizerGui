@@ -63,7 +63,9 @@ class Menu():
 		self.current = SocketCom("server").call_func("get","eq_current") 
 		eqid, desc, is_playing, eq_profile, is_dyn = ( self.current )
 		
-		
+		if eqid == -1:
+			xbmcgui.Dialog().ok(tr(32004),tr(32035))
+			return False, eqid, desc, is_playing, eq_profile, is_dyn
 		
 		if is_playing and eq_profile=='off' and is_dyn:
 			# Dialog switch on?

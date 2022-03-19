@@ -133,6 +133,10 @@ msgctxt "#32034"
 msgid "Profiles"
 msgstr "Profile"
 
+msgctxt "#32035"
+msgid "Cannot load pulseaudio equalizer. Is it installed on the system?     'sudo apt install pulseaudio-equalizer'"
+msgstr "Kann pulseaudio equalizer nicht laden. Ist dieser installiert?     'sudo apt install pulseaudio-equalizer'"
+
 msgctxt "#32200"
 msgid "Save"
 msgstr "Speichern"

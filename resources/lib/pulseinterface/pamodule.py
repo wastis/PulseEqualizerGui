@@ -31,6 +31,7 @@ class paModuleManager():
 		self.is_playing = False
 		self.config  = conf # configuration class
 		self.reroute = False
+		self.eq_fatal = False
 	
 	#
 	#	handle control messages
@@ -38,7 +39,16 @@ class paModuleManager():
 		
 	def on_pa_connect(self):
 		log("pamm: start paModuleManager")
-		self.load_dyn_equalizer()
+		try:
+			self.load_dyn_equalizer()
+			self.eq_fatal = False
+		except Exception as e: 
+			self.eq_fatal = True
+			handle(e)
+			logerror("cannot load pulseaudio-equalizer, maybe not installed?")
+			logerror("run: sudo apt install pulseaudio-equalizer")
+			return None
+			
 		self.config.load_config()
 
 		self.load_required_module("module-dbus-protocol")
@@ -301,6 +311,9 @@ class paModuleManager():
 	def on_eq_current_get(self):
 		
 		index, desc, eq_enable, is_dyn  = (None , None, "off", self.padb.kodi_is_dynamic)
+
+		if self.eq_fatal:
+			return ( -1, "fatal", self.is_playing, "off", is_dyn) 
 
 		if self.padb.cureq_sink is not None:
 			index = self.padb.cureq_sink.index
