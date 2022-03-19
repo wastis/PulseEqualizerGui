@@ -46,6 +46,7 @@ v2.0.0 (2021-11-13)
 	</news>
 	<assets>
 		<icon>icon.png</icon>
+		<fanart>fanart.jpg</fanart>
 		<screenshot>scr0.png</screenshot>
 		<screenshot>scr1.png</screenshot>
 	</assets>
