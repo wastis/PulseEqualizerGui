@@ -23,15 +23,14 @@
 #
 
 import sys
-import time
 import os
+import time
 import json
 import pickle
 
 import pulsectl
 
 from threading import Thread
-from time import time, sleep
 
 if sys.version_info[0] < 3:
 	from Queue import Queue, Empty
@@ -153,7 +152,7 @@ class PulseInterfaceService():
 				
 			if not self.running: return
 			
-			sleep(0.5)
+			time.sleep(0.5)
 			
 	#
 	#	message forward
@@ -175,12 +174,12 @@ class PulseInterfaceService():
 					# message collector. Message collector will then process the previouse
 					# collected messages
 
-					t = time()  
+					t = time.time()  
 
 					self.send_message_to_central('pa','update')
 					timeout = None
 
-					log("pa_updated: time needed {:2f} ms".format((time()-t)*1000))
+					log("pa_updated: time needed {:2f} ms".format((time.time()-t)*1000))
 					continue
 				except Exception as e: handle(e)
 					
