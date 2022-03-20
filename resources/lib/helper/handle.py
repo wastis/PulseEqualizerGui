@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -13,7 +13,6 @@ import sys
 import traceback
 
 from .log import logerror, log
- 
 
 if sys.version_info[0] > 2:
 	def handle(e):
@@ -23,10 +22,9 @@ if sys.version_info[0] > 2:
 			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
 			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
 			traceback = traceback.tb_next
-		
+
 		result = result + "{}: {}".format(type(e).__name__, e.args)
 		logerror(result)
-		
 
 	def infhandle(e):
 		traceback = e.__traceback__
@@ -38,7 +36,7 @@ if sys.version_info[0] > 2:
 
 		result = result + "{}: {}".format(type(e).__name__, e.args)
 		log(result)
-		
+
 	def opthandle(e):
 		traceback = e.__traceback__
 		result = "opt: in: "
@@ -50,8 +48,6 @@ if sys.version_info[0] > 2:
 		result = result + "{}: {}".format(type(e).__name__, e.args)
 		log(result)
 
-
-	
 else:
 	def handle(e):
 		lines = traceback.format_exc().splitlines()
@@ -59,8 +55,7 @@ else:
 			logerror(l)
 		logerror("{}: {}".format(type(e).__name__, e.args))
 
-
-	def infhandle(e):	
+	def infhandle(e):
 		lines = traceback.format_exc().splitlines()
 		for l in lines:log("nce: " + l)
 		log("nce: {}: {}".format(type(e).__name__, e.args))

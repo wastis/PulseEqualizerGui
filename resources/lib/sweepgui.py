@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -22,19 +22,18 @@ def tr(id):
 	return addon.getLocalizedString(id)
 
 class SweepGui(  xbmcgui.WindowXMLDialog  ):
-
 	def __init__( self, *args, **kwargs ):
 		self.sock = SocketCom("server")
 		self.rec = SocketCom("sweep")
 
 		self.channel = kwargs["channel"]
 		self.count = kwargs["count"]
-		
+
 		result = self.sock.call_func("get","eq_channel")
 		if result is None: return
-		
+
 		self.eqid, self.name, channel = (result)
-		
+
 		self.rec.start_func_server(self)
 
 	def onInit( self ):
@@ -43,15 +42,12 @@ class SweepGui(  xbmcgui.WindowXMLDialog  ):
 		self.prog1.setPercent(0.1)
 		self.prog2.setPercent(0.1)
 		#self.getControl(101).setLabel("%s - %s" % (self.name, tr(32410)))
-		
+
 		self.sock.call_func("play","sweep",[self.count, self.channel])
-		
-		
-		
-		
+
 	def on_sound_play(self, nr):
 		log("on_sound_play %s"% nr)
-		
+
 	def on_sound_stop(self):
 		log("on_sound_stop")
 		self.rec.stop_server()
@@ -66,12 +62,12 @@ class SweepGui(  xbmcgui.WindowXMLDialog  ):
 		self.sock.call_func("stop","pulseplayer")
 		self.rec.stop_server()
 		self.close()
-		
+
 	def onAction( self, action ):
 		#OK pressed
 		if action.getId() in [7, 100]:
 			self.end_gui()
-			
+
 		#Cancel
 		if action.getId() in [92,10]:
 			self.end_gui()

@@ -9,7 +9,6 @@ from __future__ import print_function, unicode_literals
 import itertools as it, operator as op, functools as ft
 import re
 
-
 lookup_types = {
 	'sink': 'sink_list', 'source': 'source_list',
 	'sink-input': 'sink_input_list', 'source-output': 'source_output_list' }
@@ -23,7 +22,6 @@ lookup_key_defaults = dict(
 	sink_input_list=[ # match sink_input_list objects with these keys by default
 		'media.name', 'media.icon_name', 'media.role',
 		'application.name', 'application.process.binary', 'application.icon_name' ] )
-
 
 def pulse_obj_lookup(pulse, obj_lookup, prop_default=None):
 	'''Return set of pulse object(s) with proplist values matching lookup-string.

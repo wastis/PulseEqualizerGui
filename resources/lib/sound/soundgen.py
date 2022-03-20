@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -20,7 +20,6 @@ from array import array
 from helper import SocketCom, handle, log, logerror
 
 class SoundGen():
-
 	def __init__(self, padb, pc):
 		self.fs = 44100
 		self.duration = 0.1
@@ -33,46 +32,43 @@ class SoundGen():
 		self.cur_eq = None
 		self.cur_eq_index = None
 		self.cur_eq_stream = None
-		
+
 		self.padb = padb
 		self.pc = pc
-	
+
 	def end_server(self):
 		self.on_tone_stop()
 		self.on_pulseplayer_stop()
-		
+
 	def play_loop(self, freq, vol):
 		log("soge: start play loop")
 		if not self.player_proc: self.on_pulseplayer_start()
-		
 
 		self.playing = True
 		self.stop = False
-		
-		
+
 		n_sin = int(freq * self.duration)
 		n_samp = self.fs / freq
 		t_samp = round(n_samp * n_sin)
-	
+
 		dur = t_samp / self.fs
-		
+
 		samples = array('f',[])
 		for i in range(t_samp):
 			samples.append(float(sin(2 * i * pi / n_samp) * vol))
 
 		self.player_proc.stdin.write(samples)
 		self.player_proc.stdin.write(samples)
-		
+
 		while not self.stop:
 			self.player_proc.stdin.write(samples)
 			sleep(dur)
-		
+
 		self.stop = False
 		self.playing = False
-		
+
 	def sweep_play_loop(self, count, channel, vol):
-		
-		if not self.player_proc: 
+		if not self.player_proc:
 			if not self.on_pulseplayer_start(channel): return False
 
 		self.playing = True
@@ -87,7 +83,7 @@ class SoundGen():
 		sampleRate = float(self.cur_eq.sample_spec["rate"])
 		chunk = int(sampleRate / 4)
 		chunk_duration = float(0.25)
-		
+
 		#
 		# prepare Sound
 		#
@@ -98,7 +94,7 @@ class SoundGen():
 		chunk_list = []
 		pos = 0
 		for c in range(20):
-			base = c * chunk 
+			base = c * chunk
 			samples = array('f',[])
 			for f in range(chunk):
 				step = float((base + f)) / (sampleRate * 10)
@@ -106,19 +102,19 @@ class SoundGen():
 				pos = pos + step
 			chunk_list.append(samples)
 		cur_chunk=0
-		
+
 		#
 		# play Sound
 		#
-		
+
 		for cnt in range(count):
 			if sock_up: socket.send("play","sound",[count - cnt])
 			c = 0
-			
+
 			for samples in chunk_list:
 				if sock_up: socket.send("play","chunk",[c, 20, cur_chunk, total_chunk])
 				self.player_proc.stdin.write(samples)
-				
+
 				if self.stop: break
 				cur_chunk = cur_chunk + 1
 				c = c + 1
@@ -132,22 +128,21 @@ class SoundGen():
 		self.playing = False
 		if sock_up: socket.send("stop","sound")
 		self.on_pulseplayer_stop()
-		
+
 	def on_pulseplayer_start(self,channel):
 		try:
-			
 			sink = self.padb.chaineq_sink if self.padb.chaineq_sink is not None else self.padb.autoeq_sink
 			if sink is None:
 				log("soge: on_pulseplayer_start: no equalizer sink found")
 				self.cur_eq_index = None
 				return False
-				
+
 			try:
 				self.cur_eq = sink
 				self.cur_eq_index = sink.index
 				self.cur_eq_stream = self.padb.stream_by_module[sink.owner_module].index
 				self.cur_rate = sink.sample_spec["rate"]
-			except: 
+			except Exception:
 				self.cur_eq_index = None
 				return False
 
@@ -155,13 +150,13 @@ class SoundGen():
 			if channel is None: ch = []
 			else: ch = ["--channel-map=%s" % channel]
 			log("soge: start parec: rate=%s, channel=%s" %(self.cur_rate, repr(channel)))
-				
-			self.player_proc = subprocess.Popen(["parec","-p", "--rate=%d" % self.cur_rate, "--format=float32le", "--volume=65535","--latency-msec=250","--channels=1"]+ch, 
+
+			self.player_proc = subprocess.Popen(["parec","-p", "--rate=%d" % self.cur_rate, "--format=float32le", "--volume=65535","--latency-msec=250","--channels=1"]+ch,
 				stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 			self.pid = self.player_proc.pid
 			return True
 
-		except Exception as e: 
+		except Exception as e:
 			if e.__class__.__name__ == "FileNotFoundError":
 				logerror("soge: cannot find 'parec', please install 'pulseaudio-utils'")
 			elif e.__class__.__name__ == "OSError" and e[0]==2:
@@ -169,35 +164,32 @@ class SoundGen():
 			else:
 				handle(e)
 			return False
-		
 
 	def on_pulseplayer_stop(self):
 		if self.player_proc:
 			self.player_proc.stdin.close()
 			self.player_proc = None
-		
+
 	def on_sweep_play(self,count = 1,channel = None, vol = 1):
 		log("soge: on_sweep_play")
 		vol = vol * 0.58
 		count = int(count)
 		if self.playing: self.on_tone_stop()
 		if count < 1: count = 1
-		
+
 		Thread(target=self.sweep_play_loop, args=(count, channel, vol)).start()
-		
+
 	def on_tone_start(self, freq, vol = 1):
 		log("soge: on_tone_start")
 		vol = vol * 0.58
 		if self.playing: self.on_tone_stop()
-		
+
 		Thread(target=self.play_loop, args=(freq, vol)).start()
-		
-		
+
 	def on_tone_stop(self):
 		log("soge: on_tone_stop")
 		self.stop = True
 		while self.playing:	sleep(0.01)
-		
 
 	#
 	# receive from pulseaudio
@@ -211,7 +203,7 @@ class SoundGen():
 			if self.cur_eq_index is not None:
 				# move parec stream to equalizer and then to output
 				log("pasp: move stream parec -> %s -> %s" % (self.cur_eq.name, self.padb.output_sink.name))
-		
+
 				self.pc.move_sink_input(index , self.cur_eq_index)
 				self.pc.move_sink_input(self.cur_eq_stream , self.padb.output_sink.index)
 

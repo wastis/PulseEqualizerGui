@@ -8,12 +8,10 @@
 
 from __future__ import print_function
 
-
 # C Bindings
 
 import os, sys, ctypes.util, functools as ft
 from ctypes import *
-
 
 force_str = lambda s, errors='strict': s.decode('utf-8', errors) if isinstance(s, bytes) else s
 force_bytes = lambda s, errors='strict': s.encode('utf-8', errors) if isinstance(s, unicode) else s
@@ -47,7 +45,6 @@ else:
 			err = get_errno()
 			raise OSError(err, os.strerror(err))
 		return ts.tv_sec + ts.tv_nsec * 1e-9
-
 
 PA_INVALID = 2**32-1
 
@@ -140,7 +137,6 @@ PA_DIRECTION_MAP = c_enum_map(unknown=0, output=1, input=2)
 #  pa_sink_state / pa_source_state, but seem to match.
 PA_OBJ_STATE_MAP = c_enum_map(invalid=-1, running=0, idle=1, suspended=2)
 
-
 class PA_MAINLOOP(Structure): pass
 class PA_STREAM(Structure): pass
 class PA_MAINLOOP_API(Structure): pass
@@ -149,7 +145,6 @@ class PA_PROPLIST(Structure): pass
 class PA_OPERATION(Structure): pass
 class PA_SIGNAL_EVENT(Structure): pass
 class PA_IO_EVENT(Structure): pass
-
 
 class PA_SAMPLE_SPEC(Structure):
 	_fields_ = [
@@ -363,14 +358,12 @@ class PA_BUFFER_ATTR(Structure):
 		('fragsize', c_uint32),
 	]
 
-
 class POLLFD(Structure):
 	_fields_ = [
 		('fd', c_int),
 		('events', c_short),
 		('revents', c_short),
 	]
-
 
 PA_POLL_FUNC_T = CFUNCTYPE(c_int,
 	POINTER(POLLFD),
@@ -475,9 +468,7 @@ PA_STREAM_NOTIFY_CB_T = CFUNCTYPE(c_void_p,
 	POINTER(PA_STREAM),
 	c_void_p)
 
-
 class LibPulse(object):
-
 	# func_def ::= arg_types_list | (arg_types_list, res_spec) | (res_spec, arg_types_list)
 	# res_spec ::= ctypes_restype
 	#  | res_proc_func | (ctypes_restype, res_proc_func)
@@ -639,7 +630,6 @@ class LibPulse(object):
 		pa_stream_disconnect=([POINTER(PA_STREAM)], 'int_check_ge0') )
 
 	class CallError(Exception): pass
-
 
 	def __init__(self):
 		p = CDLL(ctypes.util.find_library('libpulse') or 'libpulse.so.0')

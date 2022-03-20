@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -15,8 +15,6 @@ if sys.version_info[0] > 2:
 else:
 	from .dbus_basic_2 import PulseDBus
 
-
 from .pulseerror import PulseDBusError
 from . import interface as DBusInterface
-
 

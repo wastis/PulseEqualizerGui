@@ -42,7 +42,6 @@ class DBUS :
     # variable, and pass the value of the variable instead.
 
     # from dbus-protocol.h:
-
     # Message byte order
     LITTLE_ENDIAN = 'l'
     BIG_ENDIAN = 'B'
@@ -129,7 +128,6 @@ class DBUS :
         }
 
     # subclasses for distinguishing various special kinds of D-Bus values:
-
     class ObjectPath(str) :
         "an object path string."
 
@@ -313,7 +311,6 @@ class DBUS :
         )
 
     # from dbus-shared.h:
-
     # well-known bus types
     BusType = ct.c_uint
     BUS_SESSION = 0
@@ -363,15 +360,12 @@ class DBUS :
     START_REPLY_ALREADY_RUNNING = 2
 
     # from dbus-types.h:
-
     bool_t = ct.c_uint
 
     # from dbus-memory.h:
-
     FreeFunction = ct.CFUNCTYPE(None, ct.c_void_p)
 
     # from dbus-connection.h:
-
     HandlerResult = ct.c_uint
 
     class Error(ct.Structure) :
@@ -1703,7 +1697,6 @@ class ObjectPathVTable(TaskKeeper) :
     #end init
 
     def set_unregister(self, unregister) :
-
         def wrap_unregister(c_conn, c_user_data) :
             conn = Connection(dbus.dbus_connection_ref(c_conn))
             unregister(conn, conn._user_data.get(c_user_data))
@@ -1721,7 +1714,6 @@ class ObjectPathVTable(TaskKeeper) :
     #end set_unregister
 
     def set_message(self, message) :
-
         w_self = weak_ref(self)
 
         def wrap_message(c_conn, c_message, c_user_data) :
@@ -1834,7 +1826,6 @@ def _loop_attach(self, loop, dispatch) :
     #end call_dispatch
 
     def add_remove_watch(watch, add) :
-
         def handle_watch_event(flags) :
             # seems I need to remove the watch and add it again to
             # avoid an endless stream of notifications that cause
@@ -2541,7 +2532,6 @@ class Connection(TaskKeeper) :
     # TODO: get_adt
 
     def set_unix_user_function(self, allow_unix_user, data, free_data = None) :
-
         w_self = weak_ref(self)
 
         def wrap_allow_unix_user(c_conn, uid, c_data) :
@@ -4208,7 +4198,6 @@ class Message :
         #end object
 
         if hasattr(dbus, "dbus_message_iter_get_element_count") :
-
             @property
             def element_count(self) :
                 "returns the count of contained elements, assuming the current argument" \
@@ -5857,7 +5846,6 @@ def valid_utf8(alleged_utf8) :
 #-
 
 class _TagCommon :
-
     def get_annotation(self, name) :
         "returns the value of the annotation with the specified name, or None" \
         " if none could be found"
@@ -5936,7 +5924,6 @@ class Introspection(_TagCommon) :
     #end PROP_CHANGE_NOTIFICATION
 
     class Annotation(_TagCommon) :
-
         __slots__ = ("name", "value")
         tag_name = "annotation"
         tag_attrs = ("name", "value")
@@ -5959,19 +5946,16 @@ class Introspection(_TagCommon) :
     #end _get_annotations
 
     class Interface(_TagCommon) :
-
         __slots__ = ("name", "methods", "signals", "properties", "annotations")
         tag_name = "interface"
         tag_attrs = ("name",)
 
         class Method(_TagCommon) :
-
             __slots__ = ("name", "args", "annotations")
             tag_name = "method"
             tag_attrs = ("name",)
 
             class Arg(_TagCommon) :
-
                 __slots__ = ("name", "type", "direction", "annotations")
                 tag_name = "arg"
                 tag_attrs = ("name", "type", "direction")
@@ -6025,13 +6009,11 @@ class Introspection(_TagCommon) :
         #end Method
 
         class Signal(_TagCommon) :
-
             __slots__ = ("name", "args", "annotations")
             tag_name = "signal"
             tag_attrs = ("name",)
 
             class Arg(_TagCommon) :
-
                 __slots__ = ("name", "type", "direction", "annotations")
                 tag_name = "arg"
                 tag_attrs = ("name", "type", "direction")
@@ -6071,7 +6053,6 @@ class Introspection(_TagCommon) :
         #end Signal
 
         class Property(_TagCommon) :
-
             __slots__ = ("name", "type", "access", "annotations")
             tag_name = "property"
             tag_attrs = ("name", "type", "access")
@@ -6152,7 +6133,6 @@ class Introspection(_TagCommon) :
     #end StubInterface
 
     class Node(_TagCommon) :
-
         __slots__ = ("name", "interfaces", "nodes", "annotations")
         tag_name = "node"
         tag_attrs = ("name",)

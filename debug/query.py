@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -11,14 +11,13 @@
 #
 #
 import sys
-import os 
+import os
 import json
 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 
 from helper import SocketCom
-
 
 sc = SocketCom("server")
 if not sc.is_server_running():
@@ -27,18 +26,18 @@ if not sc.is_server_running():
 
 try:
 	func = sys.argv[1]
-	
-	if func == "exit": 
+
+	if func == "exit":
 		sc.stop_server()
 		sys.exit(0)
-	
+
 	target = sys.argv[2]
 	try: args = sys.argv[3:]
-	except: args = []
-except: 
+	except Exception: args = []
+except Exception:
 	print('usage: query.py func target args...')
 	sys.exit(0)
-	
+
 print(func,target,args)
-	
+
 print(sc.call_func(func,target,args))

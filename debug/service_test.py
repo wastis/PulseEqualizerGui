@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -10,14 +10,11 @@
 #	or (at your option) any later version.
 #
 #
-import sys 
+import sys
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
-import xbmc
-import os
 
 from pulseinterface import PulseInterfaceService
-
 
 em = PulseInterfaceService()
 
@@ -28,5 +25,4 @@ else:
 
 em.stop_event_loop()
 print("done")
-
 

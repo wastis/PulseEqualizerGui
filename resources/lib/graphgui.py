@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@ def tr(id):
 class GraphGui(  xbmcgui.WindowXMLDialog  ):
 	spec_file = None
 	mic_file = None
-	
+
 	def __init__( self, *args, **kwargs ):
 		self.sock = SocketCom("server")
 		self.cwd = args[1]
@@ -37,17 +37,17 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 
 	def onInit( self ):
 		self.setFocusId(3000)
-		
+
 		self.update_image()
 
 	def update_image(self):
 		fn = path_tmp +  % self.cnt
 		try: os.remove(fn)
 		except Exception as e: opthandle(e)
-		
+
 		self.cnt = self.cnt + 1
 		fn = self.tmp_fn % self.cnt
-		
+
 		if self.spec_file and self.mic_file:
 			spec = self.spec_file - self.mic_file
 		elif self.spec_file:
@@ -55,17 +55,15 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 		elif self.mic_file:
 			spec =  self.mic_file
 		else: spec = None
-			
+
 		if spec: createGraph(fn,spec.as_coef())
 		else: createGraph(fn)
-		
+
 		self.getControl(1000).setImage(fn, False)
 
-
 	def import_spec(self):
-
 		heading = "Import Spectrum"
-		
+
 		defaultt="/home/user/Script/kodi/"
 		file_name = xbmcgui.Dialog().browse(1, heading, "",defaultt=defaultt)
 		if file_name == defaultt: return
@@ -74,23 +72,22 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 		self.update_image()
 
 	def import_mic(self):
-
 		heading = "Import Microphone"
-		
+
 		defaultt="/home/user/Script/kodi/"
 		file_name = xbmcgui.Dialog().browse(1, heading, "",defaultt=defaultt)
 		if file_name == defaultt: return
-		
+
 		self.mic_file =  SpecManager().import_mic_file(file_name)
 
 	def select_mic(self):
 		spec = SpecManager()
 		mics = spec.get_mic_specs()
-				
+
 		mic_name = None
 
 		mic_sel = xbmcgui.Dialog().contextmenu(["no microphone"] + mics + ["Import Microphone"])
-		
+
 		if mic_sel < 0: return
 		if mic_sel == 0:
 			self.mic_file = None
@@ -100,11 +97,10 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 			mic_name = mics[mic_sel - 1]
 			fn_mic = spec.spec_path + mic_name + ".mic"
 			self.mic_file = Spectrum().load(fn_mic)
-		
+
 		self.update_image()
 
 	def handleOK(self):
-		
 		fid = self.getFocusId()
 		if fid == 3000:	#edit
 			self._close()
@@ -121,4 +117,4 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 		#Cancel
 		if action.getId() in [92,10]:
 			self.close()
-		
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -28,21 +28,21 @@ if not sc.is_server_running():
 
 try:
 	func = sys.argv[1]
-	
-	if func == "exit": 
+
+	if func == "exit":
 		sc.stop_server()
 		sys.exit(0)
-	
+
 	target = sys.argv[2]
-	try: 
+	try:
 		args = []
 		for arg in sys.argv[3:]:
 			args.append(float(arg))
-	except: args = []
-except: 
+	except Exception: args = []
+except Exception:
 	print('usage: control_sound.py "start" "tone" 1000 0.5')
 	sys.exit(0)
-	
+
 print(func,target,args)
-	
+
 sc.call_func(func,target,args)

@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -10,13 +10,13 @@
 #
 
 try: import xbmc
-except: 
+except Exception:
 	# this is the python service, running independent of kodi
-	# so to log into kodi-log, we need to send the log info to kodi-addon-service.py 
-	import socket 
+	# so to log into kodi-log, we need to send the log info to kodi-addon-service.py
+	import socket
 	import pickle
 	from helper.path import path_socket
-	
+
 	# as we do not have access to xbmc import, we need to fake it.
 	class xbmc():
 		LOGDEBUG = 0
@@ -25,12 +25,11 @@ except:
 		LOGINFO = 1
 		LOGNONE = 5
 		LOGWARNING = 2
-		
+
 		sock_name = path_socket + "kodi.0"
 
-	
 		@staticmethod
-		def log(text, level): 
+		def log(text, level):
 			msg = pickle.dumps(["write","log",[text,level]], protocol=2)
 			try:
 				s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -38,20 +37,18 @@ except:
 				s.connect(xbmc.sock_name)
 				s.send(msg)
 				s.close()
-			except: 
+			except Exception:
 				# no place where we can log the error
 				# if we arrive here, there are lots of other problems, then
 				# so throw this away
 				pass
-				 
-				  
 
 def log(text):
 	xbmc.log("eq: " + text, xbmc.LOGDEBUG)
-	
+
 def loginfo(text):
 	xbmc.log("eq: " + text, xbmc.LOGINFO)
 
 def logerror(text):
 	xbmc.log("eq: " + text, xbmc.LOGERROR)
-	
+

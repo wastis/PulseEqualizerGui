@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -13,10 +13,4 @@ from .handle import *
 from .log import *
 from .path import *
 from .socketcom import *
-
-
-
-
-
-
 

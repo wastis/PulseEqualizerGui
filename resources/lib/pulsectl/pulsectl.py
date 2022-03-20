@@ -15,7 +15,6 @@ import os, sys, inspect, traceback
 
 from . import _pulsectl as c
 
-
 if sys.version_info.major >= 3:
 	long, unicode = int, str
 	print_err = ft.partial(print, file=sys.stderr, flush=True)
@@ -42,7 +41,6 @@ else:
 		if func.__doc__: wrapper.__doc__ += '\n\n' + func.__doc__
 		return wrapper
 
-
 is_str = lambda v,ext=None,native=False: (
 	isinstance(v, ( (unicode, bytes)
 		if not native else (str,) ) + ((ext,) if ext else ())) )
@@ -59,7 +57,6 @@ def assert_pulse_object(obj):
 class FakeLock():
 	def __enter__(self): return self
 	def __exit__(self, *err): pass
-
 
 @ft.total_ordering
 class EnumValue(object):
@@ -78,7 +75,6 @@ class EnumValue(object):
 	def __hash__(self): return hash(self._value)
 
 class Enum(object):
-
 	def __init__(self, name, values_or_map):
 		vals = values_or_map
 		if is_str_native(vals): vals = vals.split()
@@ -110,7 +106,6 @@ class Enum(object):
 	def __repr__(self):
 		return '<Enum {} [{}]>'.format(self._name, ' '.join(sorted(self._values.keys())))
 
-
 PulseEventTypeEnum = Enum('event-type', c.PA_EVENT_TYPE_MAP)
 PulseEventFacilityEnum = Enum('event-facility', c.PA_EVENT_FACILITY_MAP)
 PulseEventMaskEnum = Enum('event-mask', c.PA_EVENT_MASK_MAP)
@@ -119,7 +114,6 @@ PulseStateEnum = Enum('sink/source-state', c.PA_OBJ_STATE_MAP)
 PulseUpdateEnum = Enum('update-type', c.PA_UPDATE_MAP)
 PulsePortAvailableEnum = Enum('available', c.PA_PORT_AVAILABLE_MAP)
 PulseDirectionEnum = Enum('direction', c.PA_DIRECTION_MAP)
-
 
 class PulseError(Exception): pass
 class PulseOperationFailed(PulseError): pass
@@ -130,7 +124,6 @@ class PulseLoopStop(Exception): pass
 class PulseDisconnected(Exception): pass
 
 class PulseObject(object):
-
 	c_struct_wrappers = dict()
 
 	def __init__(self, struct=None, *field_data_list, **field_data_dict):
@@ -201,7 +194,6 @@ class PulseObject(object):
 
 	def __repr__(self):
 		return '<{} at {:x} - {}>'.format(self.__class__.__name__, id(self), str(self))
-
 
 class PulsePortInfo(PulseObject):
 	c_struct_fields = 'name description available priority'
@@ -284,7 +276,6 @@ class PulseCardInfo(PulseObject):
 			profile_active='[{}]'.format(self.profile_active.name) )
 
 class PulseVolumeInfo(PulseObject):
-
 	def __init__(self, struct_or_values=None, channels=None):
 		if is_num(struct_or_values):
 			assert channels is not None, 'Channel count specified if volume value is not a list.'
@@ -351,16 +342,13 @@ class PulseExtStreamRestoreInfo(PulseObject):
 		return self._as_str(self.volume, fields='name mute device')
 
 class PulseEventInfo(PulseObject):
-
 	def __init__(self, ev_t, facility, index):
 		self.t, self.facility, self.index = ev_t, facility, index
 
 	def __str__(self):
 		return self._as_str(fields='t facility index'.split())
 
-
 class Pulse(object):
-
 	_ctx = None
 
 	def __init__(self, client_name=None, server=None, connect=True, threading_lock=False):
@@ -469,7 +457,6 @@ class Pulse(object):
 	def __enter__(self): return self
 	def __exit__(self, err_t, err, err_tb): self.close()
 
-
 	def _pulse_state_cb(self, ctx, userdata):
 		state = c.pa.context_get_state(ctx)
 		if state >= c.PA_CONTEXT_READY:
@@ -545,7 +532,6 @@ class Pulse(object):
 				if self._loop_stop: break
 				ts = c.mono_time()
 				if ts_deadline and ts >= ts_deadline: break
-
 
 	def _pulse_info_cb(self, info_cls, data_list, done_cb, ctx, info, eof, userdata):
 		# No idea where callbacks with "userdata != NULL" come from,
@@ -623,7 +609,6 @@ class Pulse(object):
 	module_list = _pulse_get_list(
 		c.PA_MODULE_INFO_CB_T, c.pa.context_get_module_info_list, PulseModuleInfo )
 
-
 	def _pulse_method_call(pulse_op, func=None, index_arg=True):
 		'''Creates following synchronous wrapper for async pa_operation callable:
 			wrapper(index, ...) -> pulse_op(index, [*]args_func(...))
@@ -643,7 +628,6 @@ class Pulse(object):
 
 	card_profile_set_by_index = _pulse_method_call(
 		c.pa.context_set_card_profile_by_index, lambda profile_name: profile_name )
-
 
 	sink_default_set = _pulse_method_call(
 		c.pa.context_set_default_sink, index_arg=False,
@@ -706,7 +690,6 @@ class Pulse(object):
 
 	module_unload = _pulse_method_call(c.pa.context_unload_module, None)
 
-
 	def stream_restore_test(self):
 		'Returns module-stream-restore version int (e.g. 1) or None if it is unavailable.'
 		data = list()
@@ -754,7 +737,6 @@ class Pulse(object):
 		name_struct = (c.c_char_p * len(name_list))()
 		name_struct[:] = list(map(c.force_bytes, name_list))
 		return [name_struct]
-
 
 	def default_set(self, obj):
 		'Set passed sink or source to be used as default one by pulseaudio server.'
@@ -825,7 +807,6 @@ class Pulse(object):
 		assert_pulse_object(obj)
 		return obj.volume.value_flat
 
-
 	def event_mask_set(self, *masks):
 		mask = 0
 		for m in masks: mask |= PulseEventMaskEnum[m]._c_val
@@ -857,7 +838,6 @@ class Pulse(object):
 		self._loop_stop = True
 		c.pa.mainloop_wakeup(self._loop)
 
-
 	def set_poll_func(self, func, func_err_handler=None):
 		'''Can be used to integrate pulse client into existing eventloop.
 			Function will be passed a list of pollfd structs and timeout value (seconds, float),
@@ -869,7 +849,6 @@ class Pulse(object):
 		if not func_err_handler: func_err_handler = traceback.print_exception
 		self._pa_poll_cb = c.PA_POLL_FUNC_T(ft.partial(self._pulse_poll_cb, func, func_err_handler))
 		c.pa.mainloop_set_poll_func(self._loop, self._pa_poll_cb, None)
-
 
 	def get_peak_sample(self, source, timeout, stream_idx=None):
 		'''Returns peak (max) value in 0-1.0 range for samples in source/stream within timespan.
@@ -939,7 +918,6 @@ class Pulse(object):
 					c.pa.context_play_sample_with_proplist(
 						self._ctx, name, sink, volume, proplist, cb, None )
 			except c.pa.CallError as err: raise PulseOperationInvalid(err.args[-1])
-
 
 def connect_to_cli(server=None, as_file=True, socket_timeout=1.0, attempts=5, retry_delay=0.3):
 	'''Returns connected CLI interface socket (as file object, unless as_file=False),

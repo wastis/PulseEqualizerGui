@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -8,22 +8,22 @@
 #	or (at your option) any later version.
 #
 #
-#    Each message from pulseaudio sytem or user interface arrives here for further processing 
+#    Each message from pulseaudio sytem or user interface arrives here for further processing
 #
 #
 #    ------------------     ------------        -------------      ---------------
-#    | MessageCentral | --> | dispatch | ->|<-> | paDatabase| <--> | pulse audio | 
+#    | MessageCentral | --> | dispatch | ->|<-> | paDatabase| <--> | pulse audio |
 #    ------------------ |   ------------   |    -------------      ---------------
 #                       |                  |    --------
 #                       |                  |--> | self |
-#                       |                  |    -------- 
-#         ----------    |                  |    -------------       --------      ---------------- 
+#                       |                  |    --------
+#         ----------    |                  |    -------------       --------      ----------------
 #     --->| update | -->|                  |--> | EqControl |  <--> | dbus | <--> | pa equalizer |
 #         ---------                        |    -------------       --------      ----------------
-#                                          |    -------------------      ---------------             
-#                                          |--> | paModuleManager | --> | pulse audio |              
-#                                               -------------------      ---------------             
-#                                                             
+#                                          |    -------------------      ---------------
+#                                          |--> | paModuleManager | --> | pulse audio |
+#                                               -------------------      ---------------
+#
 # dispatch: send pa-messages to paDatabase, collect them
 #           non pa-messages, such the ones from user interface, are sent to the other modules
 # update:   comes 100ms after the last pa-message, triggers the processing of the previoues pa-messages
@@ -31,7 +31,6 @@
 # self:     handels some specific requests, such as latency set/get, etc
 # EqControl interface to the current equalizer, mainly called on client requests, such ad get_profile/ set_profile, etc
 # paModuleManager: reconfigures the playback stream dependend on current configuration and connected devices and playback status
-
 
 import os
 import json
@@ -44,7 +43,6 @@ from .eqcontrol import EqControl
 from helper import SocketCom, Config, handle, opthandle, log
 from sound import SoundGen
 
-
 class MessageCentral():
 	def __init__(self):
 		# init class structure
@@ -56,11 +54,11 @@ class MessageCentral():
 		self.padb = paDatabase(self.pc)
 		self.sg = SoundGen(self.padb, self.pc)
 		self.pamm = paModuleManager(self.pc, self.eq, self.padb, self.config)
-		
-	#	
+
+	#
 	#	start message, called if pulse audio gets connected
 	#
-	
+
 	def on_pulse_connect(self):
 		log("pact: start pulse control")
 		self.pc.start()
@@ -70,22 +68,21 @@ class MessageCentral():
 	#
 	# Dispatch messages
 	#
-	
 
 	def on_message(self, target, func, arg, conn):
 		try:
 			# filter messages
 			if self.padb.on_message(target, func, arg): return
-			
+
 			# other messages are just forwarded
-			
+
 			cmd = "on_" + target + "_" + func
 			methods = []
-			
+
 			for cl in [self.padb, self, self.pamm, self.eq, self.sg]:
 				try:methods.append( getattr(cl,cmd))
 				except AttributeError: pass
-				except Exception as e: opthandle(e) 
+				except Exception as e: opthandle(e)
 
 			if len(methods) == 0:
 				SocketCom.respond(conn, None)
@@ -95,51 +92,47 @@ class MessageCentral():
 				ret = method(*arg)
 				log("pact: return '%s'" % repr(ret))
 				SocketCom.respond(conn, ret)
-					
 
 		except Exception as e: handle(e)
-			
+
 	#
 	#	message collector, just collect fast incomeing messages from pulse audio
-	#	handle them after a timeout 
+	#	handle them after a timeout
 	#
-				
-	
+
 	def on_pa_update(self):
 		log("pact: on_pa_update")
 
 		messages = self.padb.do_update()
-		
+
 		for message,arg in messages:
 			try:
 				method = getattr(self.pamm, message)
-			except:	continue
+			except Exception:	continue
 			method(*arg)
-			
+
 		self.pamm.do_update()
 		log("pact: %s" % str(self.padb))
-		
+
 		for message,arg in messages:
 			try:
 				method = getattr(self.sg, message)
-			except:	continue
+			except Exception:	continue
 			method(*arg)
 
-	
-		
-	#	
-	#	message handler of self	
+	#
+	#	message handler of self
 	#
 
 	def on_outlist_get(self):
-		return self.padb.get_outlist() 
-	
+		return self.padb.get_outlist()
+
 	def on_latency_get(self):
-		return self.padb.get_latency() 
-		
+		return self.padb.get_latency()
+
 	def on_latency_set(self,latency_info):
 		self.pc.set_port_latency(latency_info)
-		
+
 		if self.padb.output_sink:
 			if self.padb.cureq_sink:
 				self.config.set("eq_latency", int(latency_info["latency"]),self.padb.output_sink.name)
@@ -160,13 +153,9 @@ class MessageCentral():
 	def on_room_correction_unset(self, index):
 		if self.padb.output_sink:
 			self.config.set("eq_correction", None,self.padb.output_sink.name)
-	
-	# helper	
+
+	# helper
 	def on_pa_module_log(self):
 		for key,val in vars(self.pamm).items():
 			log(key+"="+ str(val))
 
-	
-	
-
-			

@@ -1,5 +1,5 @@
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -9,51 +9,48 @@
 #
 #
 #	collects pulseaudio messages (new/change/remove) and tacks the current status of sinks/input_streams
-#	on request, sends the last message, that actually reflects the current pulseaudio status.  
+#	on request, sends the last message, that actually reflects the current pulseaudio status.
 #
 
 from helper import log
 
-
 class MessageCollector():
-	
 	msg_collector = {}
-	
+
 	@staticmethod
 	def process_getlist(target, func):
 		try: return target[func]
-		except: return []
-	
+		except Exception: return []
+
 	@classmethod
 	def process_insert(cls,target, func, index):
 		f_list = cls.process_getlist(target, func)
 		if index in f_list: return target
-		f_list.append(index) 
+		f_list.append(index)
 		target[func] = f_list
 		return target
-	
+
 	@staticmethod
 	def process_del(li, index):
-		try: 
+		try:
 			li.remove(index)
 			return True, li
-		except: return False, li
-	
+		except Exception: return False, li
+
 	@classmethod
 	def process_new(cls,target, index):
 		c_list = cls.process_getlist(target, "change")
 		success, c_list = cls.process_del(c_list,index)
 		target["change"] = c_list
-		
+
 		return cls.process_insert(target,"new", index)
-	
+
 	@classmethod
 	def process_change(cls,target, index):
-
 		# filter out changes of elements that are in new
 		n_list = cls.process_getlist(target, "new")
 		if index in n_list: return target
-		
+
 		# not found in new, so insert it into change
 		return cls.process_insert(target,"change", index)
 
@@ -63,26 +60,25 @@ class MessageCollector():
 		c_list = cls.process_getlist(target, "change")
 		success, c_list = cls.process_del(c_list, index)
 		target["change"] = c_list
-		
+
 		# remove added elements, that have been removed
 		n_list = cls.process_getlist(target, "new")
 		success, n_list = cls.process_del(n_list, index)
 		target["new"] = n_list
-		
+
 		if success: return target
-		
+
 		# element had been added earlier, so keep remove
 		return cls.process_insert(target,"remove", index)
 
-		
 	def collect_message(self,target,func,index):
 		#log("collect on_%s_%s_%d"%(target,func,index))
-		
-		try: ctarget = self.msg_collector[target] 
+
+		try: ctarget = self.msg_collector[target]
 		except KeyError: ctarget = {}
-		
+
 		self.msg_collector[target] = getattr(MessageCollector, "process_"+func)(ctarget, index)
-		
+
 	def get_messages_and_clear(self):
 		result = {"remove":[],"new":[],"change":[]}
 		for target , func_list  in  self.msg_collector.items():

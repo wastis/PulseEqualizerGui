@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #	This file is part of PulseEqualizerGui for Kodi.
-#	
+#
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
 #	PulseEqualizerGui is free software; you can redistribute it and/or modify
@@ -13,11 +13,10 @@
 import sys
 import time
 import subprocess
-import signal
 import os
 
-from helper.log import log
-from helper.handle import handle
+from helper import log
+
 
 class PulseService:
 	def start(self):
@@ -25,7 +24,7 @@ class PulseService:
 			self.ps = subprocess.Popen(["python3",os.path.realpath(__file__), str(os.getpid())])
 		else:
 			self.ps = subprocess.Popen(["python2",os.path.realpath(__file__), str(os.getpid())])
-		
+
 	def stop(self):
 		from helper.socketcom import SocketCom
 		sc = SocketCom("server")
@@ -36,12 +35,11 @@ if __name__ == '__main__':
 	from pulseinterface import PulseInterfaceService
 	log("pulseservice start")
 	try: gid = sys.argv[1]
-	except: gid = 0
+	except Exception: gid = 0
 
 	em = PulseInterfaceService(gid)
 
 	if em.service_owner:
-
 		while True:
 			time.sleep(0.2)
 			if not em.pulseloop: break
