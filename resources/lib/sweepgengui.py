@@ -9,9 +9,7 @@
 #
 #
 
-import xbmc
 import xbmcaddon
-import xbmcvfs
 import xbmcgui
 
 from contextmenu import contextMenu

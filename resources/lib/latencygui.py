@@ -9,12 +9,10 @@
 #
 #
 
-import xbmc
 import xbmcaddon
-import xbmcvfs
 import xbmcgui
 
-from helper import SocketCom, log
+from helper import SocketCom
 
 addon = xbmcaddon.Addon()
 def tr(id):

@@ -9,12 +9,11 @@
 #
 #
 
-import os
 import subprocess
 
 from time import sleep
 from threading import Thread
-from math import sin, pi, log10
+from math import sin, pi
 from array import array
 
 from helper import SocketCom, handle, log, logerror

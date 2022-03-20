@@ -9,10 +9,6 @@
 #
 #
 import xbmcgui
-from xbmc import executeJSONRPC
-
-import time
-import threading
 
 import os
 import re

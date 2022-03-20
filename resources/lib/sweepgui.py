@@ -9,12 +9,11 @@
 #
 #
 
-import xbmc
+
 import xbmcaddon
-import xbmcvfs
 import xbmcgui
 
-from helper import log, SocketCom
+from helper import SocketCom
 
 addon = xbmcaddon.Addon()
 

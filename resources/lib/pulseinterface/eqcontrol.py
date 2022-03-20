@@ -18,14 +18,11 @@
 #   user request <-> spec manager -> dbus <-> equalizer
 
 import sys
-import json
-import padbus
 
 from padbus import DBusInterface as IF
 from padbus import PulseDBus
-from helper import handle, opthandle
+from helper import opthandle
 from sound import SpecManager
-from .pulsecontrol import PulseControl
 
 class FilterParam(): pass
 

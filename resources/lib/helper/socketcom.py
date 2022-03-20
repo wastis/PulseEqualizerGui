@@ -17,7 +17,6 @@
 import socket
 import pickle
 import os
-import time
 
 from threading import Thread
 from .log import log

@@ -32,10 +32,6 @@
 # EqControl interface to the current equalizer, mainly called on client requests, such ad get_profile/ set_profile, etc
 # paModuleManager: reconfigures the playback stream dependend on current configuration and connected devices and playback status
 
-import os
-import json
-
-from threading import Thread
 from .pulsecontrol import PulseControl
 from .pamodule import paModuleManager
 from .padb import paDatabase

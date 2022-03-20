@@ -12,7 +12,6 @@
 import xbmc
 import xbmcgui
 
-import os
 import json
 
 from xbmcaddon import Addon

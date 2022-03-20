@@ -11,11 +11,9 @@
 #
 #
 
-import sys , pickle
+import sys 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
-import xbmc
-import os
 
 from helper import SocketCom
 

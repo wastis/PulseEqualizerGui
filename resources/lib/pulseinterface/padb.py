@@ -20,10 +20,7 @@
 #         it does not exsits anymore by the time the create message arrives here.
 #
 
-from .pulsecontrol import PulseControl
 from .collector import MessageCollector
-from sound import SoundGen
-import json
 import os
 
 from helper import SocketCom, handle, opthandle, log

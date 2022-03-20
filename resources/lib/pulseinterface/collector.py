@@ -12,7 +12,7 @@
 #	on request, sends the last message, that actually reflects the current pulseaudio status.
 #
 
-from helper import log
+#from helper import log
 
 class MessageCollector():
 	msg_collector = {}

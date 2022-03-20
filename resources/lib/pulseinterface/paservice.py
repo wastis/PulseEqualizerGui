@@ -23,9 +23,7 @@
 #
 
 import sys
-import os
 import time
-import json
 import pickle
 
 import pulsectl

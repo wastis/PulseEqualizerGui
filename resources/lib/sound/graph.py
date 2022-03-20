@@ -10,23 +10,20 @@
 #
 
 import sys
-import os
 import math
 
 from helper import logerror, opthandle
 
 if sys.version_info[0] > 2:
 	try:
-		from PIL import Image, ImageDraw, ImageFont
+		from PIL import Image, ImageDraw
 	except ModuleNotFoundError:
 		logerror("please install python3-pil")
 else:
 	try:
-		from PIL import Image, ImageDraw, ImageFont
+		from PIL import Image, ImageDraw
 	except ImportError:
 		logerror("please install python-pil")
-
-from .spectrum import Spectrum
 
 def createGraph(fn, spec = None, width = 1700, height = 700):
 	with Image.new("RGBA",(width, height),(0,0,0,0)) as im:

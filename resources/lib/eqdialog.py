@@ -11,10 +11,6 @@
 import xbmcgui
 import xbmcaddon
 
-from xbmc import executeJSONRPC
-
-import time
-import threading
 import os
 import re
 import math

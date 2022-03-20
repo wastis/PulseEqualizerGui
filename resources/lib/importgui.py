@@ -9,16 +9,14 @@
 #
 #
 
-import xbmc
 import xbmcaddon
 import xbmcgui
 
-import time
 import shutil
 import os
 
-from helper import SocketCom, handle, opthandle, log, path_addon, path_tmp, path_filter
-from sound import createGraphdB, createGrid, SpecManager, Spectrum, SpecGroup,createGraph2, createGrid2
+from helper import SocketCom, opthandle, log, path_addon, path_tmp, path_filter
+from sound import createGrid, SpecManager, Spectrum, SpecGroup,createGraph2, createGrid2
 from contextmenu import contextMenu
 
 from threading import Thread

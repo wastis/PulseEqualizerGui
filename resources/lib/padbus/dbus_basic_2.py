@@ -23,7 +23,7 @@ import interface as IF
 import sys
 import os
 from pulseerror import PulseDBusError
-from helper import handle, log, logerror
+from helper import log, logerror
 
 class PulseDBus:
 	def __init__( self, *args, **kwargs ):

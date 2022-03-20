@@ -11,8 +11,6 @@
 #
 #
 import sys
-import os
-import json
 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')

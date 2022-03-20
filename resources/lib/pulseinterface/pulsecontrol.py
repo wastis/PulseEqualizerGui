@@ -9,8 +9,6 @@
 #
 #
 
-import sys
-import os
 import threading
 
 import pulsectl

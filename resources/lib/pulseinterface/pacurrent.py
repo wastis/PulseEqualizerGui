@@ -10,7 +10,6 @@
 #
 
 from helper import handle, opthandle, log
-from .pulsecontrol import PulseControl
 
 class MessagCollector():
 	def __init__(self):

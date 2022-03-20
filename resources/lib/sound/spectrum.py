@@ -10,7 +10,6 @@
 #	or (at your option) any later version.
 #
 #
-import os
 import re
 
 from helper import handle

@@ -18,12 +18,9 @@
 #    - interconnetion of pulseaudio modules, dependent on playback status
 #
 
-import os
 import time
 import threading
 
-from .pulsecontrol import PulseControl
-from .padb import paDatabase
 from helper import SocketCom, handle, log, logerror
 
 class paModuleManager():
