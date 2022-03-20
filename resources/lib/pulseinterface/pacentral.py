@@ -33,15 +33,16 @@
 # paModuleManager: reconfigures the playback stream dependend on current configuration and connected devices and playback status
 
 
+import os
+import json
+
 from threading import Thread
 from .pulsecontrol import PulseControl
 from .pamodule import paModuleManager
 from .padb import paDatabase
 from .eqcontrol import EqControl
-from helper import *
+from helper import SocketCom, Config, handle, opthandle, log
 from sound import SoundGen
-
-import json, os
 
 
 class MessageCentral():
@@ -72,7 +73,6 @@ class MessageCentral():
 	
 
 	def on_message(self, target, func, arg, conn):
-		#print("on_%s_%s"% (target,func))
 		try:
 			# filter messages
 			if self.padb.on_message(target, func, arg): return
@@ -84,10 +84,10 @@ class MessageCentral():
 			
 			for cl in [self.padb, self, self.pamm, self.eq, self.sg]:
 				try:methods.append( getattr(cl,cmd))
-				except: pass 
+				except AttributeError: pass
+				except Exception as e: opthandle(e) 
 
 			if len(methods) == 0:
-				#log("pact: no message handler for " + cmd)
 				SocketCom.respond(conn, None)
 				return
 
@@ -109,10 +109,6 @@ class MessageCentral():
 		log("pact: on_pa_update")
 
 		messages = self.padb.do_update()
-
-
-		
-		#print(self.padb.playback_stream)
 		
 		for message,arg in messages:
 			try:

@@ -10,21 +10,21 @@
 #	or (at your option) any later version.
 #
 #
-import sys,os, json
+import sys
+import os
+import json
 import numpy as np
 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 
-from helper import *
-
+from helper import SocketCom
 
 #sc = SocketCom("sound")
 sc = SocketCom("server")
 if not sc.is_server_running():
 	print("server is not running")
 	sys.exit(0)
-
 
 try:
 	func = sys.argv[1]

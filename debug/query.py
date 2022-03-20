@@ -10,12 +10,14 @@
 #	or (at your option) any later version.
 #
 #
-import sys,os, json
+import sys
+import os 
+import json
 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 
-from helper import *
+from helper import SocketCom
 
 
 sc = SocketCom("server")

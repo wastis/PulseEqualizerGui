@@ -16,7 +16,7 @@ import os
 import json
 
 from xbmcaddon import Addon
-from helper import *
+from helper import SocketCom, handle, log, logerror
 from time import sleep
 from volumegui import VolumeGui
 

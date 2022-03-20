@@ -20,7 +20,7 @@ from . import dbussy as dbus
 from .dbussy import DBUS, DBusError
 from . import interface as IF
 from .pulseerror import PulseDBusError
-from helper import *
+from helper import handle, log
 
 
 class PulseDBus:

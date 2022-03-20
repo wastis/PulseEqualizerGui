@@ -17,7 +17,7 @@ import xbmcgui
 from contextmenu import contextMenu
 from rundialog import runDialog
 from sweepgui import SweepGui
-from helper import *
+from helper import SocketCom, log, opthandle
 
 chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
 
@@ -63,7 +63,7 @@ class SweepGenGui(  xbmcgui.WindowXMLDialog  ):
 			try:
 				index = chan_num.index(ch_name)
 				ch_index.append(index)
-			except: pass
+			except Exception as e: opthandle(e)
 			
 		self.channel = ch_index
 
@@ -83,8 +83,6 @@ class SweepGenGui(  xbmcgui.WindowXMLDialog  ):
 		self.getControl(301).setLabel(self.corrections[self.sel_correction])
 		self.getControl(302).setLabel(tr(32412))
 		self.getControl(303).setLabel("1")
-		
-		#self.getControl(101).setLabel("%s - %s" % (self.name, tr(32410)))
 		
 	def on_sel_profile(self):
 		

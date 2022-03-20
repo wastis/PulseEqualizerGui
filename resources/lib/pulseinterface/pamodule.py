@@ -24,7 +24,7 @@ import threading
 
 from .pulsecontrol import PulseControl
 from .padb import paDatabase
-from helper import *
+from helper import SocketCom, handle, log, logerror
 
 class paModuleManager():
 	def __init__(self, pulsecontrol, eqcontrol, padb, conf):

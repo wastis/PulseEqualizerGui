@@ -13,7 +13,7 @@ import pickle
 import json
 import shutil
 
-from helper import *
+from helper import handle, infhandle, opthandle, log, path_addon, path_filter
 from .spectrum import Spectrum
 from .specgroup import SpecGroup
 
@@ -63,7 +63,7 @@ class SpecManager():
 			nb = os.path.splitext(f)
 			try: 
 				if nb[1] ==  ".mic": result.append(nb[0])
-			except: pass
+			except Exception as e: opthandle(e)
 		return result
 		
 	#
@@ -86,7 +86,7 @@ class SpecManager():
 				try: 
 					if nb[1] ==  ".fil": result.append(f)
 					break
-				except: pass
+				except Exception as e: opthandle(e)
 		return result
 		
 	def select_spec(self, name, channel):
@@ -197,7 +197,7 @@ class SpecManager():
 		if not self.profiles: self.profile_file_load()
 		try: 
 			del self.profiles[name]
-		except: pass
+		except Exception as e: opthandle(e)
 
 		fn = self.spec_path + "profiles.json"
 		with open(fn, "w") as f: f.write(json.dumps(self.profiles))

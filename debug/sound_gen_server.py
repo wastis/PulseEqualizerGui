@@ -10,11 +10,13 @@
 #	or (at your option) any later version.
 #
 #
-import os, sys 
+import os 
+import sys 
+
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
-import xbmc
 
+import xbmc
 from helper import SocketCom
 from sound import SoundGen
 

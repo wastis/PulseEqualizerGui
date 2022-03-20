@@ -14,7 +14,7 @@
 import os
 
 from .spectrum import Spectrum
-from helper import *
+from helper import handle, log, path_addon, path_filter
 
 class SpecGroup():
 	

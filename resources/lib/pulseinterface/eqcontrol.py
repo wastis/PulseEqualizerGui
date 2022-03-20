@@ -24,7 +24,7 @@ import padbus
 
 from padbus import DBusInterface as IF
 from padbus import PulseDBus
-from helper import *
+from helper import handle, opthandle
 from sound import SpecManager
 from .pulsecontrol import PulseControl
 
@@ -48,7 +48,7 @@ class EqControl():
 	def get_filter_param(self, index):
 		
 		try: return self.eq_param[index]
-		except: pass
+		except KeyError: pass
 		
 		param = FilterParam()
 

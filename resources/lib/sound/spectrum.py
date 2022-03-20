@@ -14,7 +14,7 @@ import os
 import re
 import math
 
-from helper import *
+from helper import handle
 
 class Spectrum():
 	
@@ -31,9 +31,6 @@ class Spectrum():
 		
 	def __str__(self):
 		return repr(self.freq_db)
-		
-	#def __repr__(self):
-	#	return self.freq_db
 		
 	def __len__(self):
 		return self.size

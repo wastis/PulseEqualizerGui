@@ -13,7 +13,7 @@ import os
 import re
 
 from .skincolor import *
-from helper import *
+from helper import log, path_addon, path_tmp, path_skin, path_skin_root
 from xbmc import executeJSONRPC
 
 def get_current_skin():

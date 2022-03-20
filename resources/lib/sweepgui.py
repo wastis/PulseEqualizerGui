@@ -14,7 +14,7 @@ import xbmcaddon
 import xbmcvfs
 import xbmcgui
 
-from helper import *
+from helper import log, SocketCom
 
 addon = xbmcaddon.Addon()
 

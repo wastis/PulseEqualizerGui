@@ -11,7 +11,7 @@
 
 import os
 import xbmcgui
-from helper import *
+from helper import handle, log, path_addon, path_tmp, path_skin
 from skin import get_current_skin, getSkinColors, create_temp_structure
 
 def runDialog(dialog, template ,**kwargs):

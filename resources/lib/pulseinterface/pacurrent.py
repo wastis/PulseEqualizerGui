@@ -9,7 +9,7 @@
 #
 #
 
-from helper import *
+from helper import handle, opthandle, log
 from .pulsecontrol import PulseControl
 
 class MessagCollector():
@@ -27,7 +27,7 @@ class MessagCollector():
 		
 	def on_remove(self,index):
 		try: self.change.remove(index)
-		except: pass
+		except Exception as e: opthandle(e)
 		
 		try: self.new.remove(index)
 		except: self.remove.append(index)
@@ -40,7 +40,7 @@ class MessagCollector():
 				method = getattr(rec_class,cmd)
 				for index in index_list:
 					method(index)
-			except: pass
+			except Exception as e: opthandle(e)
 
 class CurIndex():
 	def __init__(self):
@@ -140,7 +140,7 @@ class PaCurrent():
 						target_dic[index] = self.pc.get_info(target,index)
 						
 				setattr(self, targets, target_dic)
-			except: pass
+			except Exception as e: opthandle(e)
 			
 	def send_messages(self):
 		
@@ -159,7 +159,7 @@ class PaCurrent():
 						target_dic[index] = self.pc.get_info(target,index)
 						
 				setattr(self, l, {})
-			except: pass
+			except Exception as e: opthandle(e)
 		
 
 	def update_list(self,target):

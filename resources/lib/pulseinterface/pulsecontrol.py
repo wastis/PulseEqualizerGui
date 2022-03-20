@@ -16,7 +16,7 @@ import threading
 import pulsectl
 
 from pulsectl import PulseIndexError, PulseVolumeInfo
-from helper import *
+from helper import handle, opthandle, log
 
 class PulseControl():
 	def __init__( self, name = 'Pulse Control Script'):
@@ -37,7 +37,7 @@ class PulseControl():
 	def stop(self):
 		try:
 			self.pulse.close()
-		except: pass
+		except Exception as e: opthandle(e)
 		
 	def get_list(self, obj):
 		if not obj in ["sink","sink_input","client","module", "card"]: return

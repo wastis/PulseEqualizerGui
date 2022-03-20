@@ -10,11 +10,11 @@
 #
 #   paDatabase is a information repository, that follows the pulseaudio system configuration 
 #   by catching and handling the pulseaudio system messages
-#   - apply some logic to set flags (e.g. pulseaudio-equalizer loaded)
-#   - cache current pulse audio system configuration e.g sinks, sink-inputs cards, modules
-#   - create a lookup index for those objects
-#   - find certain information, e.g who is the current kodi client, kodi-stream ...
-#   - aggregate pulse-audio messages, as messages arrive to fast for individual handling, 
+#     - apply some logic to set flags (e.g. pulseaudio-equalizer loaded)
+#     - cache current pulse audio system configuration e.g sinks, sink-inputs cards, modules
+#     - create a lookup index for those objects
+#     - find certain information, e.g who is the current kodi client, kodi-stream ...
+#     - aggregate pulse-audio messages, as messages arrive to fast for individual handling, 
 #         python iterpreter is to slow for heavy message handling
 #         it may happen that a sink_input is created and immidiately destroyed by kodi or pulseaudio. 
 #         it does not exsits anymore by the time the create message arrives here.  
@@ -24,8 +24,9 @@ from .pulsecontrol import PulseControl
 from .collector import MessageCollector
 from sound import SoundGen
 import json
+import os
 
-from helper import *
+from helper import SocketCom, handle, opthandle, log
 
 class paDatabase():
 	
@@ -64,7 +65,8 @@ class paDatabase():
 		for attr in self.attributes + ["output_sink"]:
 			val = getattr(self, attr)
 			try:  val=val.name
-			except: pass
+			except AttributeError: pass
+			except Exception as e: opthandle(e)
 			yield (attr, val)
 
 	def get_objects(self):
@@ -247,9 +249,6 @@ class paDatabase():
 	#
 	#	special messages from kodi player, we need to know the selected sink in kodi
 	#
-	
-
-		
 				
 	def proc_device(self):
 		self.output_sink = None
@@ -298,7 +297,6 @@ class paDatabase():
 		self.proc_device_set(arg)
 		
 
-		
 	#
 	#  all messages arrive here, filter the ones from pulseaudio and collect them for later aggregation
 	#
@@ -338,8 +336,9 @@ class paDatabase():
 			try:
 				for index in func_list["remove"]:
 					try: del obj_list[index]
-					except: pass
-			except: pass
+					except KeyError: pass
+			except KeyError: pass
+			
 
 				
 			for func in ["new", "change"]:
@@ -347,7 +346,7 @@ class paDatabase():
 					for index in func_list[func]:
 						obj = self.pc.get_info(target , index)
 						if obj is not None:	obj_list[index] = obj
-				except: pass
+				except KeyError: pass
 			
 			setattr(self, targets,obj_list)
 			
@@ -376,7 +375,8 @@ class paDatabase():
 			try: 
 				method = None
 				try: method = getattr(self,cmd)
-				except: pass
+				except AttributeError: pass
+				except Exception as e: opthandle(e)
 				
 				if method: method(*arg)
 			except Exception as e: handle(e)
@@ -394,7 +394,6 @@ class paDatabase():
 	# respond to info requests coming from client		
 	#
 
-		
 	def get_latency(self):
 		
 		
@@ -438,7 +437,3 @@ class paDatabase():
 		return [sink.index, sink.proplist["device.description"] , sink.channel_list]
 		
 
-		
-		
-		
-		

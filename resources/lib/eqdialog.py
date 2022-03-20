@@ -20,7 +20,7 @@ import re
 import math
 import json
 
-from helper import *
+from helper import SocketCom, handle, opthandle, log, logerror, path_addon, path_tmp, path_settings, path_skin
 from time import sleep
 from skin import get_current_skin, getSkinColors, create_temp_structure
 from contextmenu import contextMenu
@@ -155,7 +155,7 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 
 				cur = new
 				flist.append(cur)
-		except: pass
+		except Exception as e: opthandle(e)
 		
 		fn = path_addon + path_settings + "settings.json"
 		try: 

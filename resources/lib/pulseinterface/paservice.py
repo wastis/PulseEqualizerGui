@@ -37,7 +37,7 @@ if sys.version_info[0] < 3:
 else:
 	from queue import Queue, Empty
 
-from helper import *
+from helper import SocketCom, handle, log, logerror
 
 from .pacentral import MessageCentral
 

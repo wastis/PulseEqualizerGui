@@ -22,14 +22,12 @@ from helper import SocketCom
 
 sock_com = SocketCom("main")
 
-
 class receiver():
 	
 	def on_service_get(self,args):
 		print("yuhu", args)
 		
 		return {"Name":1, "Val":1}
-
 
 def on_receive(conn, msg):
 	print(msg)

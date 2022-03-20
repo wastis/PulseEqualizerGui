@@ -14,7 +14,7 @@ import xbmcaddon
 import xbmcvfs
 import xbmcgui
 
-from helper import *
+from helper import SocketCom, handle, opthandle, log, path_tmp
 from sound import createGraph, SpecManager, Spectrum
 
 addon = xbmcaddon.Addon()
@@ -43,7 +43,7 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 	def update_image(self):
 		fn = path_tmp +  % self.cnt
 		try: os.remove(fn)
-		except: pass
+		except Exception as e: opthandle(e)
 		
 		self.cnt = self.cnt + 1
 		fn = self.tmp_fn % self.cnt

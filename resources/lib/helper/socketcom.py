@@ -21,7 +21,7 @@ import time
 
 from threading import Thread
 from .log import log
-from .handle import handle, infhandle
+from .handle import handle, infhandle, opthandle
 
 class SocketCom():
 	
@@ -32,7 +32,8 @@ class SocketCom():
 	def __init__(self, name, gid = 0):
 		self.path = "/run/user/%d/pa/" % os.geteuid()
 		try: os.makedirs(self.path)
-		except Exception as e: pass
+		except OSError: pass
+		#except Exception as e: opthandle(e)
 		
 		self.sock_name = self.path + "%s.%d" % (name , gid)
 	
@@ -124,7 +125,7 @@ class SocketCom():
 			except: 
 				#log(repr(msg))
 				try:conn.close()
-				except: pass
+				except Exception as e: opthandle(e)
 				return
 			
 			
@@ -135,10 +136,10 @@ class SocketCom():
 			
 			try: 
 				conn.send(pickle.dumps(result, protocol=2))
-			except: pass
+			except Exception as e: opthandle(e)
 			
 			try:conn.close()
-			except: pass
+			except Exception as e: opthandle(e)
 			
 		except Exception as e: handle(e)
 	
@@ -147,5 +148,6 @@ class SocketCom():
 		if conn is not None:
 			try:
 				conn.send(pickle.dumps(result, protocol=2))
-			except: pass
+			except BrokenPipeError: pass   #requestor did not wait for response
+			except Exception as e: opthandle(e)
 		

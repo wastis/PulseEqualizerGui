@@ -15,7 +15,7 @@ except:
 	# so to log into kodi-log, we need to send the log info to kodi-addon-service.py 
 	import socket 
 	import pickle
-	from helper.path import *
+	from helper.path import path_socket
 	
 	# as we do not have access to xbmc import, we need to fake it.
 	class xbmc():
@@ -38,10 +38,13 @@ except:
 				s.connect(xbmc.sock_name)
 				s.send(msg)
 				s.close()
-			except: pass
-
-			
-			
+			except: 
+				# no place where we can log the error
+				# if we arrive here, there are lots of other problems, then
+				# so throw this away
+				pass
+				 
+				  
 
 def log(text):
 	xbmc.log("eq: " + text, xbmc.LOGDEBUG)

@@ -17,7 +17,7 @@ import time
 import shutil
 import os
 
-from helper import *
+from helper import SocketCom, handle, opthandle, log, path_addon, path_tmp, path_filter
 from sound import createGraphdB, createGrid, SpecManager, Spectrum, SpecGroup,createGraph2, createGrid2
 from contextmenu import contextMenu
 
@@ -138,7 +138,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 	def draw_image(self):
 		fn = path_tmp + "%s.png" % self.img
 		try: os.remove(fn)
-		except: pass
+		except Exception as e: opthandle(e)
 		
 		self.img =  self.img + 1
 		fn = path_tmp + "%s.png" % self.img
@@ -175,7 +175,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 			try: 
 				self.file_name.append(fns[i])
 				self.load_channel_name.append(self.channel_name[i])
-			except: pass
+			except Exception as e: opthandle(e)
 		
 		ctl = self.getControl(2100)
 		ctl.reset()
@@ -286,7 +286,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 	def end_gui(self):
 		fn = path_tmp + "%s.png" % self.img
 		try: os.remove(fn)
-		except: pass
+		except Exception as e: opthandle(e)
 
 		self.close()
 		

@@ -58,9 +58,10 @@ if not os.path.exists( lock ):
 		open(lock,'w')
 		run_addon()
 	finally:	
+		from helper import opthandle
 		try:
 			os.remove(lock)
-		except: pass
+		except Exception as e: opthandle(e)
 
 
 

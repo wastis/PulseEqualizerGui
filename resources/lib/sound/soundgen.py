@@ -17,7 +17,7 @@ from threading import Thread
 from math import sin, pi, log10
 from array import array
 
-from helper import *
+from helper import SocketCom, handle, log, logerror
 
 class SoundGen():
 

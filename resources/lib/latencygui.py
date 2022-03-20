@@ -14,7 +14,7 @@ import xbmcaddon
 import xbmcvfs
 import xbmcgui
 
-from helper import *
+from helper import SocketCom, log
 
 addon = xbmcaddon.Addon()
 def tr(id):
@@ -62,5 +62,3 @@ class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 				self.setFocusId(1900)
 			self.setLatency()
 		
-		#xbmc.log( "code :" + str(action.getButtonCode()),xbmc.LOGINFO)
-		#xbmc.log( "Id   :" + str(action.getId()),xbmc.LOGINFO)

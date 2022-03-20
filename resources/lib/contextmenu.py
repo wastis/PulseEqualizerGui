@@ -17,7 +17,7 @@ import threading
 import os
 import re
 
-from helper import *
+from helper import handle, opthandle, log, path_addon, path_tmp, path_skin
 from skin import get_current_skin, getSkinColors, create_temp_structure
 
 class ContextGui(  xbmcgui.WindowXMLDialog  ):
@@ -34,7 +34,7 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 		except: default = None
 		
 		try: self.funcs = kwargs["funcs"]
-		except: pass
+		except Exception as e: opthandle(e)
 		
 	def onInit( self ):
 		if self.index is not None:
@@ -247,7 +247,7 @@ def contextMenu(**kwargs):
 		if method: 
 			method(*args)
 			return None
-	except: pass
+	except Exception as e: opthandle(e)
 	
 	return ui.result
 	

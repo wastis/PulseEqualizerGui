@@ -10,7 +10,7 @@
 import os
 import json
 
-from helper import *
+from helper import handle, path_addon
 
 def getSkinColors(skin):
 	

@@ -12,7 +12,7 @@ import os
 import sys
 import traceback
 
-from .log import *
+from .log import logerror, log
  
 
 if sys.version_info[0] > 2:
@@ -32,12 +32,24 @@ if sys.version_info[0] > 2:
 		traceback = e.__traceback__
 		result = "nce: in: "
 		while traceback:
-			p,fn = path.os.split(traceback.tb_frame.f_code.co_filename)
+			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
 			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
 			traceback = traceback.tb_next
 
 		result = result + "{}: {}".format(type(e).__name__, e.args)
 		log(result)
+		
+	def opthandle(e):
+		traceback = e.__traceback__
+		result = "opt: in: "
+		while traceback:
+			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
+			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
+			traceback = traceback.tb_next
+
+		result = result + "{}: {}".format(type(e).__name__, e.args)
+		log(result)
+
 
 	
 else:
@@ -52,3 +64,9 @@ else:
 		lines = traceback.format_exc().splitlines()
 		for l in lines:log("nce: " + l)
 		log("nce: {}: {}".format(type(e).__name__, e.args))
+
+	def opthandle(e):
+		lines = traceback.format_exc().splitlines()
+		for l in lines:log("opt: " + l)
+		log("opt: {}: {}".format(type(e).__name__, e.args))
+

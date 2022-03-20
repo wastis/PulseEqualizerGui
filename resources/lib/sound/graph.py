@@ -13,7 +13,7 @@ import sys
 import os
 import math
 
-from helper.log import *
+from helper import logerror, opthandle
 
 if sys.version_info[0] > 2:
 	try:
@@ -54,7 +54,7 @@ def createGraph(fn, spec = None, width = 1700, height = 700):
 					yl = zero_y - yl * scale
 				
 					coords.append((xl, yl))
-				except: pass
+				except Exception as e: opthandle(e)
 			if coords:
 				x1, y1 = coords[0]
 				for x2,y2 in coords[1:]:
@@ -90,7 +90,7 @@ def createGraphdB(fn, spec = None, width = 1700, height = 700):
 					yl = zero_y - yl * scale
 				
 					coords.append((xl, yl))
-				except: pass
+				except Exception as e: opthandle(e)
 			if coords:
 				x1, y1 = coords[0]
 				for x2,y2 in coords[1:]:
@@ -127,7 +127,7 @@ def createGraph2(fn, spec = None, width = 1700, height = 700):
 					yl = zero_y - yl * scale
 				
 					coords.append((xl, yl))
-				except: pass
+				except Exception as e: opthandle(e)
 			if coords:
 				x1, y1 = coords[0]
 				for x2,y2 in coords[1:]:

@@ -10,14 +10,15 @@
 #	or (at your option) any later version.
 #
 #
-import sys,os, json, math
-import PIL
-
+import sys
+import os
+import json
+import math
 
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 
-from helper import *
+from helper import log
 from sound import SpecManager
 
 from PIL import Image, ImageDraw, ImageFont
