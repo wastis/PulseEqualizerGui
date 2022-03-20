@@ -10,13 +10,15 @@
 #
 
 import os
+import subprocess
+
 from time import sleep
 from threading import Thread
-import subprocess
 from math import sin, pi, log10
 from array import array
 
 from helper import *
+
 class SoundGen():
 
 	def __init__(self, padb, pc):

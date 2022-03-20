@@ -8,7 +8,18 @@
 #	or (at your option) any later version.
 #
 #
-import sys,json
+
+#
+#   main interface to the equalizer via dbus
+#   uses SpecManager to load/save/change equalizer/room correction profiles 
+#   and to caputure slider changes
+#   if needed, send changes to equalizer. 
+#
+#   user request <-> spec manager -> dbus <-> equalizer
+
+
+import sys
+import json
 import padbus
 
 from padbus import DBusInterface as IF

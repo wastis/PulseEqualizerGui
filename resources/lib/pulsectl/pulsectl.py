@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # source: https://github.com/mk-fg/python-pulse-control
+# Licence MIT
 #
 # modified 2021 by wastis
 #

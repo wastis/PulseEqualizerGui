@@ -8,36 +8,39 @@
 #	or (at your option) any later version.
 #
 #
-#   --------
-#   | pipe |  -- 
-#   --------    |   ---------    -----------    ------------------
+#   ----------
+#   | socket |-- 
+#   ----------  |   ---------    -----------    ------------------
 #               --->| queue | -> | forward | -> | MessageCentral |
 #   --------    |   ---------    -----------    ------------------
 #   | pulse | --                       
 #   --------
 #
-#   pipe: messages coming from client, pipe read is blocking, therefore has it's own thread
+#   socket: messages coming from client, socket read is blocking, therefore has it's own thread
 #   pulse:  messages coming from pulseaudio, palisten is blocking, therefore has it's own thread
 #   queue: decouple incoming messages from their listening threads
 #   forward: send messages to MessageCentral, send timeout message 100ms after last pulseaudio message 
 #
 
-import sys, time, os, json, pickle
+import sys
+import time
+import os
+import json
+import pickle
+
+import pulsectl
+
 from threading import Thread
+from time import time, sleep
 
 if sys.version_info[0] < 3:
 	from Queue import Queue, Empty
 else:
 	from queue import Queue, Empty
 
-import pulsectl
 from helper import *
 
-
 from .pacentral import MessageCentral
-
-from time import time, sleep
-
 
 
 class PulseInterfaceService():
@@ -67,8 +70,6 @@ class PulseInterfaceService():
 		Thread(target=self.start_pulse_loop).start()
 		self.sock.start_server(self.on_socket_message)
 
-		
-
 	#stop all message loops
 	def stop_event_loop(self):
 		if self.running:
@@ -86,7 +87,6 @@ class PulseInterfaceService():
 	#	support functions
 	#
 
-	
 	def handle(self, e):
 		func_name = sys._getframe(1).f_code.co_name
 		error_type = type(e)
@@ -102,7 +102,6 @@ class PulseInterfaceService():
 	#
 	#	message loops
 	#
-	
 	
 	def on_socket_message(self, conn, msg):
 		try:
@@ -125,7 +124,6 @@ class PulseInterfaceService():
 			if event.facility._value in ["server", "source", "source_output"]: return
 			self.q.put((event.facility._value ,event.t._value, [event.index], None))
 
-			
 	#start message loop for pulse audio		
 	def start_pulse_loop(self):
 		log("start pulse loop")

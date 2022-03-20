@@ -17,6 +17,7 @@ import xbmcgui
 from helper import *
 
 addon = xbmcaddon.Addon()
+
 def tr(id):
 	return addon.getLocalizedString(id)
 

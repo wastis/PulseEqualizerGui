@@ -10,12 +10,14 @@
 #	or (at your option) any later version.
 #
 #
-import sys , time
-import subprocess, signal
+import sys
+import time
+import subprocess
+import signal
 import os
+
 from helper.log import log
 from helper.handle import handle
-
 
 class PulseService:
 	def start(self):
@@ -24,9 +26,6 @@ class PulseService:
 		else:
 			self.ps = subprocess.Popen(["python2",os.path.realpath(__file__), str(os.getpid())])
 		
-		
-
-
 	def stop(self):
 		from helper.socketcom import SocketCom
 		sc = SocketCom("server")

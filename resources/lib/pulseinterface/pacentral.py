@@ -8,6 +8,8 @@
 #	or (at your option) any later version.
 #
 #
+#    Each message from pulseaudio sytem or user interface arrives here for further processing 
+#
 #
 #    ------------------     ------------        -------------      ---------------
 #    | MessageCentral | --> | dispatch | ->|<-> | paDatabase| <--> | pulse audio | 

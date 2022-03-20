@@ -25,7 +25,6 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 	spec_file = None
 	mic_file = None
 	
-	
 	def __init__( self, *args, **kwargs ):
 		self.sock = SocketCom("server")
 		self.cwd = args[1]
@@ -103,8 +102,6 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 			self.mic_file = Spectrum().load(fn_mic)
 		
 		self.update_image()
-		
-		
 
 	def handleOK(self):
 		
@@ -116,14 +113,11 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 		elif fid == 3002:	#import mic
 			self.select_mic()
 
-
-		
 	def onAction( self, action ):
 		#OK pressed
 		if action.getId() in [7,100]:
 			self.handleOK()
 
-			
 		#Cancel
 		if action.getId() in [92,10]:
 			self.close()

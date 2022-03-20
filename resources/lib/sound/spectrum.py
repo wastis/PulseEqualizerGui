@@ -10,9 +10,11 @@
 #	or (at your option) any later version.
 #
 #
-import os, re, math
-from helper import *
+import os
+import re
+import math
 
+from helper import *
 
 class Spectrum():
 	

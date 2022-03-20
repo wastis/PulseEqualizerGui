@@ -8,11 +8,14 @@
 #	or (at your option) any later version.
 #
 #
-#
+#   paDatabase is a information repository, that follows the pulseaudio system configuration 
+#   by catching and handling the pulseaudio system messages
+#   - apply some logic to set flags (e.g. pulseaudio-equalizer loaded)
 #   - cache current pulse audio system configuration e.g sinks, sink-inputs cards, modules
 #   - create a lookup index for those objects
 #   - find certain information, e.g who is the current kodi client, kodi-stream ...
-#   - aggregate pulse-audio messages, as messages arrive to fast for individual handling
+#   - aggregate pulse-audio messages, as messages arrive to fast for individual handling, 
+#         python iterpreter is to slow for heavy message handling
 #         it may happen that a sink_input is created and immidiately destroyed by kodi or pulseaudio. 
 #         it does not exsits anymore by the time the create message arrives here.  
 #

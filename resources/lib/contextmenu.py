@@ -10,11 +10,15 @@
 #
 import xbmcgui
 from xbmc import executeJSONRPC
-import time, threading
-from helper import *
-import os, re
-from skin import get_current_skin, getSkinColors, create_temp_structure
 
+import time
+import threading
+
+import os
+import re
+
+from helper import *
+from skin import get_current_skin, getSkinColors, create_temp_structure
 
 class ContextGui(  xbmcgui.WindowXMLDialog  ):
 	result = None
@@ -45,8 +49,6 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 			self.getControl(id).setLabel(label)
 			id = id + 1
 
-
-
 	def onAction( self, action ):
 		aid = action.getId()
 	
@@ -59,8 +61,6 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 		#Cancel
 		if aid in [92,10]:
 			self.close()
-
-
 
 def contextMenu(**kwargs):
 	

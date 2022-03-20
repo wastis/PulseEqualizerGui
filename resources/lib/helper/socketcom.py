@@ -9,7 +9,16 @@
 #
 #
 
-import socket, pickle , os, time
+#
+#	implements the communication between user interface on Kodi and the unerlying service
+#	is a file socket
+#
+
+import socket
+import pickle
+import os
+import time
+
 from threading import Thread
 from .log import log
 from .handle import handle, infhandle

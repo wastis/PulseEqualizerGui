@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+#
+# source: https://github.com/mk-fg/python-pulse-control
+# License MIT
+#
+
 from __future__ import print_function
 
 from . import _pulsectl

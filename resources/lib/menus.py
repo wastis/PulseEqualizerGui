@@ -9,9 +9,12 @@
 #
 #
 
-import os, json
 import xbmc
 import xbmcgui
+
+import os 
+import json
+
 from xbmcaddon import Addon
 from helper import *
 from time import sleep
@@ -64,6 +67,7 @@ class Menu():
 		eqid, desc, is_playing, eq_profile, is_dyn = ( self.current )
 		
 		if eqid == -1:
+			# Dialog equalizer not installed
 			xbmcgui.Dialog().ok(tr(32004),tr(32035))
 			return False, eqid, desc, is_playing, eq_profile, is_dyn
 		
@@ -297,6 +301,10 @@ class Menu():
 	def sel_voldown(self, smenu=False):
 		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "down")
 		self.volgui.doModal()
+		
+	#
+	#	debug funcion
+	#
 		
 	def introspect(self):
 		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Textures.GetTextures", "id":1}')

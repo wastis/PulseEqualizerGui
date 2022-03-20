@@ -8,7 +8,11 @@
 #	or (at your option) any later version.
 #
 #
-import os, pickle, json, shutil
+import os
+import pickle
+import json
+import shutil
+
 from helper import *
 from .spectrum import Spectrum
 from .specgroup import SpecGroup

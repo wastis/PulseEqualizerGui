@@ -1,21 +1,30 @@
+#	This file is part of PulseEqualizerGui for Kodi.
+#	
+#	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
 #
-#	pulse audio gui addon for kodi
-#	2021 by wastis
-#
-#	manage the re-routing of audio streams coming from kodi
-#	load and unload the eq-auto-load equalizer module
-#	maintain kodi-play status (playing or not)
+#	PulseEqualizerGui is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU Lesser General Public License as published
+#	by the Free Software Foundation; either version 3 of the License,
+#	or (at your option) any later version.
 #
 #
 
+#
+#  paModuleManager is a major class that 
+#    - manages the loading of the equalizer,
+#    - configuration of the equalizer (setting profile),
+#    - equalizer on/of switchning,
+#    - change system volume  
+#    - interconnetion of pulseaudio modules, dependent on playback status
+#
 
+import os
+import time
+import threading
 
 from .pulsecontrol import PulseControl
 from .padb import paDatabase
 from helper import *
-import os, time, threading
-
-
 
 class paModuleManager():
 	def __init__(self, pulsecontrol, eqcontrol, padb, conf):
@@ -141,8 +150,6 @@ class paModuleManager():
 			
 		else: log("pamm: on_sink_change %d" % index)
 		
-		
-			
 
 	#*************************************************************************
 	#
@@ -298,15 +305,12 @@ class paModuleManager():
 	# handle client request messages
 	#
 
-
 	def set_eq_config(self):
 		profile = self.config.get("eq_profile","none", self.padb.output_sink.name)
 		if profile is not None: return
 		
 		eq_profile = self.eq.on_eq_base_profile_get()
 		self.config.set("eq_profile",eq_profile, self.padb.output_sink.name)
-		
-		
 	
 	def on_eq_current_get(self):
 		
@@ -398,7 +402,6 @@ class paModuleManager():
 				return
 			
 		self.pc.load_module(name)
-		
 		
 
 	#

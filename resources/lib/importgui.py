@@ -13,13 +13,16 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+import time
+import shutil
+import os
+
 from helper import *
 from sound import createGraphdB, createGrid, SpecManager, Spectrum, SpecGroup,createGraph2, createGrid2
 from contextmenu import contextMenu
 
-import time
 from threading import Thread
-import shutil, os
+
 
 chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
 

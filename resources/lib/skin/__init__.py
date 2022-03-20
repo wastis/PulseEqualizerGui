@@ -9,7 +9,9 @@
 #
 #
 
-import os, re
+import os
+import re
+
 from .skincolor import *
 from helper import *
 from xbmc import executeJSONRPC

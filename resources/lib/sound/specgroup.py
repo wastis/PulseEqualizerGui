@@ -16,7 +16,6 @@ import os
 from .spectrum import Spectrum
 from helper import *
 
-
 class SpecGroup():
 	
 	def __init__(self, speclist={}, src=None):

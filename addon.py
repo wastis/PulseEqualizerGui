@@ -9,7 +9,9 @@
 #
 #
 
-import os,sys 
+import os
+import sys
+ 
 lock = "/run/user/%d/pa/lock" % os.geteuid()
 
 def run_addon():
@@ -33,18 +35,14 @@ def run_addon():
 		except:	cmd = False
 
 		m = Menu(cwd)
-		#if not m.get_status(): sys._exit(0)
-
-		#check if another instance of this script is already running
-	
 		if cmd:
 		
-			xbmc.log("equalizer: addon has been started by key press command" , xbmc.LOGINFO)
+			xbmc.log("eq: addon has been started by key press command" , xbmc.LOGDEBUG)
 			m.sel_menu(cmd)
 			
 		else:
 			
-			xbmc.log("equalizer: addon has been selected and is first instance" , xbmc.LOGINFO)
+			xbmc.log("eq: addon has been selected and is first instance" , xbmc.LOGDEBUG)
 			m.sel_main_menu()
 
 				
@@ -52,6 +50,10 @@ def run_addon():
 
 
 if not os.path.exists( lock ):
+	
+	# check if another instance of this script is already running
+	# only allow one instance or the script per user
+	
 	try:
 		open(lock,'w')
 		run_addon()

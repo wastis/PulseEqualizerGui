@@ -8,10 +8,16 @@
 #	or (at your option) any later version.
 #
 #
-import os,json
+
+#
+#	stores user selections linked to pulseaudio-devices in the settings directory
+#
+
+import os
+import json
+
 from .handle import handle, log
 from .path import *
-
 
 class Config():
 

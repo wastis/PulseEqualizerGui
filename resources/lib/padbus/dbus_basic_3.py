@@ -8,7 +8,13 @@
 #	or (at your option) any later version.
 #
 #
-import os, sys
+
+#
+#  dbus wraper for Python 3.x
+#
+
+import os
+import sys
 
 from . import dbussy as dbus
 from .dbussy import DBUS, DBusError

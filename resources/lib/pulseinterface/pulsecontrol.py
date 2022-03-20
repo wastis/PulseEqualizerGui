@@ -9,12 +9,14 @@
 #
 #
 
-import sys, os, threading
+import sys
+import os
+import threading
 
 import pulsectl
+
 from pulsectl import PulseIndexError, PulseVolumeInfo
 from helper import *
-
 
 class PulseControl():
 	def __init__( self, name = 'Pulse Control Script'):
@@ -32,14 +34,10 @@ class PulseControl():
 			self.pulse = pulsectl.Pulse(self.name)
 		except Exception as e: handle(e)
 		
-		
-		
 	def stop(self):
 		try:
 			self.pulse.close()
 		except: pass
-		
-		
 		
 	def get_list(self, obj):
 		if not obj in ["sink","sink_input","client","module", "card"]: return
@@ -68,7 +66,6 @@ class PulseControl():
 			 
 			return result
 			
-	
 	def get_info(self, obj, index):
 		if not obj in ["sink","sink_input","client","module","card"]: return
 		
@@ -93,7 +90,6 @@ class PulseControl():
 			except :pass
 			return result
 			
-			
 	def get_server_info(self):
 		self.lock.acquire()
 		result = self.pulse.server_info()
@@ -109,7 +105,6 @@ class PulseControl():
 	def load_module(self, name, args = ""):
 			self.pulse.module_load(name, args)
 
-		
 	def unload_module(self, index):
 			self.pulse.module_unload(index)
 	

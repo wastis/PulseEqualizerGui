@@ -9,6 +9,11 @@
 #
 #
 
+#
+#  dbus wraper for Python 2.x
+#
+
+
 from helper.log import *
 try:
 	import dbus
@@ -16,7 +21,8 @@ except ImportError:
 	logerror("please install python-dbus")
 
 import interface as IF
-import sys,os
+import sys
+import os
 from pulseerror import PulseDBusError
 from helper import *
 

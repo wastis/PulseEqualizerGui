@@ -10,10 +10,17 @@
 #
 import xbmcgui
 import xbmcaddon
+
 from xbmc import executeJSONRPC
-import time, threading
+
+import time
+import threading
+import os
+import re
+import math
+import json
+
 from helper import *
-import os, re, math, json
 from time import sleep
 from skin import get_current_skin, getSkinColors, create_temp_structure
 from contextmenu import contextMenu

@@ -11,9 +11,13 @@
 
 try: import xbmc
 except: 
-	import socket, pickle
+	# this is the python service, running independent of kodi
+	# so to log into kodi-log, we need to send the log info to kodi-addon-service.py 
+	import socket 
+	import pickle
 	from helper.path import *
 	
+	# as we do not have access to xbmc import, we need to fake it.
 	class xbmc():
 		LOGDEBUG = 0
 		LOGERROR = 3

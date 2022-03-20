@@ -12,9 +12,6 @@
 from helper import *
 from .pulsecontrol import PulseControl
 
-
-
-
 class MessagCollector():
 	def __init__(self):
 		self.new = []

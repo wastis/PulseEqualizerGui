@@ -9,8 +9,12 @@
 #
 #
 
-import xbmc, xbmcgui
-import json, os, sys
+import xbmc 
+import xbmcgui
+
+import json
+import os
+import sys
 
 from pulseservice import PulseService
 from helper import SocketCom
@@ -22,7 +26,7 @@ class PaMonitor( xbmc.Monitor ):
 	def __init__( self , pid = 0):
 		#strat process
 		xbmc.Monitor.__init__( self )
-		xbmc.log("Start PulesEqualizer service",xbmc.LOGINFO)
+		xbmc.log("eq: start PulesEqualizer service",xbmc.LOGDEBUG)
 		
 		self.server_sock = SocketCom("kodi")
 		if not self.server_sock.is_server_running():

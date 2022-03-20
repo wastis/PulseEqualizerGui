@@ -8,10 +8,14 @@
 #	or (at your option) any later version.
 #
 #
+
 import xbmcgui
-import time, threading
-from helper import log, SocketCom
+
 import os
+import time
+import threading
+
+from helper import log, SocketCom
 
 class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 
