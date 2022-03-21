@@ -215,7 +215,7 @@ class SpecManager():
 		elif self.cur_spec:
 			spec =  self.cur_spec
 			preamp = 1.0
-			info = "room correction %s and no profile" % (self.cur_spec.name , self.profile.name)
+			info = "room correction %s and no profile" % (self.cur_spec.name)
 		else:
 			log("no room correction and no profile have been selected")
 			return None

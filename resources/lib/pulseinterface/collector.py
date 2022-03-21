@@ -40,7 +40,7 @@ class MessageCollector():
 	@classmethod
 	def process_new(cls,target, index):
 		c_list = cls.process_getlist(target, "change")
-		success, c_list = cls.process_del(c_list,index)
+		_, c_list = cls.process_del(c_list,index)
 		target["change"] = c_list
 
 		return cls.process_insert(target,"new", index)

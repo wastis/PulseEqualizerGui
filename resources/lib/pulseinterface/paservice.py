@@ -81,7 +81,8 @@ class PulseInterfaceService():
 	#	support functions
 	#
 
-	def handle(self, e):
+	@staticmethod
+	def handle(e):
 		func_name = sys._getframe(1).f_code.co_name
 		error_type = type(e)
 		logerror("pulse_event_manager: %s %s %s" % (func_name, error_type, e.message))

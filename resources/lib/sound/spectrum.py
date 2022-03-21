@@ -158,7 +158,7 @@ class Spectrum():
 		try:
 			it = self.iter()
 			while True:
-				itf1, itv1, itf2, itv2 = it.next()
+				itf1, _, itf2, _ = it.next()
 				if itf1 >= itf2:
 					self.freq_db = []
 					self.size = 0
@@ -231,7 +231,7 @@ class Spectrum():
 
 			su = 0
 			for n in range(low,hi):
-				f, v = freq_db[n]
+				_, v = freq_db[n]
 				su = su + v
 			val = su / (hi-low)
 
@@ -248,7 +248,7 @@ class Spectrum():
 	def set_coefs(self, coefs):
 		result = []
 		it = iter(coefs)
-		for f,v in self.freq_db:
+		for f,_ in self.freq_db:
 			nv = next(it)
 			result.append((f,nv))
 

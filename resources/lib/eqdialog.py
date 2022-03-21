@@ -23,10 +23,14 @@ from skin import get_current_skin, getSkinColors, create_temp_structure
 from contextmenu import contextMenu
 
 addon = xbmcaddon.Addon()
-def tr(id):
-	return addon.getLocalizedString(id)
+def tr(lid):
+	return addon.getLocalizedString(lid)
 
 class EqGui(  xbmcgui.WindowXMLDialog  ):
+	''' Eqaulizer Dialog
+	
+		The equalizer dialog is build up dynamically
+	'''
 	result = None
 	index = None
 
@@ -266,15 +270,15 @@ def eqBuild(**kwargs):
 	xpos = (1920 - total_width) / 2
 
 	r = ''
-	id = 2000
+	iid = 2000
 	left = 0
 	for f in freqs:
 		if int(f) < 1000: label = str(f)
 		elif int(f) < 10000: label = str(f)[0]+"k"+ str(f)[1]
 		else: label = str(f)[:2]+"k"
 
-		r = r + element.format(id = id, left = left, label= label, onright = id + 1, onleft = id - 1, lid = id + 100, **colors)
-		id = id + 1
+		r = r + element.format(id = iid, left = left, label= label, onright = iid + 1, onleft = iid - 1, lid = iid + 100, **colors)
+		iid = iid + 1
 
 	main = main.format(grouplist = r, xpos = xpos, total_width=total_width, slider_width=slider_width, **colors)
 

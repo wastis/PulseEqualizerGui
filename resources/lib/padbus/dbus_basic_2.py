@@ -13,7 +13,7 @@
 #  dbus wraper for Python 2.x
 #
 
-from helper.log import *
+from helper import log, logerror
 try:
 	import dbus
 except ImportError:
@@ -23,7 +23,6 @@ import interface as IF
 import sys
 import os
 from pulseerror import PulseDBusError
-from helper import log, logerror
 
 class PulseDBus:
 	def __init__( self, *args, **kwargs ):

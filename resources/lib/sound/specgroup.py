@@ -102,7 +102,7 @@ class SpecGroup():
 
 	def get_coefs(self):
 		result = []
-		for key, spec in self.speclist.items():
+		for _, spec in self.speclist.items():
 			result.append(spec.get_coefs())
 
 		return result

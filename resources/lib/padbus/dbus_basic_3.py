@@ -97,7 +97,7 @@ class PulseDBus:
 				method = "Set"
 			)
 			request.append_objects("ssv", dbus.valid_interface(interface),p_name, p_val)
-			reply = self.conn.send_with_reply_and_block(request)
+			self.conn.send_with_reply_and_block(request)
 		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
 
 	def get_all_property(self, interface, d_path):

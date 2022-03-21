@@ -16,7 +16,7 @@ import shutil
 import os
 
 from helper import SocketCom, opthandle, log, path_addon, path_tmp, path_filter
-from sound import SpecManager, Spectrum, SpecGroup,createGraph2, createGrid2
+from sound import SpecManager, Spectrum, SpecGroup,createGraph2
 from contextmenu import contextMenu
 
 from threading import Thread
@@ -24,8 +24,8 @@ from threading import Thread
 chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
 
 addon = xbmcaddon.Addon()
-def tr(id):
-	return addon.getLocalizedString(id)
+def tr(lid):
+	return addon.getLocalizedString(lid)
 
 class ImportGui(  xbmcgui.WindowXMLDialog  ):
 	name = None

@@ -41,7 +41,7 @@ class SoundGen():
 
 	def play_loop(self, freq, vol):
 		log("soge: start play loop")
-		if not self.player_proc: self.on_pulseplayer_start()
+		if not self.player_proc: self.on_pulseplayer_start(None)
 
 		self.playing = True
 		self.stop = False

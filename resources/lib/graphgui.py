@@ -9,17 +9,16 @@
 #
 #
 
-import xbmc
 import xbmcaddon
-import xbmcvfs
 import xbmcgui
+import os
 
-from helper import SocketCom, handle, opthandle, log, path_tmp
+from helper import SocketCom, opthandle, log, path_tmp
 from sound import createGraph, SpecManager, Spectrum
 
 addon = xbmcaddon.Addon()
-def tr(id):
-	return addon.getLocalizedString(id)
+def tr(lid):
+	return addon.getLocalizedString(lid)
 
 class GraphGui(  xbmcgui.WindowXMLDialog  ):
 	spec_file = None

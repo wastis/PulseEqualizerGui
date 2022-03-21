@@ -20,8 +20,8 @@ from helper import SocketCom, opthandle
 chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
 
 addon = xbmcaddon.Addon()
-def tr(id):
-	return addon.getLocalizedString(id)
+def tr(lid):
+	return addon.getLocalizedString(lid)
 
 class SweepGenGui(  xbmcgui.WindowXMLDialog  ):
 	name = None

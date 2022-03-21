@@ -133,7 +133,7 @@ class paDatabase():
 	def parse_sink_inputs(self):
 		self.stream_by_module = {}
 
-		for index, si in self.sink_inputs.items():
+		for _, si in self.sink_inputs.items():
 			try:
 				self.stream_by_module[si.owner_module] = si
 			except Exception: print(self.sink_inputs)
@@ -145,7 +145,7 @@ class paDatabase():
 		self.sink_by_name = {}
 		self.sink_by_module = {}
 
-		for index, sink in self.sinks.items():
+		for _, sink in self.sinks.items():
 			self.sink_by_name[sink.name] = sink
 			self.sink_by_module[sink.owner_module] = sink
 
@@ -206,7 +206,6 @@ class paDatabase():
 
 	def on_sink_input_new(self, index):
 		log("padb: on_sink_input_new %d" % index)
-		si = self.sink_inputs[index]
 
 		if self.info['kodi_stream'] is not None:
 			if index == self.info['kodi_stream'].index:

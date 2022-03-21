@@ -55,14 +55,14 @@ class PulseControl():
 		finally:
 			self.lock.release()
 			for ele in result:
-				
+
 				try:
 					sample_spec = {"format":self.sformats[ele.sample_spec.format],"rate":ele.sample_spec.rate,"channels":ele.sample_spec.channels}
 					ele.sample_spec = sample_spec
 				except AttributeError: pass
 				except Exception as e: opthandle(e)
 
-			return result
+		return result
 
 	def get_info(self, obj, index):
 		if not obj in ["sink","sink_input","client","module","card"]: return

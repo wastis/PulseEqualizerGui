@@ -43,9 +43,10 @@ class SocketCom():
 			return True
 		return None
 
-	def get_from_socket(self,sock):
+	@staticmethod
+	def get_from_socket(sock):
 		sock.listen(1)
-		conn, addr = sock.accept()
+		conn, _ = sock.accept()
 
 		result = conn.recv(8192)
 		return result, conn

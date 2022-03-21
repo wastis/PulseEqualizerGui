@@ -10,6 +10,7 @@
 #
 
 from helper import handle, opthandle, log
+import os
 
 class MessagCollector():
 	def __init__(self):

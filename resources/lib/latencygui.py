@@ -15,8 +15,8 @@ import xbmcgui
 from helper import SocketCom
 
 addon = xbmcaddon.Addon()
-def tr(id):
-	return addon.getLocalizedString(id)
+def tr(lid):
+	return addon.getLocalizedString(lid)
 
 class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 	def __init__( self, *args, **kwargs ):
@@ -43,7 +43,7 @@ class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 	def onAction( self, action ):
 		aid = action.getId()
 		#log("%s %s"%(aid,self.getFocusId()))
-		
+
 		#OK pressed
 		if aid == 7:
 			self.close()

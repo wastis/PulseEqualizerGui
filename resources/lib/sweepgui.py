@@ -17,8 +17,8 @@ from helper import SocketCom, log
 
 addon = xbmcaddon.Addon()
 
-def tr(id):
-	return addon.getLocalizedString(id)
+def tr(lid):
+	return addon.getLocalizedString(lid)
 
 class SweepGui(  xbmcgui.WindowXMLDialog  ):
 	def __init__( self, *args, **kwargs ):
@@ -31,7 +31,7 @@ class SweepGui(  xbmcgui.WindowXMLDialog  ):
 		result = self.sock.call_func("get","eq_channel")
 		if result is None: return
 
-		self.eqid, self.name, channel = (result)
+		self.eqid, self.name, _ = (result)
 
 		self.rec.start_func_server(self)
 
@@ -44,7 +44,8 @@ class SweepGui(  xbmcgui.WindowXMLDialog  ):
 
 		self.sock.call_func("play","sweep",[self.count, self.channel])
 
-	def on_sound_play(self, nr):
+	@staticmethod
+	def on_sound_play( nr):
 		log("on_sound_play %s"% nr)
 
 	def on_sound_stop(self):

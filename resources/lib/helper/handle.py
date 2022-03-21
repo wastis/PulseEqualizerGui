@@ -15,40 +15,28 @@ import traceback
 from .log import logerror, log
 
 if sys.version_info[0] > 2:
-	def handle(e):
-		traceback = e.__traceback__
-		result = "in: "
+	
+	def format_tracepack(e, result):
+		traceback = e.__traceback
 		while traceback:
 			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
 			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
 			traceback = traceback.tb_next
 
 		result = result + "{}: {}".format(type(e).__name__, e.args)
-		logerror(result)
+		return result
+	
+	def handle(e):
+		logerror(format_tracepack(e,"in: "))
 
 	def infhandle(e):
-		traceback = e.__traceback__
-		result = "nce: in: "
-		while traceback:
-			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
-			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
-			traceback = traceback.tb_next
-
-		result = result + "{}: {}".format(type(e).__name__, e.args)
-		log(result)
+		log(format_tracepack(e,"nce: in: "))
 
 	def opthandle(e):
-		traceback = e.__traceback__
-		result = "opt: in: "
-		while traceback:
-			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
-			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
-			traceback = traceback.tb_next
-
-		result = result + "{}: {}".format(type(e).__name__, e.args)
-		log(result)
+		log(format_tracepack(e,"opt: in: "))
 
 else:
+	
 	def handle(e):
 		lines = traceback.format_exc().splitlines()
 		for l in lines:

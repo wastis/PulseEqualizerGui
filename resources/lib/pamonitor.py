@@ -57,12 +57,14 @@ class PaMonitor( xbmc.Monitor ):
 		xbmc.log("eq: kodi service: on_device_get %s" % result,xbmc.LOGDEBUG)
 		return result
 
-	def on_player_get(self):
+	@staticmethod
+	def on_player_get():
 		r_dict = json.loads(xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Player.GetActivePlayers","id":0}'))
 		try: return r_dict["result"]
 		except Exception: return None
 
-	def on_log_write(self, message, level):
+	@staticmethod
+	def on_log_write(message, level):
 		xbmc.log(message, level)
 
 	def onNotification( self, sender, method, data ):

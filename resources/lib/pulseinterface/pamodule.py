@@ -351,7 +351,7 @@ class paModuleManager():
 
 	def load_dyn_equalizer(self):
 		# equalizer already loaded?
-		for sid, sink in self.padb.sinks.items():
+		for _, sink in self.padb.sinks.items():
 			if sink.name == self.eq_name:
 				self.dyn_equalizer = sink.index
 				return
@@ -366,7 +366,7 @@ class paModuleManager():
 			self.pc.unload_module(index)
 
 	def load_required_module(self, name):
-		for index,module in self.padb.modules.items():
+		for _,module in self.padb.modules.items():
 			if module.name == name:
 				log("pamm: %s already loaded" % name)
 				return
@@ -376,8 +376,9 @@ class paModuleManager():
 	#
 	#	helper
 	#
-
-	def get_sink_info(self, sink):
+	
+	@staticmethod
+	def get_sink_info(sink):
 		try:
 			return "%s  %s %s %s" % (sink.name, sink.sample_spec["format"], sink.sample_spec["rate"], sink.sample_spec["channels"])
 		except Exception: return sink.name

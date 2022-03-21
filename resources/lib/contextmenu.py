@@ -17,6 +17,11 @@ from helper import handle, opthandle, log, path_addon, path_tmp, path_skin
 from skin import get_current_skin, getSkinColors, create_temp_structure
 
 class ContextGui(  xbmcgui.WindowXMLDialog  ):
+	'''Main Context Menu
+
+		the context menu is build dynamically
+	'''
+	
 	result = None
 	index = None
 
@@ -26,31 +31,31 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 		try:
 			self.items = kwargs["items"]
 			self.index = self.items.index(kwargs["default"])
-		except Exception: default = None
+		except Exception: self.index = None
 
 		try: self.funcs = kwargs["funcs"]
-		except Exception: funcs = []
+		except Exception: self.funcs = []
 
 	def onInit( self ):
 		if self.index is not None:
 			self.setFocusId(5000 + self.index)
 
-		id = 5000
+		iid = 5000
 		for label in self.items:
-			self.getControl(id).setLabel(label)
-			id = id + 1
+			self.getControl(iid).setLabel(label)
+			iid = iid + 1
 
 		for label,cb in self.funcs:
-			self.getControl(id).setLabel(label)
-			id = id + 1
+			self.getControl(iid).setLabel(label)
+			iid = iid + 1
 
 	def onAction( self, action ):
 		aid = action.getId()
 
 		#OK pressed
 		if aid in [7,100]:
-			id = self.getFocusId()
-			if id >= 5000: self.result = id - 5000
+			iid = self.getFocusId()
+			if iid >= 5000: self.result = iid - 5000
 			self.close()
 
 		#Cancel
@@ -64,7 +69,7 @@ def contextMenu(**kwargs):
 	try: default = kwargs["default"]
 	except Exception: default = None
 
-	try: callback = kwargs[callback]
+	try: callback = kwargs["callback"]
 	except Exception: callback = None
 
 	try: funcs = kwargs["funcs"]

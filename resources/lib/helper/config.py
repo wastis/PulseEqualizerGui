@@ -17,7 +17,7 @@ import os
 import json
 
 from .handle import handle, log
-from .path import *
+from .path import path_addon, path_settings
 
 class Config():
 	config = {}
