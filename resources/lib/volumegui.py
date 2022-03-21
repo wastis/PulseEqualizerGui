@@ -99,31 +99,31 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 		if aid in [92,10]:
 			self.close()
 
-		aid = action.getButtonCode() & 255
+		aide = action.getButtonCode() & 255
 		log("action2 %d" %aid)
 
-		if aid in [self.key_up,128,131]:
+		if aide == self.key_up or aid in [2,3]:
 			self.vol_up()
 			self.set_vol_gui()
 			#log("key up")
-		elif aid in [self.key_down,129,130]:
+		elif aide == self.key_down or aid in[1,4]:
 			self.vol_down()
 			self.set_vol_gui()
 			#log("key down")
 		else:
 			if self.updown == "up":
 				if self.key_up is None:
-					self.key_up = aid
+					self.key_up = aide
 					self.vol_up()
 				elif self.key_down is None:
-					self.key_down = aid
+					self.key_down = aide
 					self.vol_down()
 			elif self.updown == "down":
 				if self.key_down is None:
-					self.key_down = aid
+					self.key_down = aide
 					self.vol_down()
 				elif self.key_up is None:
-					self.key_up = aid
+					self.key_up = aide
 					self.vol_up()
 
 			self.set_vol_gui()
