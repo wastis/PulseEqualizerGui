@@ -17,7 +17,7 @@ from .log import logerror, log
 if sys.version_info[0] > 2:
 	
 	def format_tracepack(e, result):
-		traceback = e.__traceback
+		traceback = e.__traceback__
 		while traceback:
 			p,fn = os.path.split(traceback.tb_frame.f_code.co_filename)
 			result = result + "%s (%s), " % (fn,traceback.tb_lineno)
