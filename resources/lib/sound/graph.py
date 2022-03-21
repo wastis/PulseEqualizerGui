@@ -68,7 +68,6 @@ def createGraphdB(fn, spec = None, width = 1700, height = 700):
 		scale = h / 40
 		xscale = w / 2.5
 
-		col= (255,255,255,255)
 		draw = ImageDraw.Draw(im)
 
 		if spec:

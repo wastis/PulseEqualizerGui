@@ -28,7 +28,7 @@ def tr(lid):
 
 class EqGui(  xbmcgui.WindowXMLDialog  ):
 	''' Eqaulizer Dialog
-	
+
 		The equalizer dialog is build up dynamically
 	'''
 	result = None

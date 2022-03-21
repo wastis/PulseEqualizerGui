@@ -5,16 +5,15 @@ PulseEqualizer GUI provides a graphical pulsaudio frontend for Kodi on linux sys
 Version 2.1.2 beta
 
 This includes:
-  - Graphical configuration of the pulseaudio equalizer
-  - Digital Room Correction
-  - Management of profiles (add, remove and change)
-  - Automatic profile switching based on output device
-  - Audio latency-offset slider and automatic switch (for video/audio sync)
-  - Control system volume (needed if a compressor is used in the filter chain)
 
-  - tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless
+* Graphical configuration of the pulseaudio equalizer
+* Digital Room Correction
+* Management of profiles (add, remove and change)
+* Automatic profile switching based on output device
+* Audio latency-offset slider and automatic switch (for video/audio sync)
+* Control system volume (needed if a compressor is used in the filter chain)
 
-*currently not working with: LibreElec / OSMC / OpenElec*  
+Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless
 
 2022 wastis
 
@@ -28,7 +27,7 @@ This addon requires pulseaudio-equalizer installed on the system
 
 	sudo apt install pulseaudio-equalizer	
 
-If you run Kodi 18, in addition the module python-dbus is required
+If you run Kodi 18, the module python-dbus is required in addition
 	
 	sudo apt install pulseaudio-equalizer
 	sudo apt install python-dbus

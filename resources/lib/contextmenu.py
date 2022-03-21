@@ -21,7 +21,7 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 
 		the context menu is build dynamically
 	'''
-	
+
 	result = None
 	index = None
 
@@ -45,7 +45,7 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 			self.getControl(iid).setLabel(label)
 			iid = iid + 1
 
-		for label,cb in self.funcs:
+		for label,_ in self.funcs:
 			self.getControl(iid).setLabel(label)
 			iid = iid + 1
 
@@ -147,7 +147,7 @@ def contextMenu(**kwargs):
 
 	max_width = bw if l_cnt == 1 else l_cnt * bw + 20
 
-	id=5000
+	iid=5000
 	item_but = ''
 	func_but = ''
 
@@ -161,17 +161,17 @@ def contextMenu(**kwargs):
 			txt_col = col_text
 			foc_col = col_focus
 
-		item_but = item_but +"\n" + button.format(id=id, label=item.encode('utf-8'), onleft= "", onright = onright,
+		item_but = item_but +"\n" + button.format(id=iid, label=item.encode('utf-8'), onleft= "", onright = onright,
 					txt_col=txt_col, foc_col=foc_col, **colors)
 
-		id = id + 1
+		iid = iid + 1
 		call.append((callback,[item]))
 
 	for item, cb in funcs:
-		func_but = func_but +"\n" + button.format(id=id, label=item.encode('utf-8'), onleft= onleft, onright = "",
+		func_but = func_but +"\n" + button.format(id=iid, label=item.encode('utf-8'), onleft= onleft, onright = "",
 					txt_col=col_text, foc_col=col_focus, **colors)
 
-		id = id + 1
+		iid = iid + 1
 		call.append((cb,[]))
 
 	#

@@ -376,7 +376,7 @@ class paModuleManager():
 	#
 	#	helper
 	#
-	
+
 	@staticmethod
 	def get_sink_info(sink):
 		try:
