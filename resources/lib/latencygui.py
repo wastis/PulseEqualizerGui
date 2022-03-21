@@ -41,17 +41,20 @@ class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 		self.sock.call_func("set","latency",[self.latency_info])
 
 	def onAction( self, action ):
+		aid = action.getId()
+		#log("%s %s"%(aid,self.getFocusId()))
+		
 		#OK pressed
-		if action.getId() == 7:
+		if aid == 7:
 			self.close()
 
 		#Cancel
-		if action.getId() in [92,10]:
+		if aid in [92,10]:
 			self.sock.call_func("set","latency",[self.save])
 			self.close()
 
 		#up/down/left/right
-		if action.getId() in [1,2,3,4]:
+		if aid in [1,2,3,4,106]:
 			fid = self.getFocusId()
 			if fid == 0:
 				self.setFocusId(1900)

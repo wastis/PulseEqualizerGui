@@ -29,7 +29,7 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 		except Exception: default = None
 
 		try: self.funcs = kwargs["funcs"]
-		except Exception as e: opthandle(e)
+		except Exception: funcs = []
 
 	def onInit( self ):
 		if self.index is not None:

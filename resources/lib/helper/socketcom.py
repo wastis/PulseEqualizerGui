@@ -17,6 +17,7 @@
 import socket
 import pickle
 import os
+import sys
 
 from threading import Thread
 from .log import log
@@ -128,9 +129,7 @@ class SocketCom():
 
 			result = method(*args) if method else None
 
-			try:
-				conn.send(pickle.dumps(result, protocol=2))
-			except Exception as e: opthandle(e)
+			self.respond(conn,result)
 
 			try:conn.close()
 			except Exception as e: opthandle(e)
@@ -140,8 +139,14 @@ class SocketCom():
 	@staticmethod
 	def respond(conn, result):
 		if conn is not None:
-			try:
-				conn.send(pickle.dumps(result, protocol=2))
-			except IOError: pass   #requestor did not wait for response, broken pipe
-			except Exception as e: opthandle(e)
+			if sys.version_info[0] > 2:
+				try:
+					conn.send(pickle.dumps(result, protocol=2))
+				except BrokenPipeError: pass   #requestor did not wait for response => broken pipe
+				except Exception as e: opthandle(e)
+			else:
+				try:
+					conn.send(pickle.dumps(result, protocol=2))
+				except IOError: pass   #requestor did not wait for response, broken pipe
+				except Exception as e: opthandle(e)
 

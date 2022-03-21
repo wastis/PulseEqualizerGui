@@ -16,6 +16,7 @@ import re
 import math
 import json
 
+from threading import Thread
 from helper import SocketCom, handle, opthandle, log, logerror, path_addon, path_tmp, path_settings, path_skin
 from time import sleep
 from skin import get_current_skin, getSkinColors, create_temp_structure
@@ -131,7 +132,7 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 
 	def sel_edit_freq(self):
 		freq = xbmcgui.Dialog().input(tr(32621),".".join([str(f) for f in self.freqs]))
-		if freq is "": return
+		if freq == "": return
 
 		try: freqs = sorted([int(f) for f in freq.split(".")])
 		except Exception: return
@@ -180,7 +181,7 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 	def onAction( self, action ):
 		aid = action.getId()
 		fid = self.getFocusId()
-		log("%s %s"%(aid,self.getFocusId()))
+		#log("%s %s"%(aid,self.getFocusId()))
 
 		#OK pressed
 		if aid in [7]:

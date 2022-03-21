@@ -16,7 +16,6 @@ import math
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 
-from helper import log
 from sound import SpecManager
 
 from PIL import Image, ImageDraw, ImageFont

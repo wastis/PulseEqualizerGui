@@ -16,7 +16,7 @@ import shutil
 import os
 
 from helper import SocketCom, opthandle, log, path_addon, path_tmp, path_filter
-from sound import createGrid, SpecManager, Spectrum, SpecGroup,createGraph2, createGrid2
+from sound import SpecManager, Spectrum, SpecGroup,createGraph2, createGrid2
 from contextmenu import contextMenu
 
 from threading import Thread
@@ -63,7 +63,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		for ch_name in channel:
 			try:
 				index = chan_num.index(ch_name)
-				channel_name.append(tr(32500 + i))
+				channel_name.append(tr(32500 + index))
 				file_name.append(tr(32411))
 			except Exception:
 				channel_name.append(tr(32612))
@@ -129,6 +129,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 	def draw_image(self):
 		fn = path_tmp + "%s.png" % self.img
 		try: os.remove(fn)
+		except OSError: pass
 		except Exception as e: opthandle(e)
 
 		self.img =  self.img + 1
@@ -164,6 +165,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 			try:
 				self.file_name.append(fns[i])
 				self.load_channel_name.append(self.channel_name[i])
+			except KeyError: pass
 			except Exception as e: opthandle(e)
 
 		ctl = self.getControl(2100)
@@ -283,6 +285,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 	def onAction( self, action ):
 		aid = action.getId()
 		fid = self.getFocusId()
+		#log("%s %s"%(aid,fid))
 
 		#OK pressed
 		if aid in [7, 100]:
@@ -292,12 +295,12 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		if aid in [92,10]:
 			self.end_gui()
 
-		if aid in [1,2,3,4]:
+		if aid in [1,2,3,4,100]:
 			if fid == 2100:
 				self.update_slider()
 				self.update_image()
 
-		if aid in [3,4]:
+		if aid in [3,4,106]:
 			if fid == 5001:
 				self.update_shift()
 

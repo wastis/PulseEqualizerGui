@@ -41,7 +41,7 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 		self.update_image()
 
 	def update_image(self):
-		fn = path_tmp +  % self.cnt
+		fn = self.tmp_fn  % self.cnt
 		try: os.remove(fn)
 		except Exception as e: opthandle(e)
 

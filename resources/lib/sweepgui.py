@@ -13,7 +13,7 @@
 import xbmcaddon
 import xbmcgui
 
-from helper import SocketCom
+from helper import SocketCom, log
 
 addon = xbmcaddon.Addon()
 

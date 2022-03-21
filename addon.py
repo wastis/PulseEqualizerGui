@@ -16,7 +16,6 @@ lock = "/run/user/%d/pa/lock" % os.geteuid()
 
 def run_addon():
 	import xbmc
-	import json
 	import xbmcaddon
 
 	cwd		= xbmcaddon.Addon().getAddonInfo('path')
@@ -26,7 +25,7 @@ def run_addon():
 	from helper import handle, log, logerror
 	from menus import Menu
 
-	xbmc.log("equalizer: start addon" , xbmc.LOGINFO)
+	xbmc.log("eq: start addon" , xbmc.LOGDEBUG)
 
 	try:
 		try: cmd = sys.argv[1]

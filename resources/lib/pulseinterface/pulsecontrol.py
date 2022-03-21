@@ -55,11 +55,12 @@ class PulseControl():
 		finally:
 			self.lock.release()
 			for ele in result:
+				
 				try:
 					sample_spec = {"format":self.sformats[ele.sample_spec.format],"rate":ele.sample_spec.rate,"channels":ele.sample_spec.channels}
 					ele.sample_spec = sample_spec
-
-				except :pass
+				except AttributeError: pass
+				except Exception as e: opthandle(e)
 
 			return result
 
@@ -83,8 +84,8 @@ class PulseControl():
 			try:
 				sample_spec = {"format":self.sformats[result.sample_spec.format],"rate":result.sample_spec.rate,"channels":result.sample_spec.channels}
 				result.sample_spec = sample_spec
-
-			except :pass
+			except AttributeError: pass
+			except Exception as e: opthandle(e)
 			return result
 
 	def get_server_info(self):

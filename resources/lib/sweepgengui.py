@@ -15,7 +15,7 @@ import xbmcgui
 from contextmenu import contextMenu
 from rundialog import runDialog
 from sweepgui import SweepGui
-from helper import SocketCom, log, opthandle
+from helper import SocketCom, opthandle
 
 chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
 
