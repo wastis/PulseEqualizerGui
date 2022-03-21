@@ -40,7 +40,8 @@ class Menu():
 							(tr(32007),self.sel_equalizer),
 							(tr(32008),self.sel_device),
 							(tr(32027),self.sel_correction),
-							(tr(32010),self.sel_latency)])
+							(tr(32010),self.sel_latency),
+							(tr(32036),self.sel_sysvol)])
 
 	def sel_menu(self, command, smenu = False):
 		func = 'sel_' + command
@@ -281,6 +282,10 @@ class Menu():
 
 	def sel_voldown(self, smenu=False):
 		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "down")
+		self.volgui.doModal()
+
+	def sel_sysvol(self, smenu=False):
+		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "none")
 		self.volgui.doModal()
 
 	#

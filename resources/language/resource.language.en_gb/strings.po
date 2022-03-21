@@ -137,6 +137,10 @@ msgctxt "#32035"
 msgid "Cannot load pulseaudio equalizer. Is it installed on the system?     'sudo apt install pulseaudio-equalizer'"
 msgstr "Cannot load pulseaudio equalizer. Is it installed on the system?     'sudo apt install pulseaudio-equalizer'"
 
+msgctxt "#32036"
+msgid "System Volume"
+msgstr "System Volume"
+
 msgctxt "#32200"
 msgid "Save"
 msgstr "Save"

@@ -33,7 +33,7 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 		self.vol = self.sock.call_func("get","volume")
 		if self.updown == "up":
 			self.vol_up()
-		else:
+		elif self.updown == "down":
 			self.vol_down()
 
 		self.last = time.time()
@@ -100,13 +100,13 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 			self.close()
 
 		aid = action.getButtonCode() & 255
-		#log("action %d" %aid)
+		log("action2 %d" %aid)
 
-		if aid == self.key_up:
+		if aid in [self.key_up,128,131]:
 			self.vol_up()
 			self.set_vol_gui()
 			#log("key up")
-		elif aid == self.key_down:
+		elif aid in [self.key_down,129,130]:
 			self.vol_down()
 			self.set_vol_gui()
 			#log("key down")
@@ -118,7 +118,7 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 				elif self.key_down is None:
 					self.key_down = aid
 					self.vol_down()
-			else:
+			elif self.updown == "down":
 				if self.key_down is None:
 					self.key_down = aid
 					self.vol_down()
