@@ -24,11 +24,13 @@ https://github.com/wastis/PulseEqualizerGui
 		<disclaimer lang="de_DE">Dokumentation: https://github.com/wastis/PulseEqualizerGui/wiki</disclaimer>
 		<news>
 			
-v2.1.2  (2022-03-19)
+v2.1.2  (2022-03-22)
 - Improved error message, in case pulse-equalizer is not installed
 - Source code clean-ups
 - Change of file structure to match standad
-- Add System Volume entry into main menu
+- Add System Volume into main menu
+- Dynamic sliders for slow remotes in Volume and Equalizer GUI
+- Possibilty to configure slider step-size in keymap
 
 v2.1.1  (2021-12-16)
 - fix some problems with Kodi 19.3 on raspberry (audio device conflicts, bt-device on/off issues)

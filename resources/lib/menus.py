@@ -28,8 +28,9 @@ def tr(lid):
 class Menu():
 	skin = "Default"
 
-	def __init__(self, cwd):
+	def __init__(self, cwd, step):
 		self.cwd = cwd
+		self.step = step
 
 	#
 	#	Menu selectors
@@ -151,7 +152,7 @@ class Menu():
 			if not func_available: return
 
 			from eqdialog import eqDialog
-			eqDialog(eqid = eqid, desc=desc, is_playing=is_playing)
+			eqDialog(eqid = eqid, desc=desc, is_playing=is_playing, step = self.step)
 		except Exception as e: handle(e)
 
 	#
@@ -276,16 +277,8 @@ class Menu():
 	#	show volume progress bar
 	#
 
-	def sel_volup(self, smenu=False):
-		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "up")
-		self.volgui.doModal()
-
-	def sel_voldown(self, smenu=False):
-		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "down")
-		self.volgui.doModal()
-
 	def sel_sysvol(self, smenu=False):
-		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "none")
+		self.volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "none", step=self.step)
 		self.volgui.doModal()
 
 	#

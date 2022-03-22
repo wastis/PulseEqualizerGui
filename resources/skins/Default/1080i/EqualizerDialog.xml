@@ -115,7 +115,7 @@
 				<font>{font_small}</font>
 				<textcolor>{col_text}</textcolor>
 				<shadowcolor>{col_shadow}</shadowcolor>
-				<label>Vor</label>
+				<label>pre</label>
 				<align>center</align>
 				<aligny>top</aligny>
 			</control>

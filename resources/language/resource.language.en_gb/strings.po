@@ -141,6 +141,10 @@ msgctxt "#32036"
 msgid "System Volume"
 msgstr "System Volume"
 
+msgctxt "#32037"
+msgid "pre"
+msgstr "pre"
+
 msgctxt "#32200"
 msgid "Save"
 msgstr "Save"

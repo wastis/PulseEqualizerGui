@@ -14,31 +14,54 @@ import sys
 
 lock = "/run/user/%d/pa/lock" % os.geteuid()
 
+
+def sel_vol(cwd, updown, step):
+	from volumegui import VolumeGui
+	volgui = VolumeGui("OsdVolume.xml" , cwd, "Default", updown = updown, step=step)
+	volgui.doModal()
+
 def run_addon():
-	import xbmc
-	import xbmcaddon
-
-	cwd		= xbmcaddon.Addon().getAddonInfo('path')
-	sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
-	sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
-
-	from helper import handle, log, logerror
-	from menus import Menu
-
-	xbmc.log("eq: start addon" , xbmc.LOGDEBUG)
-
 	try:
+
+		import xbmc
+		import xbmcaddon
+
+		xbmc.log("eq: start script.pulseequalizer.gui addon" , xbmc.LOGDEBUG)
+
+		cwd		= xbmcaddon.Addon().getAddonInfo('path')
+		sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
+		sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
+
 		try: cmd = sys.argv[1]
 		except Exception:	cmd = False
+		try: step = int(sys.argv[2])
+		except Exception:	step = False
 
-		m = Menu(cwd)
-		if cmd:
-			xbmc.log("eq: addon has been started by key press command" , xbmc.LOGDEBUG)
-			m.sel_menu(cmd)
-
+		# handle volup/voldown here to avoid unneccecary imports that slow down
+		if cmd == "volup": sel_vol(cwd,"up",step)
+		elif cmd == "voldown": sel_vol(cwd,"down",step)
 		else:
-			xbmc.log("eq: addon has been selected and is first instance" , xbmc.LOGDEBUG)
-			m.sel_main_menu()
+
+			from helper import handle, log, logerror
+			from menus import Menu
+
+			if not step:
+				try: 
+					step = int(cmd)
+					if step > 0: cmd = False
+				except ValueError: step = 1
+
+			if step < 1: step = 1
+
+			m = Menu(cwd, step)
+			if cmd:
+				xbmc.log("eq: keypress %s startup, step: %d" % (cmd,step) , xbmc.LOGDEBUG)
+				m.sel_menu(cmd)
+			else:
+				xbmc.log("eq: start main menu, step: %d" % step , xbmc.LOGDEBUG)
+				m.sel_main_menu()
+
+		xbmc.log("eq: end script.pulseequalizer.gui addon" , xbmc.LOGDEBUG)
 
 	except Exception as e: handle(e)
 

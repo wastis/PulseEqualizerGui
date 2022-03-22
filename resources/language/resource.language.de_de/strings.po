@@ -141,6 +141,10 @@ msgctxt "#32036"
 msgid "System Volume"
 msgstr "Systemlautstärke"
 
+msgctxt "#32037"
+msgid "pre"
+msgstr "Vor"
+
 msgctxt "#32200"
 msgid "Save"
 msgstr "Speichern"
