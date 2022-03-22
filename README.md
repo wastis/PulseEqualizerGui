@@ -2,7 +2,7 @@
 
 PulseEqualizer GUI provides a graphical pulsaudio frontend for Kodi on linux systems. 
 
-Version 2.1.2 beta
+Version 2.1.2
 
 This includes:
 
