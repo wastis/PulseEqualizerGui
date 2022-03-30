@@ -8,12 +8,21 @@
 #	or (at your option) any later version.
 #
 #
+
 import os
-import json
 import shutil
 
-from helper import handle, infhandle, opthandle, log, path_addon, path_filter
+from helper.fjson import json
+
+from basic import handle
+from basic import infhandle
+from basic import opthandle
+from basic import log
+from basic import path_addon
+from basic import path_filter
+
 from .spectrum import Spectrum
+
 from .specgroup import SpecGroup
 
 ## first one must be flat as it is used as filter for room correction

@@ -13,8 +13,13 @@ import xbmcaddon
 import xbmcgui
 import os
 
-from helper import SocketCom, opthandle, log, path_tmp
-from sound import createGraph, SpecManager, Spectrum
+from helper import SocketCom
+
+from basic import opthandle
+
+from sound import createGraph
+from sound import SpecManager
+from sound import Spectrum
 
 addon = xbmcaddon.Addon()
 def tr(lid):

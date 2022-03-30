@@ -17,10 +17,14 @@ import os
 import sys
 
 from . import dbussy as dbus
-from .dbussy import DBUS, DBusError
 from . import interface as IF
+
+from .dbussy import DBUS
+from .dbussy import DBusError
+
 from .pulseerror import PulseDBusError
-from helper import log
+
+from basic import log
 
 class PulseDBus:
 	def __init__( self, *args, **kwargs ):

@@ -21,6 +21,7 @@ import sys
 
 from padbus import DBusInterface as IF
 from padbus import PulseDBus
+
 from sound import SpecManager
 
 class FilterParam(): pass

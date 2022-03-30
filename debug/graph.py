@@ -18,7 +18,9 @@ sys.path.append ('./fakekodi')
 
 from sound import SpecManager
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 with Image.new("RGBA",(1700, 700),(0,0,0,0)) as im:
 	#im.load("/home/user/Script/kodi/develop/script.pulseequalizer.gui/debug/resources/skins/Default/media/equalizer-panel.png")

@@ -13,16 +13,19 @@
 #  dbus wraper for Python 2.x
 #
 
-from helper import log, logerror
+import interface as IF
+import sys
+import os
+
+from basic import log
+from basic import logerror
+
+from pulseerror import PulseDBusError
+
 try:
 	import dbus
 except ImportError:
 	logerror("please install python-dbus")
-
-import interface as IF
-import sys
-import os
-from pulseerror import PulseDBusError
 
 class PulseDBus:
 	def __init__( self, *args, **kwargs ):

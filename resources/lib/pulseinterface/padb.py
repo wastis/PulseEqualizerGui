@@ -20,10 +20,15 @@
 #         it does not exsits anymore by the time the create message arrives here.
 #
 
-from .collector import MessageCollector
 import os
 
-from helper import SocketCom, handle, opthandle, log
+from .collector import MessageCollector
+
+from helper import SocketCom
+
+from basic import handle
+from basic import opthandle
+from basic import log
 
 class paDatabase():
 	target_list = ["card","module","sink","client","sink_input"]
@@ -353,7 +358,7 @@ class paDatabase():
 		msg_list = self.update_attr() + msg_list
 		msg_list = self.update_output_sink() + msg_list
 
-		log(str(self))
+		#log("padb: {}".format(str(self)))
 
 		return msg_list
 

@@ -12,11 +12,19 @@
 import subprocess
 
 from time import sleep
+
 from threading import Thread
-from math import sin, pi
+
+from math import sin
+from math import pi
+
 from array import array
 
-from helper import SocketCom, handle, log, logerror
+from helper import SocketCom
+
+from basic import handle
+from basic import log
+from basic import logerror
 
 class SoundGen():
 	def __init__(self, padb, pc):

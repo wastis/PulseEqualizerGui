@@ -33,10 +33,20 @@
 # paModuleManager: reconfigures the playback stream dependend on current configuration and connected devices and playback status
 
 from .pulsecontrol import PulseControl
+
 from .pamodule import paModuleManager
+
 from .padb import paDatabase
+
 from .eqcontrol import EqControl
-from helper import SocketCom, Config, handle, opthandle, log
+
+from helper import SocketCom
+from helper import Config
+
+from basic import handle
+from basic import opthandle
+from basic import log
+
 from sound import SoundGen
 
 class MessageCentral():
@@ -60,6 +70,9 @@ class MessageCentral():
 		self.pc.start()
 		self.padb.on_pa_connect()
 		self.pamm.on_pa_connect()
+
+		SocketCom("kodi").call_func("up","service",[])
+		SocketCom("kodi").call_func("get","player",[])
 
 	#
 	# Dispatch messages
@@ -86,7 +99,6 @@ class MessageCentral():
 
 			for method in methods:
 				ret = method(*arg)
-				log("pact: return '%s'" % repr(ret))
 				SocketCom.respond(conn, ret)
 
 		except Exception as e: handle(e)

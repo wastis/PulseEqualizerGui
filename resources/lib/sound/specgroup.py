@@ -14,7 +14,11 @@
 import os
 
 from .spectrum import Spectrum
-from helper import handle, log, path_addon, path_filter
+
+from basic import handle
+from basic import log
+from basic import path_addon
+from basic import path_filter
 
 class SpecGroup():
 	def __init__(self, speclist={}, src=None):

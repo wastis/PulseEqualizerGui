@@ -8,13 +8,22 @@
 #	or (at your option) any later version.
 #
 #
-import xbmcgui
 
+import xbmcgui
 import os
 import re
+import time
 
-from helper import handle, opthandle, log, path_addon, path_tmp, path_skin
-from skin import get_current_skin, getSkinColors, create_temp_structure
+from basic import handle
+from basic import opthandle
+from basic import log
+from basic import path_addon
+from basic import path_tmp
+from basic import path_skin
+
+from skin import get_current_skin
+from skin import get_skin_colors
+from skin import create_temp_structure
 
 class ContextGui(  xbmcgui.WindowXMLDialog  ):
 	'''Main Context Menu
@@ -103,7 +112,7 @@ def contextMenu(**kwargs):
 	#	get skin color scheme
 	#
 
-	colors = getSkinColors(skincol)
+	colors = get_skin_colors(skincol)
 
 	col_select = 	colors["col_select"]
 	col_focus = 	colors["col_textfocus"]
@@ -225,7 +234,9 @@ def contextMenu(**kwargs):
 
 	ui = ContextGui(fn_dialog_name, path_tmp, "Default", "720p", **kwargs)
 	ui.doModal()
-	#os.remove(fn_path_dialog + fn_dialog_name)
+
+	# wait for animation finished
+	time.sleep(0.2)
 
 	#
 	#	process result

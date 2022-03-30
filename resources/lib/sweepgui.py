@@ -9,11 +9,12 @@
 #
 #
 
-
 import xbmcaddon
 import xbmcgui
 
-from helper import SocketCom, log
+from helper import SocketCom
+
+from basic import log
 
 addon = xbmcaddon.Addon()
 
@@ -71,3 +72,4 @@ class SweepGui(  xbmcgui.WindowXMLDialog  ):
 		#Cancel
 		if action.getId() in [92,10]:
 			self.end_gui()
+

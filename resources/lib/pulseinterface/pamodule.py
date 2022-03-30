@@ -21,7 +21,11 @@
 import time
 import threading
 
-from helper import SocketCom, handle, log, logerror
+from helper import SocketCom
+
+from basic import handle
+from basic import log
+from basic import logerror
 
 class paModuleManager():
 	def __init__(self, pulsecontrol, eqcontrol, padb, conf):

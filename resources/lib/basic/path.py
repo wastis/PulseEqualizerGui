@@ -8,16 +8,19 @@
 #	or (at your option) any later version.
 #
 #
-import os, re
 
-try: path_addon = re.findall(".*?/resources/", os.path.realpath(__file__),re.DOTALL | re.I)[0][:-10]
-except Exception: path_addon = None
+import os
 
-path_socket = "/run/user/%d/pa/" % os.geteuid()
+p = os.path.realpath(__file__)
+path_addon = p[:p.rfind("/resources/") + 1]
+path_kodi = os.environ['HOME']+"/.kodi/"
+
 path_tmp = "/run/user/%d/pa/" % os.geteuid()
+path_pipe = "/run/user/%d/pa/" % os.geteuid()
 path_settings = "settings/"
 path_filter = "settings/spectrum/"
 path_lib = "resources/lib/"
 path_skin = "resources/skins/{skin}/1080i/"
 path_skin_root = "resources/skins/"
+path_keymap = "userdata/keymaps/"
 

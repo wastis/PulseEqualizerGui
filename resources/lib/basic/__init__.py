@@ -8,9 +8,7 @@
 #	or (at your option) any later version.
 #
 #
+from .log import log,loginfo,logerror
+from .handle import handle,infhandle,opthandle
+from .path import path_addon,path_tmp,path_pipe,path_settings,path_filter,path_lib,path_skin,path_skin_root,path_kodi,path_keymap
 
-from .soundgen import SoundGen
-from .specmanager import SpecManager
-from .spectrum import Spectrum
-from .graph import createGraph2
-from .specgroup import SpecGroup

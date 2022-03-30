@@ -11,7 +11,7 @@
 #
 #
 
-import sys 
+import sys
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 

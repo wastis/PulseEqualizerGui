@@ -15,7 +15,7 @@ import sys
 sys.path.append ('./resources/lib/')
 sys.path.append ('./fakekodi')
 
-from helper import handle
+from basic import handle
 
 from pulseinterface import PulseControl
 
