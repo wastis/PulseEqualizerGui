@@ -84,6 +84,6 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 					self.getControl(lab_id).setLabel(str(keycode))
 				except KeyError: pass
 		except Exception as e:
-			xbmc.log(",".join([str(x) for x in e.args]),xbmc.LOGDEBUG)
+			handle(e)
 			self.close()
 

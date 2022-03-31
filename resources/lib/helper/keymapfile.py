@@ -18,25 +18,25 @@ from basic import handle
 
 class KeyMapFile():
 	struc_templ = {
-	"menu":{"id":0, "name":37000, "eq":True, "in":["global"], "key":0, "step":1},
-	"profile":{"id":1, "name":37001, "eq":True, "in":["global"], "key":0, "step":1},
-	"equalizer":{"id":2, "name":37002, "eq":True, "in":["global"], "key":0, "step":1},
-	"device":{"id":3, "name":37003, "eq":True, "in":["global"], "key":0, "step":1},
-	"correction":{"id":4, "name":37004, "eq":True, "in":["global"], "key":0, "step":1},
-	"latency":{"id":5, "name":37005, "eq":True, "in":["global"], "key":0, "step":1},
-	"CodecInfo":{"id":6, "name":37006, "eq":False, "in":["global"], "key":0, "step":1},
-	"PlayPause":{"id":7, "name":37007, "eq":False, "in":["global"], "key":0, "step":1},
+	"menu":{"id":0, "name":37000, "eq":True, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"profile":{"id":1, "name":37001, "eq":True, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"equalizer":{"id":2, "name":37002, "eq":True, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"device":{"id":3, "name":37003, "eq":True, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"correction":{"id":4, "name":37004, "eq":True, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"latency":{"id":5, "name":37005, "eq":True, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"CodecInfo":{"id":6, "name":37006, "eq":False, "in":["fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"PlayPause":{"id":7, "name":37007, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
 	"FullScreen":{"id":8, "name":37008, "eq":False, "in":["global"], "key":0, "step":1},
-	"ContextMenu":{"id":9, "name":37009, "eq":False, "in":["global"], "key":0, "step":1},
-	"Powerdown":{"id":10, "name":37010, "eq":False, "in":["global"], "key":0, "step":1},
-	"Reboot":{"id":11, "name":37011, "eq":False, "in":["global"], "key":0, "step":1},
-	"Suspend":{"id":12, "name":37012, "eq":False, "in":["global"], "key":0, "step":1},
-	"Quit":{"id":13, "name":37013, "eq":False, "in":["global"], "key":0, "step":1},
-	"AlarmClock('stop',Action(Stop))":{"id":14, "name":37014, "eq":False, "in":["global"], "key":0, "step":1},
-	"Screenshot":{"id":15, "name":37015, "eq":False, "in":["global"], "key":0, "step":1},
+	"ContextMenu":{"id":9, "name":37009, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"Powerdown":{"id":10, "name":37010, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"Reboot":{"id":11, "name":37011, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"Suspend":{"id":12, "name":37012, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"Quit":{"id":13, "name":37013, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"AlarmClock('stop',Action(Stop))":{"id":14, "name":37014, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
+	"Screenshot":{"id":15, "name":37015, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
 	"volup":{"id":16, "name":37016, "eq":True, "in":["fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
 	"voldown":{"id":17, "name":37017, "eq":True, "in":["fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
-	"Info":{"id":18, "name":37018, "eq":False, "in":["global"], "key":0, "step":1},
+	"Info":{"id":18, "name":37018, "eq":False, "in":["global","fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
 	"ShowSubtitles":{"id":19, "name":37019, "eq":False, "in":["fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
 	"AspectRatio":{"id":20, "name":37020, "eq":False, "in":["fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
 	"AudioNextLanguage":{"id":21, "name":37021, "eq":False, "in":["fullscreenvideo","fullscreenradio","fullscreenlivetv", "visualisation"], "key":0, "step":1},
@@ -121,7 +121,7 @@ class KeyMapFile():
 			else:
 				os.remove(self.file_name)
 		except OSError: pass
-		except Exception: handle(e)
+		except Exception as e: handle(e)
 
 	def get_info(self,name):
 		try:

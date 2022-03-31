@@ -109,7 +109,7 @@ class json():
 		try:
 			while True:
 				key =  next(it)
-				if type(key) == str:
+				if isinstance(key,str):
 					if key == '}':
 						return result
 					if key in ')]':
@@ -120,7 +120,7 @@ class json():
 
 				val = next(it)
 
-				if type(val)!= str:
+				if not isinstance(val,str):
 					result[key] = val
 					continue
 
@@ -142,7 +142,7 @@ class json():
 		try:
 			while True:
 				c = next(it)
-				if type(c)!= str:
+				if not isinstance(c,str):
 					result.append(c)
 					continue
 				if c == '':

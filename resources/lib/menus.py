@@ -111,7 +111,7 @@ class Menu():
 	#
 
 	def sel_profile(self):
-		func_available, eqid, _, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		func_available, eqid, _, is_playing, _, is_dyn =  self.check_func_available()
 		if not func_available: return
 
 		self.eqid = eqid
@@ -138,7 +138,7 @@ class Menu():
 	#
 
 	def sel_correction(self):
-		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		func_available, eqid, _, is_playing, eq_profile, is_dyn =  self.check_func_available()
 		if not func_available: return
 
 		corrections = SocketCom("server").call_func("get","room_corrections")
@@ -301,22 +301,7 @@ class Menu():
 	#	keymap
 	#
 
-	def sel_keymap(self):
-		runDialog(KeyMapGui,"KeyMapDialog")
-
-	#
-	#	debug funcion
-	#
-
 	@staticmethod
-	def introspect():
-		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Textures.GetTextures", "id":1}')
-		d = json.loads(response)
-		with open("/run/shm/all.txt","w") as f: f.write(json.dumps(d,indent = 4))
-
-		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettingValue", "params":{ "setting":"lookandfeel.skin"}, "id":1}')
-		d = json.loads(response)
-		with open("/run/shm/result.txt","w") as f: f.write(json.dumps(d,indent = 4))
-
-		log("*** %s"% re.findall(".*?skin\.(.*?)\"",xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettingValue", "params":{ "setting":"lookandfeel.skin"}, "id":1}'))[0])
+	def sel_keymap():
+		runDialog(KeyMapGui,"KeyMapDialog")
 

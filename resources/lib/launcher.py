@@ -23,6 +23,16 @@ class Launcher():
 		self.menu = Menu(cwd)
 		self.pname = "{}.{}".format(name,os.getppid())
 		self.ppath = path_pipe + self.pname
+		self.exit_str = "sfdaoekga"
+
+	def wait_user_action(self):
+		try:
+			log("launcher: wait for user action")
+			with open(self.ppath) as f: result = f.read()
+			return result
+		except OSError as e:
+			handle(e)
+			return self.exit_str
 
 	def loop(self):
 		log("launcher: start {}".format(self.ppath))
@@ -36,17 +46,10 @@ class Launcher():
 
 		while True:
 			try:
-				try:
-					log("launcher: wait")
-					with open(self.ppath) as f: result = f.read()
-					log("launcher: rec")
-				except OSError as e:
-					handle(e)
-					break
+				result = self.wait_user_action()
+				if result == self.exit_str: break
 
-				log("launcher: receive {}".format(result))
-
-				if result == "sfdaoekga": break
+				log("launcher: start menu {}".format(result))
 
 				cmd , step = result.split(',')
 				try: step = int(step.strip())
@@ -66,7 +69,7 @@ class Launcher():
 
 	def stop(self):
 		try:
-			with open(self.ppath, "w") as f: f.write("sfdaoekga")
+			with open(self.ppath, "w") as f: f.write(self.exit_str)
 		except OSError: pass
 
 	def start(self):

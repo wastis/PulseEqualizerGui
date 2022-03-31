@@ -13,6 +13,7 @@ import threading
 import pulsectl
 
 from pulsectl import PulseVolumeInfo
+from pulsectl import PulseIndexError
 
 from basic import handle
 from basic import opthandle
@@ -87,7 +88,7 @@ class PulseControl():
 				result.sample_spec = sample_spec
 			except AttributeError: pass
 			except Exception as e: opthandle(e)
-			return result
+		return result
 
 	def get_server_info(self):
 		self.lock.acquire()

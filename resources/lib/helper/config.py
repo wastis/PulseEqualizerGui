@@ -24,8 +24,8 @@ from basic import path_settings
 
 class Config():
 	def __init__(self):
-		config = {}
-		name = ""
+		self.config = {}
+		self.name = ""
 
 		path_name = path_addon + path_settings
 		if not os.path.exists(path_name): os. makedirs(path_name)

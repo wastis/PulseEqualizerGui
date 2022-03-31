@@ -20,7 +20,7 @@ def filename(fn):
 def format_trace(e, pre):
 	n = 2
 
-	exc_type, exc_obj, tb = sys.exc_info()
+	_, _, tb = sys.exc_info()
 
 	trace = ""
 	while tb != None:

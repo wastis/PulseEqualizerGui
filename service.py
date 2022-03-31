@@ -8,7 +8,6 @@
 #	or (at your option) any later version.
 #
 #
-import xbmc
 import xbmcaddon
 import sys
 import os
