@@ -241,7 +241,7 @@ def contextMenu(**kwargs):
 	#
 	#	process result
 	#
-	log("result %s"%ui.result)
+	log("ContextGui: result %s" % ui.result)
 	if ui.result is None: return None
 	try:
 		method, args = call[ui.result]

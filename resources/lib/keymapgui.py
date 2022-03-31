@@ -12,9 +12,12 @@
 import xbmcaddon
 import xbmcgui
 import xbmc
+import threading
+import time
 
 from helper import KeyMapFile
 from basic import handle
+from basic import log
 
 from contextmenu import contextMenu
 
@@ -49,9 +52,16 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 					if vals["key"] == 0: lab_ctl.setLabel("-")
 					else: lab_ctl.setLabel(str(vals["key"]))
 
+	@staticmethod
+	def send_reload_keymaps():
+		time.sleep(1)
+		xbmc.executebuiltin('Action(reloadkeymaps)')
+
 	def end_gui_ok(self):
 		self.kmf.save()
-		xbmc.executebuiltin('Action(reloadkeymaps)')
+		# we have to create delayed action otherwise the reloadkeymaps action will
+		# be swallowed by the window animations
+		threading.Thread(target = self.send_reload_keymaps).start()
 		self.close()
 
 	def end_gui_cancel(self):
@@ -72,10 +82,9 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 
 			#Cancel
 			if aid in [92,10]:
-				#self.end_gui_ok()
-				mic_sel = contextMenu(items = [tr(37501),tr(37502),tr(37503)])
-				if mic_sel == 1: self.end_gui_cancel()
-				if mic_sel == 2: self.end_gui_ok()
+				contextMenu(funcs = [(tr(37501),None),
+						(tr(37502),self.end_gui_cancel),
+						(tr(37503),self.end_gui_ok)])
 
 			elif aid not in [1,2,3,4,7] and buc != 0:
 				try:
