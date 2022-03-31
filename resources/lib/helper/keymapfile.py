@@ -12,7 +12,7 @@
 import os
 import re
 
-from basic import path_kodi
+from basic import path_profile
 from basic import path_keymap
 from basic import handle
 
@@ -47,7 +47,7 @@ class KeyMapFile():
 	sec_list = ["global","fullscreenvideo","fullscreenradio","seekbar","fullscreenlivetv", "visualisation"]
 
 	def __init__(self, file_name = "zEqualizer.xml"):
-		self.file_name = path_kodi + path_keymap + file_name
+		self.file_name = path_profile + path_keymap + file_name
 
 		self.struct = self.struc_templ
 		self.index = {}

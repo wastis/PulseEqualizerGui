@@ -18,9 +18,9 @@ from helper import SocketCom
 from helper import DynStep
 
 from basic import opthandle
-from basic import path_addon
 from basic import path_tmp
 from basic import path_filter
+from basic import path_masterprofile
 
 from sound import SpecManager
 from sound import Spectrum
@@ -197,7 +197,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		name = xbmcgui.Dialog().input(tr(32608),self.spec_group.name)
 
 		if name is None: return
-		fn = path_addon + path_filter + name + "/"
+		fn = path_masterprofile + path_filter + name + "/"
 		if os.path.exists(fn):
 			if xbmcgui.Dialog().yesno(tr(32608),tr(32609) %(name)) == False: return
 			shutil.rmtree(fn)

@@ -29,6 +29,7 @@ from basic import path_addon
 from basic import path_tmp
 from basic import path_settings
 from basic import path_skin
+from basic import path_profile
 
 from time import sleep
 
@@ -177,7 +178,7 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 				flist.append(cur)
 		except Exception as e: opthandle(e)
 
-		fn = path_addon + path_settings + "settings.json"
+		fn = path_profile + path_settings + "settings.json"
 		try:
 			with open(fn) as f: se = json.loads(f.read())
 		except Exception: se = {}
@@ -248,7 +249,7 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		self.last_key = t
 
 def eqBuild(**kwargs):
-	fn = path_addon + path_settings + "settings.json"
+	fn = path_profile + path_settings + "settings.json"
 	try:
 		with open(fn) as f: se = json.loads(f.read())
 		freqs = se["freqs"]

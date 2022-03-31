@@ -19,7 +19,7 @@ from .fjson import json
 
 from basic import handle
 from basic import log
-from basic import path_addon
+from basic import path_profile
 from basic import path_settings
 
 class Config():
@@ -27,7 +27,7 @@ class Config():
 		self.config = {}
 		self.name = ""
 
-		path_name = path_addon + path_settings
+		path_name = path_profile + path_settings
 		if not os.path.exists(path_name): os. makedirs(path_name)
 		self.file_name = os.path.join(path_name,"config.json")
 

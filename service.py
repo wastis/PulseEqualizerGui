@@ -16,6 +16,9 @@ cwd	= xbmcaddon.Addon().getAddonInfo('path')
 sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
 sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
 
+from basic import path
+path.create_paths()
+
 from pamonitor import PaMonitor
 
 if ( __name__ == "__main__" ):

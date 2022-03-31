@@ -17,8 +17,8 @@ from .spectrum import Spectrum
 
 from basic import handle
 from basic import log
-from basic import path_addon
 from basic import path_filter
+from basic import path_masterprofile
 
 class SpecGroup():
 	def __init__(self, speclist={}, src=None):
@@ -78,7 +78,7 @@ class SpecGroup():
 		self.filenames = {}
 		self.name = name
 
-		path = path_addon + path_filter + name + "/%s.fil"
+		path = path_masterprofile + path_filter + name + "/%s.fil"
 		if os.path.exists(path % "all" ):
 			channels = ["all"]
 
