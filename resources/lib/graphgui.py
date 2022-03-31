@@ -17,7 +17,7 @@ from helper import SocketCom
 
 from basic import opthandle
 
-from sound import createGraph
+from sound import createGraph2
 from sound import SpecManager
 from sound import Spectrum
 
@@ -60,8 +60,8 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 			spec =  self.mic_file
 		else: spec = None
 
-		if spec: createGraph(fn,spec.as_coef())
-		else: createGraph(fn)
+		if spec: createGraph2(fn,spec.as_coef())
+		else: createGraph2(fn)
 
 		self.getControl(1000).setImage(fn, False)
 
@@ -121,4 +121,3 @@ class GraphGui(  xbmcgui.WindowXMLDialog  ):
 		#Cancel
 		if action.getId() in [92,10]:
 			self.close()
-

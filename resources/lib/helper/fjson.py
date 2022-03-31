@@ -28,7 +28,7 @@ class StructProblme(Exception):
 class json():
 	@classmethod
 	def dumps(cls,arg):
-		if arg == None: return 'None'
+		if arg  is None: return 'None'
 		return str(arg)
 
 	@staticmethod
@@ -178,4 +178,3 @@ class json():
 		if c == '{': return cls.parse_dict(it)
 		elif c in '[(': return cls.parse_list(it)
 		else: return ilist[0]
-

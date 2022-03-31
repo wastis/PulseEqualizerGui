@@ -81,4 +81,3 @@ if not os.path.exists( lock ):
 		if not service_mode:
 			try: os.remove(lock)
 			except OSError: pass
-

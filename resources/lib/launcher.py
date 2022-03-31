@@ -74,4 +74,3 @@ class Launcher():
 
 	def start(self):
 		threading.Thread(target = self.loop).start()
-

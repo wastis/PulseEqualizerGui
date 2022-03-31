@@ -78,8 +78,7 @@ class PaMonitor( xbmc.Monitor ):
 	def on_service_up(self):
 		self.sock.call_func("set","device",[self.get_device()])
 
-	def onNotification( self, sender, method, data ):
+	def onNotification( self, _sender, method, _data ):
 		target,func = method.lower().replace("on","").split(".")
 		if target in ["system", "player"]:
 			self.sock.call_func(func, target)
-

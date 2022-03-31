@@ -140,4 +140,3 @@ class SpecGroup():
 		self.relvol = relvol
 
 		return self
-

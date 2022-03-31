@@ -18,7 +18,6 @@ from helper import json
 from helper import SocketCom
 
 from basic import handle
-from basic import log
 from basic import logerror
 
 from time import sleep
@@ -94,7 +93,7 @@ class Menu():
 					count = count - 1
 					self.current = SocketCom("server").call_func("get","eq_current")
 					eqid, desc, is_playing, eq_profile, is_dyn = ( self.current )
-					if eqid != None: return True , eqid, desc, is_playing, eq_profile, is_dyn
+					if eqid  is not None: return True , eqid, desc, is_playing, eq_profile, is_dyn
 					sleep(0.1)
 			# Dialog problem switch on
 			xbmcgui.Dialog().ok(tr(32004),tr(32005))
@@ -138,7 +137,7 @@ class Menu():
 	#
 
 	def sel_correction(self):
-		func_available, eqid, _, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		func_available, eqid, _, _, _, _ =  self.check_func_available()
 		if not func_available: return
 
 		corrections = SocketCom("server").call_func("get","room_corrections")
@@ -162,9 +161,9 @@ class Menu():
 	#	configure equalizer
 	#
 
-	def sel_equalizer(self, smenu=False):
+	def sel_equalizer(self):
 		try:
-			func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+			func_available, eqid, desc, is_playing, _, _ =  self.check_func_available()
 			if not func_available: return
 
 			eqDialog(eqid = eqid, desc=desc, is_playing=is_playing, step = self.step)
@@ -213,7 +212,7 @@ class Menu():
 	#
 
 	def sel_manager(self):
-		func_available, eqid, desc, is_playing, eq_profile, is_dyn =  self.check_func_available()
+		func_available, eqid, _, _, _, _ =  self.check_func_available()
 		if not func_available: return
 
 		self.eqid = eqid
@@ -237,7 +236,7 @@ class Menu():
 
 		# sure to delete
 		del_profile = profiles[nr]
-		if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile) == True:
+		if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile)  is True:
 				SocketCom("server").call_func("remove","eq_profile" , [del_profile])
 
 	@staticmethod
@@ -263,7 +262,7 @@ class Menu():
 
 		del_correction = corrections[nr]
 		# sure to delete
-		if xbmcgui.Dialog().yesno(tr(32030) % del_correction,tr(32031) % del_correction) == True:
+		if xbmcgui.Dialog().yesno(tr(32030) % del_correction,tr(32031) % del_correction)  is True:
 			SocketCom("server").call_func("remove","room_correction" , [del_correction])
 
 	@staticmethod
@@ -304,4 +303,3 @@ class Menu():
 	@staticmethod
 	def sel_keymap():
 		runDialog(KeyMapGui,"KeyMapDialog")
-

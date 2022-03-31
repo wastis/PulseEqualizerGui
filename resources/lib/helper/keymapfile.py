@@ -96,19 +96,27 @@ class KeyMapFile():
 		templ_key = '\t\t\t<key id="{}">{}</key>\n'
 		templ_eq  = 'RunScript(script.pulseequalizer.gui,{},{})'
 
+		fin_struct = {}
+		for func, val in self.struct.items():
+			if val["key"] == 0: continue
+			if val["eq"]: func = templ_eq.format(func,val["step"])
+
+			for sec in val["in"]:
+				if sec not in fin_struct:
+					fin_struct[sec] = []
+
+				fin_struct[sec].append(templ_key.format(val["key"], func))
+
+			if "global" not in val["in"]:
+				if "global" not in fin_struct:
+					fin_struct["global"] = []
+				fin_struct["global"].append(templ_key.format(val["key"], "noop"))
+
 		xml_result = ""
 		for sec_name in self.sec_list:
-			if sec_name not in self.sec: continue
-			func_result = ""
-			for func_name in self.sec[sec_name]:
-				vals = self.struct[func_name]
-				if vals["key"]== 0: continue
-				if vals["eq"]: func_name = templ_eq.format(func_name,vals["step"])
+			if sec_name not in fin_struct: continue
 
-				func_result = func_result + templ_key.format(vals["key"],func_name)
-
-			if func_result != "":
-				xml_result = xml_result + templ_sec.format(sec_name,func_result,sec_name)
+			xml_result = xml_result + templ_sec.format(sec_name,"".join(fin_struct[sec_name]),sec_name)
 
 		if xml_result: xml_result = templ_keymap.format(xml_result)
 		return xml_result
@@ -128,8 +136,7 @@ class KeyMapFile():
 			return self.struct[name]
 		except KeyError: return ""
 
-	def set_info(self,name,key,step=1):
+	def set_info(self,name,key):
 		try:
 			self.struct[name]["key"]=key
 		except KeyError: return
-

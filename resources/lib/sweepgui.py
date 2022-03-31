@@ -22,7 +22,7 @@ def tr(lid):
 	return addon.getLocalizedString(lid)
 
 class SweepGui(  xbmcgui.WindowXMLDialog  ):
-	def __init__( self, *args, **kwargs ):
+	def __init__( self, *_args, **kwargs ):
 		self.sock = SocketCom("server")
 		self.rec = SocketCom("sweep")
 
@@ -72,4 +72,3 @@ class SweepGui(  xbmcgui.WindowXMLDialog  ):
 		#Cancel
 		if action.getId() in [92,10]:
 			self.end_gui()
-

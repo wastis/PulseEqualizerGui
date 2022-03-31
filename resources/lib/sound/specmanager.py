@@ -59,7 +59,6 @@ class SpecManager():
 
 		self.prof_path = path_profile + path_settings
 		if not os.path.exists(self.prof_path): os.makedirs(self.prof_path)
-		
 
 	def import_mic_file(self,fn):
 		name = os.path.split(fn)
@@ -251,4 +250,3 @@ class SpecManager():
 		log("%s, number of channels: %s" % (info, len(coefs)))
 
 		return self.filter_freq, preamp, coefs
-

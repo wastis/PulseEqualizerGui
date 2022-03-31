@@ -77,7 +77,7 @@ class Config():
 
 	def set(self, key, val, name = None):
 		if name is None: name = self.name
-		if name == None: return
+		if name  is None: return
 
 		try: sec = self.config[name]
 		except Exception: sec = {}
@@ -85,4 +85,3 @@ class Config():
 		sec[key]= val
 		self.config[name] = sec
 		self.save_config()
-

@@ -338,4 +338,3 @@ def eqDialog(**kwargs):
 		if not ui.reopen:
 			os.remove(fn_path_dialog + fn_dialog_name)
 			break
-

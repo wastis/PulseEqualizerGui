@@ -48,4 +48,3 @@ if __name__ == '__main__':
 		log("service is already running")
 
 log("pulseservice ended")
-

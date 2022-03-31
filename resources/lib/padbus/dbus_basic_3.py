@@ -27,7 +27,7 @@ from .pulseerror import PulseDBusError
 from basic import log
 
 class PulseDBus:
-	def __init__( self, *args, **kwargs ):
+	def __init__( self, *_args, **_kwargs ):
 		destination = 'org.PulseAudio1'
 		object_path = '/org/pulseaudio/server_lookup1'
 		interface_name = 'org.PulseAudio.ServerLookup1'
@@ -138,4 +138,3 @@ class PulseDBus:
 	@staticmethod
 	def handle_exception(e,python,func):
 		raise(PulseDBusError(e.name,e.message,python,func))
-

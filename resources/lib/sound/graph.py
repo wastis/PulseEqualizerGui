@@ -38,7 +38,6 @@ def createGraph2(fn, spec = None, width = 1700, height = 700):
 
 		xscale = w / 2.8
 
-		col= (255,255,255,255)
 		draw = ImageDraw.Draw(im)
 
 		if spec:
@@ -63,4 +62,3 @@ def createGraph2(fn, spec = None, width = 1700, height = 700):
 					y1 = y2
 
 		im.save(fn, "PNG")
-

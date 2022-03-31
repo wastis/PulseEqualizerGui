@@ -17,6 +17,7 @@ from basic import log
 from basic import path_addon
 from basic import path_tmp
 from basic import path_skin_root
+from basic import handle
 from helper.fjson import json
 
 def get_current_skin():

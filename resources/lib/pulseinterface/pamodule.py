@@ -117,7 +117,7 @@ class paModuleManager():
 
 		if new is not None: self.reroute = True
 
-	def on_output_sink_update(self, old, new):
+	def on_output_sink_update(self, _old, new):
 		log("pamm: on_output_sink_update -> %s" % (None if new is None else new.name))
 		if new is not None: self.reroute = True
 
@@ -364,7 +364,7 @@ class paModuleManager():
 		self.pc.load_module('module-equalizer-sink', args)
 
 	def unload_dyn_equalizer(self):
-		if self.dyn_equalizer != None:
+		if self.dyn_equalizer  is not None:
 			index = self.padb.sinks[self.dyn_equalizer].owner_module
 			self.dyn_equalizer = None
 			self.pc.unload_module(index)
@@ -386,4 +386,3 @@ class paModuleManager():
 		try:
 			return "%s  %s %s %s" % (sink.name, sink.sample_spec["format"], sink.sample_spec["rate"], sink.sample_spec["channels"])
 		except Exception: return sink.name
-

@@ -137,11 +137,3 @@ class PulseControl():
 
 	def get_sink_channel(self, index):
 		return self.get_info("sink",index).channel_list
-
-	#
-	# play sound
-	#
-
-	def play_sample(self, name, sink=None, volume=1.0, proplist_str=None):
-		self.pulse.play_sample(name, sink)
-

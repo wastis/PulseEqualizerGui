@@ -46,7 +46,7 @@ class SweepGenGui(  xbmcgui.WindowXMLDialog  ):
 
 	repeats = 0
 
-	def __init__( self, *args, **kwargs ):
+	def __init__( self, *args, **_kwargs ):
 		self.cwd = args[1]
 		self.skin = args[2]
 
@@ -149,4 +149,3 @@ class SweepGenGui(  xbmcgui.WindowXMLDialog  ):
 		#Cancel
 		if action.getId() in [92,10]:
 			self.end_gui()
-

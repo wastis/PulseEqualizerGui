@@ -69,4 +69,3 @@ def runDialog(dialog, template ,**kwargs):
 
 	# wait for animation finished
 	time.sleep(0.2)
-

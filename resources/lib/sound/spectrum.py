@@ -311,4 +311,3 @@ class Spectrum():
 		self.minval = minval
 
 		return self
-

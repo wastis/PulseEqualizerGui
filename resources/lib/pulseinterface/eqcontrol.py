@@ -162,4 +162,3 @@ class EqControl():
 
 	def on_eq_defaults_set(self):
 		self.spec.set_defaults()
-

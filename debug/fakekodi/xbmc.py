@@ -15,4 +15,3 @@ def log(text, level = LOGINFO):
 
 def translatePath(path):
 	return path
-

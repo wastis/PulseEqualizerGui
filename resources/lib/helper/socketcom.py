@@ -151,7 +151,7 @@ class SocketCom():
 
 	@classmethod
 	def respond(cls, conn, result):
-		if conn == None:
+		if conn  is None:
 			#log("socket: no connection, nothing to respond")
 			return
 
@@ -186,4 +186,3 @@ class SocketCom():
 			try:
 				sock.close()
 			except socket.error: pass
-

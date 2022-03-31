@@ -42,11 +42,11 @@ try:
 	# ~/.kodi/addons/script.pulseequalizer.gui/
 	path_addon = xbmcaddon.Addon().getAddonInfo('path') + "/"
 	# ~/.kodi
-	path_kodi = translatePath("special://home/") + "/"
+	path_kodi = translatePath("special://home/")
 	# specific
-	path_profile = translatePath("special://profile/") + "/"
+	path_profile = translatePath("special://profile/")
 	# ~/.kodi/userdata
-	path_masterprofile = translatePath("special://masterprofile/") + "/"
+	path_masterprofile = translatePath("special://masterprofile/")
 
 except ImportError:
 	try:
@@ -64,7 +64,7 @@ def try_copy(src, dst, is_dir=False):
 		import shutil
 
 		try:
-			if is_dir == True:
+			if is_dir  is True:
 				shutil.copytree(src,dst)
 			else:
 				shutil.copy(src,dst)
@@ -100,4 +100,3 @@ def create_paths():
 		with open(path_tmp + "paths", "w") as f:
 			f.write(",".join([path_kodi, path_addon, path_masterprofile, path_profile]))
 	except OSError: pass
-

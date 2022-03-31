@@ -23,7 +23,7 @@ def format_trace(e, pre):
 	_, _, tb = sys.exc_info()
 
 	trace = ""
-	while tb != None:
+	while tb  is not None:
 		f = tb.tb_frame
 		trace = "{}@{}({}), ".format(f.f_code.co_name,filename(f.f_code.co_filename),tb.tb_lineno) + trace
 		tb = tb.tb_next
@@ -49,4 +49,3 @@ def infhandle(e):
 
 def opthandle(e):
 	log(format_trace(e,"exc info"))
-

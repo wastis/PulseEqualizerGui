@@ -137,4 +137,3 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 			self.set_vol_gui()
 
 		self.last = time.time()
-

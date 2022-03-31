@@ -36,7 +36,7 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 
 	items = []
 	funcs = []
-	def __init__(self, *args, **kwargs ):
+	def __init__(self, *_args, **kwargs ):
 		try:
 			self.items = kwargs["items"]
 			self.index = self.items.index(kwargs["default"])
@@ -251,4 +251,3 @@ def contextMenu(**kwargs):
 	except Exception as e: opthandle(e)
 
 	return ui.result
-

@@ -193,4 +193,3 @@ class PulseInterfaceService():
 			except Exception as e: handle(e)
 
 		log("stop message_dispatch")
-

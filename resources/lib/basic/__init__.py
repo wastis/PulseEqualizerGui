@@ -11,4 +11,3 @@
 from .log import log,loginfo,logerror
 from .handle import handle,infhandle,opthandle
 from .path import path_tmp ,path_pipe,path_addon,path_kodi,path_profile,path_masterprofile,path_settings,path_filter,path_keymap,path_lib,path_skin,path_skin_root
-

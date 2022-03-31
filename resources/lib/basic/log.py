@@ -76,4 +76,3 @@ def loginfo(text):
 
 def logerror(text):
 	xbmc.log("c_eq: " + text, xbmc.LOGERROR)
-

@@ -148,17 +148,17 @@ class MessageCentral():
 				self.config.set("latency", int(latency_info["latency"]),self.padb.output_sink.name)
 
 	# just save the current selected profile to config file
-	def on_eq_profile_load(self,index, profile):
+	def on_eq_profile_load(self,_index, profile):
 		if self.padb.output_sink:
 			self.config.set("eq_profile", profile,self.padb.output_sink.name)
 
 	# just save the current selected room correction to config file
-	def on_room_correction_set(self,index, name):
+	def on_room_correction_set(self,_index, name):
 		if self.padb.output_sink:
 			self.config.set("eq_correction", name,self.padb.output_sink.name)
 
 	# just remove the current selected room correction from config file
-	def on_room_correction_unset(self, index):
+	def on_room_correction_unset(self, _index):
 		if self.padb.output_sink:
 			self.config.set("eq_correction", None,self.padb.output_sink.name)
 
@@ -166,4 +166,3 @@ class MessageCentral():
 	def on_pa_module_log(self):
 		for key,val in vars(self.pamm).items():
 			log(key+"="+ str(val))
-

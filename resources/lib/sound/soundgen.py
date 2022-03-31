@@ -213,4 +213,3 @@ class SoundGen():
 
 				self.pc.move_sink_input(index , self.cur_eq_index)
 				self.pc.move_sink_input(self.cur_eq_stream , self.padb.output_sink.index)
-

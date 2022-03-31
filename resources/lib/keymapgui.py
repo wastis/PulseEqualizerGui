@@ -17,7 +17,6 @@ import time
 
 from helper import KeyMapFile
 from basic import handle
-from basic import log
 
 from contextmenu import contextMenu
 
@@ -26,7 +25,7 @@ def tr(lid):
 	return addon.getLocalizedString(lid)
 
 class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
-	def __init__( self, *args, **kwargs ):
+	def __init__( self, *args, **_kwargs ):
 		self.cwd = args[1]
 		self.skin = args[2]
 
@@ -95,4 +94,3 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 		except Exception as e:
 			handle(e)
 			self.close()
-

@@ -38,7 +38,7 @@ def tr(lid):
 	return addon.getLocalizedString(lid)
 
 class ImportGui(  xbmcgui.WindowXMLDialog  ):
-	def __init__( self, *args, **kwargs ):
+	def __init__( self, *_args, **kwargs ):
 		self.name = None
 		self.eqid = None
 
@@ -199,7 +199,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		if name is None: return
 		fn = path_masterprofile + path_filter + name + "/"
 		if os.path.exists(fn):
-			if xbmcgui.Dialog().yesno(tr(32608),tr(32609) %(name)) == False: return
+			if xbmcgui.Dialog().yesno(tr(32608),tr(32609) %(name))  is False: return
 			shutil.rmtree(fn)
 		os.makedirs(fn)
 
@@ -337,4 +337,3 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 				self.update_shift()
 
 		#log("%s"%action.getId())
-
