@@ -22,7 +22,7 @@ from basic import path_pipe
 
 lock = path_pipe + "lock"
 
-service_mode = False
+service_mode = True
 
 def get_args():
 	try: cmd = sys.argv[1]
