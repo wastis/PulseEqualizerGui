@@ -26,7 +26,6 @@
 			<height>3240</height>
 			<texturefocus />
 			<texturenofocus />
-			<onclick>Action(close)</onclick>
 		</control>
 		<!-- left item group -->
 		<control type="group">
@@ -48,10 +47,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3007</onup>
-				<ondown>3001</ondown>
-				<onleft>5000</onleft>
-				<onright>4000</onright>
 			</control>
 			<control type="button" id="3001">
 				<textoffsetx>50</textoffsetx>
@@ -68,10 +63,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3000</onup>
-				<ondown>3002</ondown>
-				<onleft>5001</onleft>
-				<onright>4001</onright>
 			</control>
 			<control type="button" id="3002">
 				<textoffsetx>50</textoffsetx>
@@ -88,10 +79,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3001</onup>
-				<ondown>3003</ondown>
-				<onleft>5002</onleft>
-				<onright>4002</onright>
 			</control>
 			<control type="button" id="3003">
 				<textoffsetx>50</textoffsetx>
@@ -108,10 +95,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3002</onup>
-				<ondown>3004</ondown>
-				<onleft>5003</onleft>
-				<onright>4003</onright>
 			</control>
 			<control type="button" id="3004">
 				<textoffsetx>50</textoffsetx>
@@ -128,10 +111,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3003</onup>
-				<ondown>3005</ondown>
-				<onleft>5004</onleft>
-				<onright>4004</onright>
 			</control>
 			<control type="button" id="3005">
 				<textoffsetx>50</textoffsetx>
@@ -148,10 +127,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3004</onup>
-				<ondown>3006</ondown>
-				<onleft>5005</onleft>
-				<onright>4005</onright>
 			</control>
 			<control type="button" id="3006">
 				<textoffsetx>50</textoffsetx>
@@ -168,10 +143,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3005</onup>
-				<ondown>3007</ondown>
-				<onleft>5006</onleft>
-				<onright>4006</onright>
 			</control>
 			<control type="button" id="3007">
 				<textoffsetx>50</textoffsetx>
@@ -188,17 +159,30 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>3006</onup>
-				<ondown>3000</ondown>
-				<onleft>5007</onleft>
-				<onright>4007</onright>
 			</control>
+			<control type="button" id="3008">
+				<textoffsetx>50</textoffsetx>
+				<left>0</left>
+				<top>575</top>
+				<width>520</width>
+				<height>65</height>
+				<label>Cancel</label>
+				<textcolor>{col_text}</textcolor>
+				<selectedcolor>{col_select}</selectedcolor>
+				<focusedcolor>{col_textfocus}</focusedcolor>
+				<font>{font}</font>
+				<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
+				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+				<align>left</align>
+				<aligny>center</aligny>
+			</control>
+
 			
 
-			<control type="label" id="300">
-				<left>370</left>
+			<control type="fadelabel" id="300">
+				<left>320</left>
 				<top>0</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<height>70</height>
 				<label>-</label>
@@ -208,10 +192,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="301">
-				<left>370</left>
+			<control type="fadelabel" id="301">
+				<left>320</left>
 				<top>65</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -221,10 +205,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="302">
-				<left>370</left>
+			<control type="fadelabel" id="302">
+				<left>320</left>
 				<top>130</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -234,10 +218,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="303">
-				<left>370</left>
+			<control type="fadelabel" id="303">
+				<left>320</left>
 				<top>195</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -247,10 +231,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="304">
-				<left>370</left>
+			<control type="fadelabel" id="304">
+				<left>320</left>
 				<top>260</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -260,10 +244,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="305">
-				<left>370</left>
+			<control type="fadelabel" id="305">
+				<left>320</left>
 				<top>345</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -273,10 +257,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="306">
-				<left>370</left>
+			<control type="fadelabel" id="306">
+				<left>320</left>
 				<top>410</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -286,10 +270,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="307">
-				<left>370</left>
+			<control type="fadelabel" id="307">
+				<left>320</left>
 				<top>475</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -320,10 +304,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<ondown>4001</ondown>
-				<onup>4007</onup>
-				<onleft>3000</onleft>
-				<onright>5000</onright>
 			</control>
 			<control type="button" id="4001">
 				<textoffsetx>50</textoffsetx>
@@ -340,10 +320,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>4000</onup>
-				<ondown>4002</ondown>
-				<onleft>3001</onleft>
-				<onright>5001</onright>
 			</control>
 			<control type="button" id="4002">
 				<textoffsetx>50</textoffsetx>
@@ -360,10 +336,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>4001</onup>
-				<ondown>4003</ondown>
-				<onleft>3002</onleft>
-				<onright>5002</onright>
 			</control>
 			<control type="button" id="4003">
 				<textoffsetx>50</textoffsetx>
@@ -380,10 +352,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>4002</onup>
-				<ondown>4004</ondown>
-				<onleft>3003</onleft>
-				<onright>5003</onright>
 			</control>
 			<control type="button" id="4004">
 				<textoffsetx>50</textoffsetx>
@@ -400,10 +368,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>4003</onup>
-				<ondown>4005</ondown>
-				<onleft>3004</onleft>
-				<onright>5004</onright>
 			</control>
 			<control type="button" id="4005">
 				<textoffsetx>50</textoffsetx>
@@ -420,10 +384,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>4004</onup>
-				<ondown>4006</ondown>
-				<onleft>3005</onleft>
-				<onright>5005</onright>
 			</control>
 			<control type="button" id="4006">
 				<textoffsetx>50</textoffsetx>
@@ -440,10 +400,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>4005</onup>
-				<ondown>4007</ondown>
-				<onleft>3006</onleft>
-				<onright>5006</onright>
 			</control>
 			<control type="button" id="4007">
 				<textoffsetx>50</textoffsetx>
@@ -460,16 +416,28 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>4006</onup>
-				<ondown>4000</ondown>
-				<onleft>3007</onleft>
-				<onright>5007</onright>
+			</control>
+			<control type="button" id="4008">
+				<textoffsetx>50</textoffsetx>
+				<left>0</left>
+				<top>575</top>
+				<width>520</width>
+				<height>65</height>
+				<label>Save</label>
+				<textcolor>{col_text}</textcolor>
+				<selectedcolor>{col_select}</selectedcolor>
+				<focusedcolor>{col_textfocus}</focusedcolor>
+				<font>{font}</font>
+				<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
+				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+				<align>left</align>
+				<aligny>center</aligny>
 			</control>
 
-			<control type="label" id="400">
-				<left>370</left>
+			<control type="fadelabel" id="400">
+				<left>320</left>
 				<top>0</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<height>70</height>
 				<label>-</label>
@@ -479,10 +447,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="401">
-				<left>370</left>
+			<control type="fadelabel" id="401">
+				<left>320</left>
 				<top>65</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -492,10 +460,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="402">
-				<left>370</left>
+			<control type="fadelabel" id="402">
+				<left>320</left>
 				<top>130</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -505,10 +473,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="403">
-				<left>370</left>
+			<control type="fadelabel" id="403">
+				<left>320</left>
 				<top>195</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -518,10 +486,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="404">
-				<left>370</left>
+			<control type="fadelabel" id="404">
+				<left>320</left>
 				<top>280</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -531,10 +499,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="405">
-				<left>370</left>
+			<control type="fadelabel" id="405">
+				<left>320</left>
 				<top>345</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -544,10 +512,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="406">
-				<left>370</left>
+			<control type="fadelabel" id="406">
+				<left>320</left>
 				<top>410</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -557,10 +525,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="407">
-				<left>370</left>
+			<control type="fadelabel" id="407">
+				<left>320</left>
 				<top>475</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -591,10 +559,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<ondown>5001</ondown>
-				<onup>5007</onup>
-				<onleft>4000</onleft>
-				<onright>3000</onright>
 			</control>
 			<control type="button" id="5001">
 				<textoffsetx>50</textoffsetx>
@@ -611,10 +575,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>5000</onup>
-				<ondown>5002</ondown>
-				<onleft>4001</onleft>
-				<onright>3001</onright>
 			</control>
 			<control type="button" id="5002">
 				<textoffsetx>50</textoffsetx>
@@ -631,10 +591,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>5001</onup>
-				<ondown>5003</ondown>
-				<onleft>4002</onleft>
-				<onright>3002</onright>
 			</control>
 			<control type="button" id="5003">
 				<textoffsetx>50</textoffsetx>
@@ -651,10 +607,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>5002</onup>
-				<ondown>5004</ondown>
-				<onleft>4003</onleft>
-				<onright>3003</onright>
 			</control>
 			<control type="button" id="5004">
 				<textoffsetx>50</textoffsetx>
@@ -671,10 +623,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>5003</onup>
-				<ondown>5005</ondown>
-				<onleft>4004</onleft>
-				<onright>3004</onright>
 			</control>
 			<control type="button" id="5005">
 				<textoffsetx>50</textoffsetx>
@@ -691,10 +639,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>5004</onup>
-				<ondown>5006</ondown>
-				<onleft>4005</onleft>
-				<onright>3005</onright>
 			</control>
 			<control type="button" id="5006">
 				<textoffsetx>50</textoffsetx>
@@ -711,10 +655,6 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>5005</onup>
-				<ondown>5007</ondown>
-				<onleft>4006</onleft>
-				<onright>3006</onright>
 			</control>
 			<control type="button" id="5007">
 				<textoffsetx>50</textoffsetx>
@@ -731,17 +671,13 @@
 				<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
 				<align>left</align>
 				<aligny>center</aligny>
-				<onup>5006</onup>
-				<ondown>5000</ondown>
-				<onleft>4007</onleft>
-				<onright>3007</onright>
 			</control>
 			
 
-			<control type="label" id="500">
-				<left>370</left>
+			<control type="fadelabel" id="500">
+				<left>320</left>
 				<top>0</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<height>70</height>
 				<label>-</label>
@@ -751,10 +687,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="501">
-				<left>370</left>
+			<control type="fadelabel" id="501">
+				<left>320</left>
 				<top>65</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -764,10 +700,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="502">
-				<left>370</left>
+			<control type="fadelabel" id="502">
+				<left>320</left>
 				<top>130</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -777,10 +713,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="503">
-				<left>370</left>
+			<control type="fadelabel" id="503">
+				<left>320</left>
 				<top>195</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -790,10 +726,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="504">
-				<left>370</left>
+			<control type="fadelabel" id="504">
+				<left>320</left>
 				<top>280</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -803,10 +739,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="505">
-				<left>370</left>
+			<control type="fadelabel" id="505">
+				<left>320</left>
 				<top>345</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -816,10 +752,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="506">
-				<left>370</left>
+			<control type="fadelabel" id="506">
+				<left>320</left>
 				<top>410</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>
@@ -829,10 +765,10 @@
 				<align>left</align>
 				<aligny>center</aligny>
 			</control>
-			<control type="label" id="507">
-				<left>370</left>
+			<control type="fadelabel" id="507">
+				<left>320</left>
 				<top>475</top>
-				<width>170</width>
+				<width>200</width>
 				<height>65</height>
 				<label>-</label>
 				<height>70</height>

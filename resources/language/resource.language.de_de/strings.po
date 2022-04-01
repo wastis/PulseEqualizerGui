@@ -422,13 +422,21 @@ msgid "Keymap"
 msgstr "Tastaturbelegung"
 
 msgctxt "#37501"
-msgid "Continue"
-msgstr "Weitermachen"
+msgid "Save"
+msgstr "Speichern"
 
 msgctxt "#37502"
-msgid "Cancel and Exit"
-msgstr "Verwerfen und verlassen"
+msgid "Cancel"
+msgstr "Abbrechen"
 
 msgctxt "#37503"
-msgid "Save and Exit"
-msgstr "Speichern und verlassen"
+msgid "Unknown Key"
+msgstr "Unbekannte Taste"
+
+msgctxt "#37504"
+msgid "Input device not supported"
+msgstr "Eingabegerät wird nicht unterstützt"
+
+msgctxt "#37505"
+msgid "Already Used"
+msgstr "Bereits genutzt"

@@ -48,6 +48,7 @@ class KeyMapFile():
 
 	def __init__(self, file_name = "zEqualizer.xml"):
 		self.file_name = path_profile + path_keymap + file_name
+		self.lock_name = path_profile + path_keymap + "zzzlock.xml"
 
 		self.struct = self.struc_templ
 		self.index = {}
@@ -121,6 +122,20 @@ class KeyMapFile():
 		if xml_result: xml_result = templ_keymap.format(xml_result)
 		return xml_result
 
+	def lock(self):
+		lock = "<keymap><global><keyboard>"
+		for mod in [0, 0xf000, 0x1f000,0x2f000,0x3f000]:
+			for i in range(1,256):
+				lock=lock + '<key id="{}"></key>'.format(mod + i)
+		lock=lock + "</keyboard></global></keymap>"
+
+		with open(self.lock_name,"w") as f:
+			f.write(lock)
+
+	def unlock(self):
+		if os.path.exists(self.lock_name):
+			os.remove(self.lock_name)
+
 	def save(self):
 		try:
 			xml = self.create_xml()
@@ -140,3 +155,9 @@ class KeyMapFile():
 		try:
 			self.struct[name]["key"]=key
 		except KeyError: return
+
+	def is_mapped(self,key):
+		for _,val in self.struct.items():
+			if int(val["key"]) == key:
+				return True
+		return False

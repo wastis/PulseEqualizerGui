@@ -12,13 +12,13 @@
 import xbmcaddon
 import xbmcgui
 import xbmc
-import threading
 import time
 
 from helper import KeyMapFile
-from basic import handle
+from helper import translate_keycode
 
-from contextmenu import contextMenu
+from basic import handle
+from basic import log
 
 addon = xbmcaddon.Addon()
 def tr(lid):
@@ -32,8 +32,17 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 		self.kmf = KeyMapFile()
 		self.kmf.parse_keymap_file()
 		self.index = {}
+		self.maxy = [8,8,7]
+		self.success = False
+		self.keycount = 3
 
 	def onInit( self ):
+		self.kmf.lock()
+		xbmc.executebuiltin('Action(reloadkeymaps)')
+		self.setFocusId(3008)
+		self.getControl(3008).setLabel(tr(37502))
+		self.getControl(4008).setLabel(tr(37501))
+
 		for but_main_id in [3000,4000,5000]:
 			for but_sub_id in range(8):
 				but_id = but_main_id + but_sub_id
@@ -48,8 +57,14 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 
 				if vals:
 					but_ctl.setLabel(tr(vals["name"]))
-					if vals["key"] == 0: lab_ctl.setLabel("-")
-					else: lab_ctl.setLabel(str(vals["key"]))
+					but = int(vals["key"])
+					if but == 0:
+						lab_ctl.reset()
+						lab_ctl.addLabel("-")
+					else:
+						lab_ctl.reset()
+						keycode = translate_keycode(but)
+						lab_ctl.addLabel(self.format_key(but,keycode))
 
 	@staticmethod
 	def send_reload_keymaps():
@@ -58,39 +73,143 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 
 	def end_gui_ok(self):
 		self.kmf.save()
+		self.kmf.unlock()
+		xbmc.executebuiltin('Action(reloadkeymaps)')
 		# we have to create delayed action otherwise the reloadkeymaps action will
 		# be swallowed by the window animations
-		threading.Thread(target = self.send_reload_keymaps).start()
+		#threading.Thread(target = self.send_reload_keymaps).start()
 		self.close()
 
 	def end_gui_cancel(self):
+		self.kmf.unlock()
+		xbmc.executebuiltin('Action(reloadkeymaps)')
 		self.close()
+
+	@staticmethod
+	def get_pos(cid):
+		x = int(cid / 1000)
+		y = cid - (x * 1000)
+		x = x - 3
+		return (x,y)
+
+	@staticmethod
+	def get_cid(x,y):
+		return (x + 3) * 1000 + y
+
+	def on_left_right(self, fid, step):
+		x,y = self.get_pos(fid)
+		log("{} {}".format(x,y))
+		x += step
+		if x < 0: x = 2
+		if x > 2: x = 0
+		if y > self.maxy[x]: y = self.maxy[x]
+		self.setFocusId(self.get_cid(x,y))
+
+	def on_up_down(self, fid, step):
+		x,y = self.get_pos(fid)
+		y += step
+		if y < 0: y = self.maxy[x]
+		if y > self.maxy[x]: y = 0
+		self.setFocusId(self.get_cid(x,y))
+
+	@staticmethod
+	def format_key(but,keycode):
+		if keycode:
+			if keycode["mods"]:
+				app = "[{}]".format("".join(x[0] for x in keycode["mods"]))
+			else:
+				app = ""
+			return "{} {}".format(app,keycode["keyname"])
+		else:
+			return str(but)
 
 	def onAction( self, action ):
 		try:
 			aid = action.getId()
 			fid = self.getFocusId()
-			keycode = action.getButtonCode()
-			buc = keycode & 0xff
+			but = action.getButtonCode()
 
-			#OK pressed
-			if aid in [7]:
-				name, lab_id = self.index[fid]
-				self.kmf.set_info(name,0)
-				self.getControl(lab_id).setLabel("-")
+			log("action id {} button {:x}".format(aid,but))
 
-			#Cancel
-			if aid in [92,10]:
-				contextMenu(funcs = [(tr(37501),None),
-						(tr(37502),self.end_gui_cancel),
-						(tr(37503),self.end_gui_ok)])
+			if aid == 203:
+				self.kmf.unlock()
+				return
 
-			elif aid not in [1,2,3,4,7] and buc != 0:
-				try:
+			if aid == 0 and not self.success:
+				self.keycount -= 1
+				if self.keycount == 0:
+					# no direction keyes pressed, maybe not supported device
+					xbmcgui.Dialog().notification(tr(37503),tr(37504))
+					self.end_gui_cancel()
+					return
+
+			if but == 0:
+				if aid in [107,203]:
+					return
+				#mouse click
+				if aid == 100:
+					if fid == 3008:
+						self.end_gui_cancel()
+						return
+					if fid == 4008:
+						self.end_gui_ok()
+						return
+
+				xbmcgui.Dialog().notification(tr(37503),tr(37504))
+				self.end_gui_cancel()
+				return
+
+			keycode = translate_keycode(but)
+
+			if self.kmf.is_mapped(but):
+				xbmcgui.Dialog().notification(tr(37505),self.format_key(but,keycode), time=700)
+
+			log("translated keycode {}".format(str(keycode),fid))
+
+			if keycode and keycode["mods"]==[]:
+				if keycode["keyname"] in ["return","select","enter"]:
+					self.success = True
+					if fid == 3008:
+						self.end_gui_cancel()
+						return
+					if fid == 4008:
+						self.end_gui_ok()
+						return
+
 					name, lab_id = self.index[fid]
-					self.kmf.set_info(name, keycode)
-					self.getControl(lab_id).setLabel(str(keycode))
-				except KeyError: pass
+					self.kmf.set_info(name,0)
+					lab_ctl = self.getControl(lab_id)
+					lab_ctl.reset()
+					lab_ctl.addLabel("-")
+					return
+
+				elif keycode["keyname"] == 'up':
+					self.on_up_down(fid,-1)
+					self.success = True
+					return
+				elif keycode["keyname"] == 'down':
+					self.on_up_down(fid,+1)
+					self.success = True
+					return
+				elif keycode["keyname"] == 'left':
+					self.on_left_right(fid,-1)
+					self.success = True
+					return
+				elif keycode["keyname"] == 'right':
+					self.on_left_right(fid,+1)
+					self.success = True
+					return
+
+			try:
+				if fid not in [3008,4008]:
+					name, lab_id = self.index[fid]
+					self.kmf.set_info(name, but)
+
+					lab_ctl = self.getControl(lab_id)
+					lab_ctl.reset()
+					lab_ctl.addLabel(self.format_key(but,keycode))
+
+			except KeyError: pass
 		except Exception as e:
 			handle(e)
-			self.close()
+			self.end_gui_cancel()

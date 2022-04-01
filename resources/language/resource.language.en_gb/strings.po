@@ -422,14 +422,22 @@ msgid "Keymap"
 msgstr "Keymap"
 
 msgctxt "#37501"
-msgid "Continue"
-msgstr "Continue"
+msgid "Save"
+msgstr "Save"
 
 msgctxt "#37502"
-msgid "Cancel and Exit"
-msgstr "Cancel and Exit"
+msgid "Cancel"
+msgstr "Cancel"
 
 msgctxt "#37503"
-msgid "Save and Exit"
-msgstr "Save and Exit"
+msgid "Unknown Key"
+msgstr "Unknown Key"
+
+msgctxt "#37504"
+msgid "Input device not supported"
+msgstr "Input device not supported"
+
+msgctxt "#37505"
+msgid "Already Used"
+msgstr "Already Used"
 

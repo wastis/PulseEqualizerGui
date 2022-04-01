@@ -13,6 +13,8 @@ import os
 import sys
 
 import xbmcaddon
+import time
+t1 = time.time()
 
 cwd	= xbmcaddon.Addon().getAddonInfo('path')
 sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
@@ -62,6 +64,9 @@ def run_on_service():
 		cmd = "{},{}".format(cmd,step)
 		with open(pname, "w") as f: f.write(cmd)
 
+		t2 = time.time()
+		import xbmc
+		xbmc.log("eq: addon: startup {:.5f}".format(t2-t1))
 	except Exception as e:
 		from resources.lib.basic import handle
 		handle(e)
