@@ -164,7 +164,7 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 			if self.kmf.is_mapped(but):
 				xbmcgui.Dialog().notification(tr(37505),self.format_key(but,keycode), time=700)
 
-			log("translated keycode {}".format(str(keycode),fid))
+			log("translated keycode {}".format(str(keycode)))
 
 			if keycode and keycode["mods"]==[]:
 				if keycode["keyname"] in ["return","select","enter"]:
