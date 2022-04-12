@@ -3301,7 +3301,7 @@ class Connection(TaskKeeper) :
         # object should not be used for both eavesdropping and for normal
         # method calls.
         handled = False
-        for entry in list(self._match_actions.values()) :
+        for entry in self._match_actions.values() :
             if matches_rule(message, entry.rule) :
                 for action in entry.actions :
                     result = action.func(self, message, action.user_data)
@@ -4069,7 +4069,7 @@ class Message :
                 dbus.dbus_message_iter_has_next(self._dbobj)
         #end has_next
 
-        def __next__(self) :
+        def next(self) :
             if self._nulliter or not dbus.dbus_message_iter_next(self._dbobj) :
                 raise StopIteration("end of message iterator")
             #end if
@@ -4090,7 +4090,7 @@ class Message :
                 if self._startiter :
                     self._startiter = False
                 else :
-                    next(self)
+                    self.next()
                 #end if
             #end if
             return \
@@ -5479,7 +5479,7 @@ def matches_rule(message, rule, destinations = None) :
         #end while
     #end if
     if matches :
-        try_matching = iter(list(rule.keys()))
+        try_matching = iter(rule.keys())
         while True :
             try_key = next(try_matching, None)
             if try_key  is None :
@@ -5547,13 +5547,13 @@ class SignatureIter :
         if self._startiter :
             self._startiter = False
         else :
-            next(self)
+            self.next()
         #end if
         return \
             self
     #end __next__
 
-    def __next__(self) :
+    def next(self) :
         if dbus.dbus_signature_iter_next(self._dbobj) == 0 :
             raise StopIteration("end of signature iterator")
         #end if
