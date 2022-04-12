@@ -33,7 +33,9 @@ def run_direct(argv):
 	from basic import log
 	from basic import handle
 	from menus import Menu
+	import xbmcaddon
 
+	cwd	= xbmcaddon.Addon().getAddonInfo('path')
 	try:
 		log("addon: start script.pulseequalizer.gui addon")
 
