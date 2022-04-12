@@ -164,5 +164,5 @@ class MessageCentral():
 
 	# helper
 	def on_pa_module_log(self):
-		for key,val in vars(self.pamm).items():
+		for key,val in list(vars(self.pamm).items()):
 			log(key+"="+ str(val))

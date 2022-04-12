@@ -81,8 +81,8 @@ class MessageCollector():
 
 	def get_messages_and_clear(self):
 		result = {"remove":[],"new":[],"change":[]}
-		for target , func_list  in  self.msg_collector.items():
-			for func, index_list in func_list.items():
+		for target , func_list  in  list(self.msg_collector.items()):
+			for func, index_list in list(func_list.items()):
 				cmd = "on_%s_%s" % (target,func)
 				for index in index_list:
 					result[func].append((cmd,[index]))

@@ -203,7 +203,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 			shutil.rmtree(fn)
 		os.makedirs(fn)
 
-		for chan in self.spec_group.speclist.keys():
+		for chan in list(self.spec_group.speclist.keys()):
 			if chan == 0:
 				cn = "all"
 				spec = self.process_spec(chan)

@@ -54,7 +54,7 @@ class KeyMapFile():
 		self.index = {}
 		self.sec = {}
 
-		for key, val in self.struc_templ.items():
+		for key, val in list(self.struc_templ.items()):
 			self.index[val["id"]]=key
 			for s in val["in"]:
 				if s in self.sec: self.sec[s] = self.sec[s] + [key]
@@ -98,7 +98,7 @@ class KeyMapFile():
 		templ_eq  = 'RunScript(script.pulseequalizer.gui,{},{})'
 
 		fin_struct = {}
-		for func, val in self.struct.items():
+		for func, val in list(self.struct.items()):
 			if val["key"] == 0: continue
 			if val["eq"]: func = templ_eq.format(func,val["step"])
 
@@ -157,7 +157,7 @@ class KeyMapFile():
 		except KeyError: return
 
 	def is_mapped(self,key):
-		for _,val in self.struct.items():
+		for _,val in list(self.struct.items()):
 			if int(val["key"]) == key:
 				return True
 		return False

@@ -370,7 +370,8 @@
 		</control>
 		
 		<!-- slider pannel -->
-		<control type="group" id=5000>
+
+		<control type="group" id="5000">
 			<description>ControlGroup</description>
 			<left>1180</left>
 			<top>560</top>

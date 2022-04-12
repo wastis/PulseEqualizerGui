@@ -76,7 +76,7 @@ class paDatabase():
 			try: li = getattr(self,target + "s")
 			except Exception: continue
 			lines.append("\n%ss:" % target)
-			for index, obj in li.items(): lines.append("\t%d %s\n" % (index, obj.name) )
+			for index, obj in list(li.items()): lines.append("\t%d %s\n" % (index, obj.name) )
 
 		return " ".join(lines)
 
@@ -125,20 +125,20 @@ class paDatabase():
 
 	def get_kodi_client(self):
 		pid = str(os.getgid())
-		for cid,client in self.clients.items():
+		for cid,client in list(self.clients.items()):
 			if client.name in ['Kodi', 'KodiSink'] and client.proplist['application.process.id']==pid:
 				self.info["kodi_client"] = cid
 
 		#no kodi client with pid matching myself, I might be the develop script, so pick first kodi
 		if self.info['kodi_client']  is None:
-			for cid,client in self.clients.items():
+			for cid,client in list(self.clients.items()):
 				if client.name in ['Kodi','KodiSink']:
 					self.info['kodi_client'] = cid
 
 	def parse_sink_inputs(self):
 		self.stream_by_module = {}
 
-		for _, si in self.sink_inputs.items():
+		for _, si in list(self.sink_inputs.items()):
 			try:
 				self.stream_by_module[si.owner_module] = si
 			except Exception: print(self.sink_inputs)
@@ -150,7 +150,7 @@ class paDatabase():
 		self.sink_by_name = {}
 		self.sink_by_module = {}
 
-		for _, sink in self.sinks.items():
+		for _, sink in list(self.sinks.items()):
 			self.sink_by_name[sink.name] = sink
 			self.sink_by_module[sink.owner_module] = sink
 
@@ -187,7 +187,7 @@ class paDatabase():
 
 	def update_attr(self):
 		updates = []
-		for key, val in self.info.items():
+		for key, val in list(self.info.items()):
 			if key in self.attr_keep and val is None: continue
 			if val == "force_none": val = None
 
@@ -307,7 +307,7 @@ class paDatabase():
 	#
 
 	def update_objects(self):
-		for target, func_list in self.mc.msg_collector.items():
+		for target, func_list in list(self.mc.msg_collector.items()):
 			targets = target + "s"
 			try: obj_list = getattr(self,targets)
 			except Exception: obj_list = {}
@@ -386,7 +386,7 @@ class paDatabase():
 	def on_all_eq_get(self):
 		result = {}
 
-		for index, sink in self.sinks.items():
+		for index, sink in list(self.sinks.items()):
 			if sink.driver != "module-equalizer-sink.c": continue
 
 			result[index]= [

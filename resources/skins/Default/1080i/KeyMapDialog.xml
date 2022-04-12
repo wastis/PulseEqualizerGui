@@ -7,7 +7,6 @@
 		<left>100</left>
 		<top>260</top>
 		<origin x="100" y="260">Window.IsActive(Home)</origin>
-
 	</coordinates>
 	<controls>
 		<control type="image">

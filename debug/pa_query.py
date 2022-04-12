@@ -33,10 +33,10 @@ try:
 
 	for obj in result:
 		print(obj.index, obj.name)
-		for key,val in vars(obj).items():
+		for key,val in list(vars(obj).items()):
 			if key == "proplist":
 				print("\tproplist:")
-				for k,v in val.items():
+				for k,v in list(val.items()):
 					print("\t\t%s=%s" %(k,v))
 			else:
 				print("\t%s=%s" %(key,val))

@@ -47,7 +47,7 @@ class Spectrum():
 		self.index = -1
 		return self
 
-	def next(self):
+	def __next__(self):
 		self.index = self.index + 1
 		if self.index >= self.size - 1:
 			raise StopIteration
@@ -80,20 +80,20 @@ class Spectrum():
 		it = self.iter()
 		ot = other.iter()
 
-		itf1, itv1, itf2, itv2 = it.next()
-		otf1, otv1, otf2, otv2 = ot.next()
+		itf1, itv1, itf2, itv2 = next(it)
+		otf1, otv1, otf2, otv2 = next(ot)
 
 		result = []
 		try:
 			# first value
 			if itf1 < otf1:
-				while itf2 < otf1: itf1, itv1, itf2, itv2 = it.next()
+				while itf2 < otf1: itf1, itv1, itf2, itv2 = next(it)
 				m = (itv2 - itv1) / (itf2 - itf1)
 				val = (otf2 - itf1) * m + itv1
 				result.append((otf1,func(val, otv1)))
 
 			elif itf1 > otf1:
-				while otf2 < itf1: otf1, otv1, otf2, otv2 = ot.next()
+				while otf2 < itf1: otf1, otv1, otf2, otv2 = next(ot)
 				m = (otv2 - otv1) / (otf2 - otf1)
 				val = (itf2 - otf1) * m + otv1
 				result.append((itf1,func(itv1,val)))
@@ -103,18 +103,18 @@ class Spectrum():
 				while itf2 < otf2:
 					val = (itf2 - otf1) * m + otv1
 					result.append((itf2, func(itv2, val)))
-					itf1, itv1, itf2, itv2 = it.next()
+					itf1, itv1, itf2, itv2 = next(it)
 
 				m = (itv2 - itv1) / (itf2 - itf1)
 				while otf2 < itf2:
 					val = (otf2 - itf1) * m + itv1
 					result.append((otf2, func(val, otv2)))
-					otf1, otv1, otf2, otv2 = ot.next()
+					otf1, otv1, otf2, otv2 = next(ot)
 
 				if itf2 == otf2:
 					result.append((itf2, func(itv2,  otv2)))
-					itf1, itv1, itf2, itv2 = it.next()
-					otf1, otv1, otf2, otv2 = ot.next()
+					itf1, itv1, itf2, itv2 = next(it)
+					otf1, otv1, otf2, otv2 = next(ot)
 		except StopIteration: pass
 
 		return Spectrum(result)
@@ -122,7 +122,7 @@ class Spectrum():
 	def convert(self, freq):
 		result = []
 		it = self.iter()
-		itf1, itv1, itf2, itv2 = it.next()
+		itf1, itv1, itf2, itv2 = next(it)
 		m = (itv2 - itv1) / (itf2 - itf1)
 
 		fr = iter(freq)
@@ -140,7 +140,7 @@ class Spectrum():
 					f = next(fr)
 				else:
 					try:
-						itf1, itv1, itf2, itv2 = it.next()
+						itf1, itv1, itf2, itv2 = next(it)
 						m = (itv2 - itv1) / (itf2 - itf1)
 					except StopIteration:
 						try:
@@ -159,7 +159,7 @@ class Spectrum():
 		try:
 			it = self.iter()
 			while True:
-				itf1, _, itf2, _ = it.next()
+				itf1, _, itf2, _ = next(it)
 				if itf1 >= itf2:
 					self.freq_db = []
 					self.size = 0

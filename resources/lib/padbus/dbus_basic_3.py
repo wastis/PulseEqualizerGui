@@ -137,4 +137,4 @@ class PulseDBus:
 
 	@staticmethod
 	def handle_exception(e,python,func):
-		raise(PulseDBusError(e.name,e.message,python,func))
+		raise PulseDBusError(e.name,e.message,python,func)

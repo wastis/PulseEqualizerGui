@@ -99,14 +99,14 @@ class SpecGroup():
 	def apply_profile(self, prof_spec):
 		speclist = {}
 
-		for key, spec in self.speclist.items():
+		for key, spec in list(self.speclist.items()):
 			speclist[key] = spec * prof_spec
 
 		return SpecGroup(speclist,self)
 
 	def get_coefs(self):
 		result = []
-		for _, spec in self.speclist.items():
+		for _, spec in list(self.speclist.items()):
 			result.append(spec.get_coefs())
 
 		return result
@@ -114,7 +114,7 @@ class SpecGroup():
 	def set_filter_range(self, maxf):
 		speclist = {}
 
-		for key, spec in self.speclist.items():
+		for key, spec in list(self.speclist.items()):
 			speclist[key] = spec.set_filter_range(maxf)
 
 		return SpecGroup(speclist,self)
@@ -127,13 +127,13 @@ class SpecGroup():
 		speclist = {}
 		relvol = {}
 		minval = None #smallest maxval
-		for key, spec in self.speclist.items():
+		for key, spec in list(self.speclist.items()):
 			ns = spec.update_minmax()
 			speclist[key] = ns
 			if minval is None:  minval = ns.maxval
 			elif minval > ns.maxval: minval = ns.maxval
 
-		for key, spec in speclist.items():
+		for key, spec in list(speclist.items()):
 			relvol[key] = minval - spec.maxval
 
 		self.speclist = speclist

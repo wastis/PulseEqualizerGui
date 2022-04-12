@@ -202,7 +202,7 @@ class SpecManager():
 	def profiles_get(self):
 		if not self.profiles: self.profile_file_load()
 		try:
-			return [x for x in self.profiles.keys()]
+			return [x for x in list(self.profiles.keys())]
 		except Exception: return []
 
 	def profile_remove(self,name):

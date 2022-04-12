@@ -93,4 +93,4 @@ class PulseDBus:
 
 	@staticmethod
 	def handle_exception(e,python,func):
-		raise(PulseDBusError(e._dbus_error_name,e.message,python,func))
+		raise PulseDBusError(e._dbus_error_name,e.message,python,func)

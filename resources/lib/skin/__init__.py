@@ -43,7 +43,7 @@ def get_skin_colors(skin):
 		try: skicol = colors[skin]
 		except Exception: skicol = {}
 
-		for key,val in skicol.items():
+		for key,val in list(skicol.items()):
 			defcol[key]= val
 
 		return defcol

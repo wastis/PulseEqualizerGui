@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.pulseequalizer.gui" name="PulseEqualizer GUI" version="2.1.3" provider-name="wastis">
-
+<addon id="script.pulseequalizer.gui" name="Pulse Equalizer" version="2.1.3" provider-name="wastis">
+	<requires>
+		<import addon="xbmc.python" version="3.0.0"/>
+	</requires>
 	<extension point="xbmc.python.script" library="addon.py">
 		<provides>executable</provides>
 	</extension>
