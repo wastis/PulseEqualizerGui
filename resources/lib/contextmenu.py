@@ -10,20 +10,15 @@
 #
 
 import xbmcgui
-import os
-import re
 import time
 
-from basic import handle
 from basic import opthandle
 from basic import log
-from basic import path_addon
-from basic import path_tmp
-from basic import path_skin
 
-from skin import get_current_skin
-from skin import get_skin_colors
-from skin import create_temp_structure
+from skin import read_next_tag
+from skin import get_template
+from skin import write_dialog
+from skin import run_dialog
 
 class ContextGui(  xbmcgui.WindowXMLDialog  ):
 	'''Main Context Menu
@@ -31,223 +26,126 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 		the context menu is build dynamically
 	'''
 
-	result = None
-	index = None
-
-	items = []
-	funcs = []
 	def __init__(self, *_args, **kwargs ):
-		try:
-			self.items = kwargs["items"]
-			self.index = self.items.index(kwargs["default"])
-		except Exception: self.index = None
+		self.result = {"type":"item", "index":None}
+		self.index = None
 
-		try: self.funcs = kwargs["funcs"]
-		except Exception: self.funcs = []
+		self.build_dialog(**kwargs)
 
-	def onInit( self ):
-		if self.index is not None:
-			self.setFocusId(5000 + self.index)
+	@staticmethod
+	def get_arg(item, gdefault, **kwargs):
+		if item in kwargs:
+			return kwargs[item]
+		else:
+			return gdefault
 
+	def build_dialog(self, **kwargs):
+		color = kwargs["color"]
+		file_s = kwargs["file_s"]
+		self.cmds = None
+
+		items = self.get_arg("items",[],**kwargs)
+		funcs = self.get_arg("funcs",[],**kwargs)
+
+		default = self.get_arg("default",None,**kwargs)
+		fwidth = self.get_arg("width",None,**kwargs)
+
+		body_t, settings_t, group_t, button_t, groupend_t, bodyend_t = get_template(
+			file_s,
+			["<!-- button settings -->",
+			"<!-- item group -->",
+			"<!-- button -->",
+			"<!-- button -->",
+			"<!-- item group -->"])
+
+		if not items:
+			items = [func for func,_ in funcs]
+			self.cmds = [cmd for _,cmd in funcs]
+			self.result = {"type":"func"}
+		else:
+			if funcs:
+				body_t = body_t + settings_t
+
+		but_width = int(read_next_tag("width",button_t,0)) if not fwidth else fwidth
+		but_height = int(read_next_tag("height",button_t,0))
+
+		height = but_height * len(items)
+		if height > 900:
+			height = 900
+
+		glob = {
+			"xpos":int((1920 - but_width) / 2),
+			"ypos":int((1080 - height) / 2),
+			"default":5000,
+			"height":height,
+			"width":but_width
+			}
+
+		selected = color["selected"]
+		text = color["text"]
+		focused = color["focused"]
+
+		button_list_txt = ""
 		iid = 5000
-		for label in self.items:
-			self.getControl(iid).setLabel(label)
-			iid = iid + 1
+		for item in items:
+			if default == item:
+				color["button_textcolor"]= "<textcolor>{col}</textcolor><focusedcolor>{col}</focusedcolor>".format(col=selected)
+			else:
+				color["button_textcolor"]= "<textcolor>{col}</textcolor><focusedcolor>{foccol}</focusedcolor>".format(col=text, foccol= focused)
 
-		for label,_ in self.funcs:
-			self.getControl(iid).setLabel(label)
-			iid = iid + 1
+			item_r = {"id":iid, "label":item, "width":but_width}
+
+			button_list_txt = button_list_txt + button_t.format(**item_r, **color)
+			iid+=1
+
+		write_dialog(file_s,
+			body_t.format(**glob,**color) +
+			group_t.format(**glob,**color) +
+			button_list_txt +
+			groupend_t +
+			bodyend_t)
 
 	def onAction( self, action ):
 		aid = action.getId()
 
 		#OK pressed
 		if aid in [7,100]:
-			iid = self.getFocusId()
-			if iid >= 5000: self.result = iid - 5000
+			index = self.getFocusId()
+			if index == 4000:
+				self.result =  {'type': 'settings', 'index': 0}
+			else:
+				index -= 5000
+				self.result["index"] = self.cmds[index] if self.cmds else index
 			self.close()
 
 		#Cancel
 		if aid in [92,10]:
+			self.result["index"] = None
 			self.close()
 
 def contextMenu(**kwargs):
-	try: items = kwargs["items"]
-	except Exception: items = []
+	while True:
+		result=run_dialog(ContextGui, "ContextMenu.xml", **kwargs)
+		log("contextMenu: selected: {}".format(result))
 
-	try: default = kwargs["default"]
-	except Exception: default = None
+		#wait for animation
+		time.sleep(0.3)
 
-	try: callback = kwargs["callback"]
-	except Exception: callback = None
-
-	try: funcs = kwargs["funcs"]
-	except Exception: funcs = []
-
-	try: fwidth = int( kwargs["width"] )
-	except Exception: fwidth = None
-
-	try:
-		skin = get_current_skin()
-		skincol = skin
-		log("skin: '%s'"%skin)
-		if not os.path.exists(path_addon + path_skin.format(skin=skin) + "ContextMenu.xml"):
-			skin = "Default"
-	except Exception as e:
-		handle(e)
-		skin = "Default"
-		skincol = skin
-
-	#
-	#	create path structure
-	#
-
-	fn_dialog_name = "ContextMenu.xml"
-	fn_path = path_skin.format(skin=skin)
-	fn_path_template = path_addon + fn_path
-	fn_path_dialog = path_tmp + fn_path
-	create_temp_structure(skin)
-
-	#
-	#	get skin color scheme
-	#
-
-	colors = get_skin_colors(skincol)
-
-	col_select = 	colors["col_select"]
-	col_focus = 	colors["col_textfocus"]
-	col_text = 		colors["col_text"]
-
-	#
-	#	prepare template
-	#
-
-	with open( fn_path_template +  fn_dialog_name) as f: template = f.read()
-
-	header, group, bottom = template.split("<!-- item group -->")
-	gheader, button, gbottom = group.split("<!-- button -->")
-
-	# get info from the template
-	bh = int(re.search('<height>(.*?)</height>',button).group(1))
-
-	if fwidth:
-		bw = fwidth
-		button = re.sub('<width>.*?</width>','<width>%s</width>'% bw,button)
-	else: bw = int(re.search('<width>(.*?)</width>',button).group(1))
-
-	try: itemgap = int(re.search('<itemgap>(.*?)</itemgap>',gheader, re.DOTALL | re.I).group(1))
-	except Exception: itemgap = 10
-
-	#
-	#	create button lists
-	#
-	l_cnt = 0
-	if len(funcs) > 0:
-		onright = "701"
-		l_cnt = l_cnt + 1
-	else:
-		onright = ""
-
-	if len(items) > 0:
-		onleft = "700"
-		l_cnt = l_cnt + 1
-	else:
-		onleft = ""
-
-	max_width = bw if l_cnt == 1 else l_cnt * bw + 20
-
-	iid=5000
-	item_but = ''
-	func_but = ''
-
-	call = []
-
-	for item in items:
-		if item == default:
-			txt_col = col_select
-			foc_col = col_select
-		else:
-			txt_col = col_text
-			foc_col = col_focus
-
-		item_but = item_but +"\n" + button.format(id=iid, label=item.encode('utf-8'), onleft= "", onright = onright,
-					txt_col=txt_col, foc_col=foc_col, **colors)
-
-		iid = iid + 1
-		call.append((callback,[item]))
-
-	for item, cb in funcs:
-		func_but = func_but +"\n" + button.format(id=iid, label=item.encode('utf-8'), onleft= onleft, onright = "",
-					txt_col=col_text, foc_col=col_focus, **colors)
-
-		iid = iid + 1
-		call.append((cb,[]))
-
-	#
-	#	build item group
-	#
-
-	left = 0
-	max_height = 0
-	cnt = len(items)
-	default_id = ""
-
-	if cnt:
-		if cnt > 11: cnt = 11
-		height = cnt * (bh + itemgap)
-		max_height = height
-		default_id = "700"
-
-		item_group = gheader.format(left = left, gid = "700", width = bw, height=height, **colors) + item_but + gbottom
-		left = bw + 20
-	else: item_group = ''
-
-	#
-	#	build func group
-	#
-
-	cnt = len(funcs)
-
-	if cnt:
-		if cnt > 11: cnt = 11
-		height = cnt * (bh + itemgap)
-		if height > max_height: max_height = height
-		if not default_id: default_id = "701"
-
-		func_group = gheader.format(left = left, gid = "701", width = bw, height=height, **colors) + func_but + gbottom
-	else: func_group = ''
-
-	#
-	#	build and save final xml
-	#
-
-	ypos = (1080 - max_height) / 2
-	xpos = (1920 - max_width ) / 2
-
-	main = header.format(default = default_id, ypos = ypos, xpos = xpos, **colors) + item_group + func_group + bottom
-
-	with open(fn_path_dialog + fn_dialog_name, "w") as f: f.write(main)
-
-	#
-	#	run Dialog
-	#
-
-	ui = ContextGui(fn_dialog_name, path_tmp, "Default", "720p", **kwargs)
-	ui.doModal()
-
-	# wait for animation finished
-	time.sleep(0.2)
-
-	#
-	#	process result
-	#
-	log("ContextGui: result %s" % ui.result)
-	if ui.result is None: return None
-	try:
-		method, args = call[ui.result]
-		if method:
-			method(*args)
+		if result["index"] is None:
 			return None
-	except Exception as e: opthandle(e)
 
-	return ui.result
+		if result["type"]=="item":
+			return result["index"]
+
+		if result["type"]=="func":
+			try:
+				method = result["index"]
+				if method:
+					method()
+					return None
+			except Exception as e: opthandle(e)
+
+		if result["type"]=="settings":
+			kwargs["items"]=[]
+
+	return None

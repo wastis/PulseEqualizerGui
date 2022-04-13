@@ -9,14 +9,11 @@
 #
 #
 
-import xbmcaddon
 import xbmcgui
 
 from helper import SocketCom
 
-addon = xbmcaddon.Addon()
-def tr(lid):
-	return addon.getLocalizedString(lid)
+from skin import tr
 
 class LatencyGui(  xbmcgui.WindowXMLDialog  ):
 	def __init__( self, *_args, **_kwargs ):

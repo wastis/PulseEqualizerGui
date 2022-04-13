@@ -19,8 +19,8 @@ from basic import path_pipe
 from menus import Menu
 
 class Launcher():
-	def __init__(self,cwd, name):
-		self.menu = Menu(cwd)
+	def __init__(self, name):
+		self.menu = Menu()
 		self.pname = "{}.{}".format(name,os.getppid())
 		self.ppath = path_pipe + self.pname
 		self.exit_str = "sfdaoekga"
@@ -51,11 +51,7 @@ class Launcher():
 
 				log("launcher: start menu {}".format(result))
 
-				cmd , step = result.split(',')
-				try: step = int(step.strip())
-				except ValueError: step = 1
-
-				self.menu.sel_menu(cmd,step)
+				self.menu.sel_menu(result)
 
 			except Exception as e: handle(e)
 
@@ -73,4 +69,6 @@ class Launcher():
 		except OSError: pass
 
 	def start(self):
+		try: os.remove(path_pipe + "lock")
+		except OSError: pass
 		threading.Thread(target = self.loop).start()

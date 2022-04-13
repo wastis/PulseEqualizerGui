@@ -9,7 +9,6 @@
 #
 #
 
-import xbmcaddon
 import xbmcgui
 import shutil
 import os
@@ -21,11 +20,14 @@ from basic import opthandle
 from basic import path_tmp
 from basic import path_filter
 from basic import path_masterprofile
+from basic import get_user_setting
 
 from sound import SpecManager
 from sound import Spectrum
 from sound import SpecGroup
 from sound import createGraph2
+
+from skin import tr
 
 from contextmenu import contextMenu
 
@@ -33,12 +35,8 @@ from threading import Thread
 
 chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
 
-addon = xbmcaddon.Addon()
-def tr(lid):
-	return addon.getLocalizedString(lid)
-
 class ImportGui(  xbmcgui.WindowXMLDialog  ):
-	def __init__( self, *_args, **kwargs ):
+	def __init__( self, *_args, **_ ):
 		self.name = None
 		self.eqid = None
 
@@ -83,8 +81,9 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 
 		self.channel_name = channel_name
 		self.file_name = file_name
-		try: step = kwargs["step"]
-		except Exception: step = float(1)
+
+		try: step = int(get_user_setting("importstep",0))+1
+		except Exception: step = int(1)
 
 		self.dyn_step = DynStep(step,5,1,3)
 
@@ -269,14 +268,6 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		self.update_image()
 
 	def onInit( self ):
-		self.getControl(1001).setLabel(tr(32600))
-		self.getControl(1002).setLabel(tr(32601))
-		self.getControl(1003).setLabel(tr(32602))
-		self.getControl(2010).setLabel(tr(32603))
-		self.getControl(3101).setLabel(tr(32604))
-		self.getControl(3102).setLabel(tr(32605))
-		self.getControl(3103).setLabel(tr(32606))
-
 		ctl = self.getControl(2100)
 		ctl.addItems([xbmcgui.ListItem(self.channel_name[i],self.file_name[i]) for i in range(len(self.channel_name))])
 		self.getControl(2020).setLabel(self.mic_name)

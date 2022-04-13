@@ -12,60 +12,36 @@
 import os
 import time
 
-from basic import handle
 from basic import log
-from basic import path_addon
 from basic import path_tmp
-from basic import path_skin
 
-from skin import get_current_skin
-from skin import get_skin_colors
-from skin import create_temp_structure
+from skin import get_valid_skin
+from skin import file_struct
+from skin import localize
+from skin import write_dialog
 
-def runDialog(dialog, template ,**kwargs):
-	log("runDialog")
-	try:
-		skin = get_current_skin()
-		skincol = skin
-		if not os.path.exists(path_addon + path_skin.format(skin=skin) + "%s.xml" % dialog):
-			skin = "Default"
-	except Exception as e:
-		handle(e)
-		skin = "Default"
-		skincol = skin
-
-	#
-	#	create path structure
-	#
-
-	fn_dialog_name = "%s.xml" % template
-	fn_path = path_skin.format(skin=skin)
-	fn_path_template = path_addon + fn_path
-	fn_path_dialog = path_tmp + fn_path
-	create_temp_structure(skin)
-
-	#
-	#	get skin color scheme
-	#
-
-	colors = get_skin_colors(skincol)
+def runDialog(dialog, name ,**kwargs):
+	name = "{}.xml".format(name)
+	skin, color = get_valid_skin()
+	file_s = file_struct(skin, name)
 
 	#
 	#	prepare template
 	#
 
-	with open( fn_path_template +  fn_dialog_name) as f: template = f.read()
+	with open( file_s["template"]) as f: template = f.read()
 
-	main = template.format(**colors)
-
-	with open(fn_path_dialog + fn_dialog_name, "w") as f: f.write(main)
+	write_dialog(file_s,localize(template.format(**color)))
 
 	#
 	#	run Dialog
 	#
 	log("runDialog")
-	dialog(fn_dialog_name, path_tmp, "Default", "720p", **kwargs).doModal()
-	os.remove(fn_path_dialog + fn_dialog_name)
+
+	ui = dialog(name, path_tmp, "Default", "720p", **kwargs)
+	ui.doModal()
+
+	os.remove(file_s["tmp_dialog"])
 
 	# wait for animation finished
 	time.sleep(0.2)

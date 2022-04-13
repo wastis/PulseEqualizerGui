@@ -10,61 +10,51 @@
 #
 
 import xbmcgui
-import xbmcaddon
-import os
-import re
 import math
 import time
 
 from threading import Thread
 
-from helper import json
 from helper import SocketCom
 from helper import DynStep
 
-from basic import handle
-from basic import opthandle
-from basic import logerror
-from basic import path_addon
-from basic import path_tmp
-from basic import path_settings
-from basic import path_skin
-from basic import path_profile
+from basic import get_user_setting
 
 from time import sleep
 
-from skin import get_current_skin
-from skin import get_skin_colors
-from skin import create_temp_structure
+from skin import tr
+from skin import read_next_tag
+from skin import format_float
+from skin import localize
+from skin import get_frequencies
+
+from skin import get_template
+from skin import write_dialog
+from skin import run_dialog
 
 from contextmenu import contextMenu
 
 #from basic import log
 
-addon = xbmcaddon.Addon()
-def tr(lid):
-	return addon.getLocalizedString(lid)
-
 class EqGui(  xbmcgui.WindowXMLDialog  ):
-	''' Eqaulizer Dialog
+	''' Equalizer Dialog
 
 		The equalizer dialog is build up dynamically
 	'''
-	result = None
-	index = None
-
-	updating=False
-
-	controlId = 2000
-	reopen=False
 
 	def __init__(self, *args, **kwargs ):
+		self.build_dialog(**kwargs)
+
+		self.index = None
+		self.updating=False
+		self.controlId = 2000
+
 		self.cwd = args[1]
 		self.sock = SocketCom("server")
-		self.freqs = kwargs["freqs"]
 		self.eqid = kwargs["eqid"]
 		self.desc = kwargs["desc"]
-		step = kwargs["step"]
+		try: step = int(get_user_setting("equalstep",0))+1
+		except Exception: step = int(1)
 
 		self.dyn_step = DynStep(step,5,1,3)
 
@@ -72,6 +62,77 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		self.profile = self.sock.call_func("get","eq_base_profile")
 
 		self.preamp, self.coef = self.sock.call_func("get","eq_filter")
+		self.is_changed = False
+
+	def build_dialog(self, **kwargs):
+		self.freqs = get_frequencies()
+
+		color = kwargs["color"]
+		file_s = kwargs["file_s"]
+
+		header_t, itemgap_t, templ_t, end_t = get_template(
+								file_s,
+								["<!-- item gap -->",
+								"<!-- element begin -->",
+								"<!-- element end -->"])
+
+		itemgap = int(read_next_tag("itemgap",itemgap_t,0))
+
+		num_freq = len(self.freqs)
+
+		if num_freq >= 15:
+			itemgap = 0
+
+		itemgap_t = itemgap_t.format(itemgap=itemgap)
+
+		width = int(read_next_tag("width",templ_t,0))
+
+		slider_width = (width + itemgap) * num_freq
+		if slider_width > 1700: slider_width=1700
+		total_width = slider_width + 100
+		xpos = (1920 - total_width) / 2
+
+		items = ""
+		i = 0
+
+		max_id = 1999 + num_freq
+
+		for freq in self.freqs:
+			item_r = self.set_replace_item(2000 + i,freq, max_id)
+			items = items + templ_t.format(**item_r, **color)
+			i+=1
+
+		glob = {
+			"slider_width":slider_width,
+			"total_width":total_width,
+			"xpos":xpos
+			}
+
+		write_dialog(file_s,
+			localize(header_t.format(**glob, **color) +
+			itemgap_t +
+			items +
+			end_t))
+
+	@staticmethod
+	def set_replace_item(item_id,freq, max_id):
+		item_r = {
+			"sid":item_id,
+			"lid":item_id + 100,
+			"onleft":item_id - 1
+			}
+
+		if item_id < max_id:
+			item_r["onright"] = item_id + 1
+		else:
+			item_r["onright"] = ""
+
+		if freq < 1000:
+			item_r["labelid"] = '$NUMBER[{}]'.format(int(freq))
+		else:
+			item_r["labelid"] = format_float(freq)
+
+		return item_r
 
 	@staticmethod
 	def str(nr):
@@ -96,14 +157,9 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		self.setFocusId(2000)
 
 		#set slider names
-		lid = 2100
 		self.getControl(3500).setLabel(self.profile)
 		self.getControl(3501).setLabel(self.desc)
 		self.getControl(3502).setLabel("0 dB      ")
-
-		for f in self.freqs:
-			self.getControl(lid).setLabel(self.str(f))
-			lid = lid + 1
 
 		#set slider
 		i = 0
@@ -112,7 +168,6 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 			i = i + 1
 
 		# set preamp slider
-		self.getControl(2999).setLabel(tr(32037))
 		self.getControl(1999).setInt(self.coef2slider(self.preamp), 0, 0, 100)
 
 	def onFocus(self, controlId):
@@ -135,6 +190,7 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		sleep(0.3)
 		self.set_filter()
 		self.updating = False
+		self.is_changed = True
 
 	def setFilter(self):
 		val = 2 * (self.getControl(self.controlId).getFloat() - 50) / 5
@@ -157,43 +213,6 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		if not self.updating:
 			self.updating = True
 			Thread(target=self.update).start()
-
-	def sel_edit_freq(self):
-		freq = xbmcgui.Dialog().input(tr(32621),".".join([str(f) for f in self.freqs]))
-		if freq == "": return
-
-		try: freqs = sorted([int(f) for f in freq.split(".")])
-		except Exception: return
-
-		flist = []
-		try:
-			it = iter(freqs)
-			cur = next(it)
-			flist.append(cur)
-			while True:
-				new = next(it)
-				if new == cur: continue
-
-				cur = new
-				flist.append(cur)
-		except Exception as e: opthandle(e)
-
-		fn = path_profile + path_settings + "settings.json"
-		try:
-			with open(fn) as f: se = json.loads(f.read())
-		except Exception: se = {}
-
-		se["freqs"] = flist
-
-		try:
-			with open(fn, 'w') as f: f.write(json.dumps(se))
-		except Exception as e:
-			handle(e)
-			return
-
-		self.reopen = True
-		self.load_profile()
-		self._close()
 
 	def _close(self):
 		self.close()
@@ -226,19 +245,26 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 
 		#Cancel
 		if aid in [92,10]:
-			contextMenu(funcs = [(tr(32622),self.sel_cancel),(tr(32623),self.sel_save),(tr(32621),self.sel_edit_freq)])
+			if self.is_changed:
+				contextMenu(funcs = [(tr(32622),self.sel_cancel),(tr(32623),self.sel_save)])
+			else:
+				self.close()
 
 		self.dyn_step.dynamic_step(buc)
 
 		if aid in [3,104]:
 			ctl = self.getControl(self.controlId)
-			pos = ctl.getInt()+self.dyn_step.dynstep
+			new = ctl.getInt()+self.dyn_step.dynstep
+			if ctl.getInt() < 50 and new > 50: new = 50
+			pos = new
 			if pos > 100: pos = 100
 			ctl.setInt(pos,0,0,100)
 
 		if aid in [4,105]:
 			ctl = self.getControl(self.controlId)
-			pos = ctl.getInt()-self.dyn_step.dynstep
+			new = ctl.getInt()-self.dyn_step.dynstep
+			if ctl.getInt() > 50 and new < 50: new = 50
+			pos = new
 			if pos < 0: pos = 0
 			ctl.setInt(pos,0,0,100)
 
@@ -248,93 +274,5 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 
 		self.last_key = t
 
-def eqBuild(**kwargs):
-	fn = path_profile + path_settings + "settings.json"
-	try:
-		with open(fn) as f: se = json.loads(f.read())
-		freqs = se["freqs"]
-	except Exception:
-		freqs = [64, 125, 250, 500, 750, 1000,  2000,  3000,  4000,  8000, 16000]
-
-	kwargs["freqs"] = freqs
-
-	try:
-		skin = get_current_skin()
-		skincol = skin
-		if not os.path.exists(path_addon + path_skin.format(skin=skin) + "EqualizerDialog.xml"):
-			skin = "Default"
-	except Exception as e:
-		handle(e)
-		skin = "Default"
-		skincol = skin
-	#
-	#	create path structure
-	#
-
-	fn_dialog_name = "EqualizerDialog.xml"
-	fn_path = path_skin.format(skin=skin)
-	fn_path_template = path_addon + fn_path
-	fn_path_dialog = path_tmp + fn_path
-	create_temp_structure(skin)
-
-	#
-	#	get skin color scheme
-	#
-
-	colors = get_skin_colors(skincol)
-
-	#
-	#	prepare template
-	#
-
-	with open( fn_path_template +  fn_dialog_name) as f: template = f.read()
-
-	# find slider group
-	b = re.search('<!-- element begin -->(.*?)<!-- element end -->', template, re.DOTALL | re.I)
-	if b is None:
-		logerror("no button template found in %s" % (fn_path_template +  fn_dialog_name))
-		return
-
-	main = template.replace(b.group(0),"{grouplist}")
-	element = b.group(1)
-
-	ew = int(re.search('<width>(.*?)</width>',element).group(1))
-
-	if len(freqs) < 15:
-		oig = re.search('<optitemgap>(.*?)</optitemgap>', main)
-		if oig:
-			main = main.replace(oig.group(0),"<itemgap>%s</itemgap>" % oig.group(1))
-			ew = ew + int(oig.group(1))
-
-	slider_width = ew * len(freqs)
-	if slider_width > 1700: slider_width = 1700
-	total_width = slider_width + 100
-	xpos = (1920 - total_width) / 2
-
-	r = ''
-	iid = 2000
-	left = 0
-	for f in freqs:
-		if int(f) < 1000: label = str(f)
-		elif int(f) < 10000: label = str(f)[0]+"k"+ str(f)[1]
-		else: label = str(f)[:2]+"k"
-
-		r = r + element.format(id = iid, left = left, label= label, onright = iid + 1, onleft = iid - 1, lid = iid + 100, **colors)
-		iid = iid + 1
-
-	main = main.format(grouplist = r, xpos = xpos, total_width=total_width, slider_width=slider_width, **colors)
-
-	with open(fn_path_dialog + fn_dialog_name, "w") as f: f.write(main)
-
-	return kwargs, fn_dialog_name, path_tmp, fn_path_dialog
-
 def eqDialog(**kwargs):
-	while True:
-		kwargs, fn_dialog_name, path_tmp, fn_path_dialog = eqBuild(**kwargs)
-
-		ui = EqGui(fn_dialog_name, path_tmp, "Default", "720p", **kwargs)
-		ui.doModal()
-
-		if not ui.reopen:
-			os.remove(fn_path_dialog + fn_dialog_name)
-			break
+	run_dialog(EqGui, "EqualizerDialog.xml", **kwargs)

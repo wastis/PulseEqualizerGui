@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #	This file is part of PulseEqualizerGui for Kodi.
 #
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
@@ -8,18 +10,18 @@
 #	or (at your option) any later version.
 #
 #
-import xbmcaddon
 import sys
-import os
+sys.path.append ('./resources/lib/')
+sys.path.append ('./fakekodi')
 
-cwd	= xbmcaddon.Addon().getAddonInfo('path')
-sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
-sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
+from helper import KeyMapFile
 
-from basic import path
-path.create_paths()
+kmf = KeyMapFile()
 
-from pamonitor import PaMonitor
+kmf.struct["menu"]["key"]="1"
+kmf.struct["equalizer"]["key"]="2"
+kmf.struct["volup"]["key"]="3"
 
-if ( __name__ == "__main__" ):
-	PaMonitor()
+kmf.save()
+
+kmf.parse_keymap_file()

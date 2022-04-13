@@ -13,14 +13,14 @@
 #  dbus wraper for Python 2.x
 #
 
-import interface as IF
+from . import interface as IF
 import sys
 import os
 
 from basic import log
 from basic import logerror
 
-from pulseerror import PulseDBusError
+from .pulseerror import PulseDBusError
 
 try:
 	import dbus

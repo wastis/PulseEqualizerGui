@@ -9,6 +9,10 @@
 #
 #
 
+import time
+from .path import path_kodi
+from .usersetting import get_user_setting
+
 try: import xbmc
 except Exception:
 	# this is the python service, started outside from kodi
@@ -43,36 +47,32 @@ except Exception:
 			except Exception as e:
 				print("{} {}".format(type(e).__name__, ",".join([str(x) for x in e.args])))
 
-'''
-PRE="s_"
+history=[]
 
-class xbmc():
-	LOGDEBUG = "DEBUG"
-	LOGERROR = "ERROR"
-	LOGFATAL = "FATAL"
-	LOGINFO = "INFO"
-	LOGNONE = "NONE"
-	LOGWARNING = "WARNING"
+def log_to_history(text,level):
+	global history
+	history.append("{} {} {}\n".format(time.strftime("%d.%m %H:%M:%S"),level, text))
+	if len(history) > 40:
+		history=history[-40:]
 
-	try:
-		import xbmc
-		global PRE
-		PRE="c_"
-	except Exception:
-		pass
+def log_to_file():
+	global history
+	if get_user_setting("crashlog","false") != "true":
+		return
 
-	@staticmethod
-	def log(text, level):
-		if "padb: re:" in text: return
-		text = "{}: {}{}".format(level,PRE,text)
-		with open("/var/tmp/kodi.log","a") as f: f.write(text + "\n")
-'''
+	with open(path_kodi + "temp/equalizer.log","a") as f:
+		f.write("".join(history))
+	history=[]
 
 def log(text):
 	xbmc.log("c_eq: " + text, xbmc.LOGDEBUG)
+	log_to_history(text,"DEBUG")
 
 def loginfo(text):
 	xbmc.log("c_eq: " + text, xbmc.LOGINFO)
+	log_to_history(text,"INFO ")
 
 def logerror(text):
 	xbmc.log("c_eq: " + text, xbmc.LOGERROR)
+	log_to_history(text,"ERROR")
+	log_to_file()

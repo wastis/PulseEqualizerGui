@@ -145,6 +145,40 @@ msgctxt "#32037"
 msgid "pre"
 msgstr "pre"
 
+
+msgctxt "#32100"
+msgid "General"
+msgstr "General"
+
+msgctxt "#32101"
+msgid "Debug"
+msgstr "Debug"
+
+msgctxt "#32110"
+msgid "Volume Step Size"
+msgstr "Volume Step Size"
+
+msgctxt "#32111"
+msgid "Equalizer Step Size"
+msgstr "Equalizer Step Size"
+
+msgctxt "#32112"
+msgid "Room Correction Menu Step Size"
+msgstr "Room Correction Menu Step Size"
+
+msgctxt "#32113"
+msgid "Equalizer Frequencies"
+msgstr "Equalizer Frequencies"
+
+msgctxt "#32114"
+msgid "Crash Log"
+msgstr "Crash Log"
+
+msgctxt "#32115"
+msgid "Server Mode"
+msgstr "Server Mode"
+
+
 msgctxt "#32200"
 msgid "Save"
 msgstr "Save"
@@ -216,6 +250,10 @@ msgstr "Select Channel for Sweep"
 msgctxt "#32417"
 msgid "Number of Repeats of the Sweep"
 msgstr "Number of Repeats of the Sweep"
+
+msgctxt "#32418"
+msgid "stop"
+msgstr "stop"
 
 msgctxt "#32500"
 msgid "front-left"
@@ -314,130 +352,539 @@ msgid "Edit Frequencies"
 msgstr "Edit Frequencies"
 
 msgctxt "#32622"
-msgid "Undo Changes - Exit"
-msgstr "Undo Changes - Exit"
+msgid "Undo Changes"
+msgstr "Undo Changes"
 
 msgctxt "#32623"
-msgid "Save Changes - Exit"
-msgstr "Save Changes - Exit"
+msgid "Save Changes"
+msgstr "Save Changes"
 
-msgctxt "#37000"
+msgctxt "#32700"
 msgid "PulseEqualizer"
 msgstr "PulseEqualizer"
 
-msgctxt "#37001"
+msgctxt "#32701"
 msgid "Profile"
 msgstr "Profile"
 
-msgctxt "#37002"
+msgctxt "#32702"
 msgid "Equalizer"
 msgstr "Equalizer"
 
-msgctxt "#37003"
+msgctxt "#32703"
 msgid "Device"
 msgstr "Device"
 
-msgctxt "#37004"
+msgctxt "#32704"
 msgid "Correction"
 msgstr "Correction"
 
-msgctxt "#37005"
+msgctxt "#32705"
 msgid "Latency"
 msgstr "Latency"
 
-msgctxt "#37006"
+msgctxt "#32706"
 msgid "Codec Info"
 msgstr "Codec Info"
 
-msgctxt "#37007"
+msgctxt "#32707"
 msgid "Play Pause"
 msgstr "Play Pause"
 
-msgctxt "#37008"
+msgctxt "#32708"
 msgid "Full Screen"
 msgstr "Full Screen"
 
-msgctxt "#37009"
+msgctxt "#32709"
 msgid "Context Menu"
 msgstr "Context Menu"
 
-msgctxt "#37010"
+msgctxt "#32710"
 msgid "Power Down"
 msgstr "Power Down"
 
-msgctxt "#37011"
+msgctxt "#32711"
 msgid "Reboot"
 msgstr "Reboot"
 
-msgctxt "#37012"
+msgctxt "#32712"
 msgid "Suspend"
 msgstr "Suspend"
 
-msgctxt "#37013"
+msgctxt "#32713"
 msgid "Quit"
 msgstr "Quit"
 
-msgctxt "#37014"
+msgctxt "#32714"
 msgid "Stop Timer"
 msgstr "Stop Timer"
 
-msgctxt "#37015"
+msgctxt "#32715"
 msgid "Screenshot"
 msgstr "Screenshot"
 
-msgctxt "#37016"
+msgctxt "#32716"
 msgid "Sys Volume Up"
 msgstr "Sys Volume Up"
 
-msgctxt "#37017"
+msgctxt "#32717"
 msgid "Sys Volume Down"
 msgstr "Sys Volume Down"
 
-msgctxt "#37018"
+msgctxt "#32718"
 msgid "Info"
 msgstr "Info"
 
-msgctxt "#37019"
+msgctxt "#32719"
 msgid "Show Subtitles"
 msgstr "Show Subtitles"
 
-msgctxt "#37020"
+msgctxt "#32720"
 msgid "Aspect Ratio"
 msgstr "Aspect Ratio"
 
-msgctxt "#37021"
+msgctxt "#32721"
 msgid "Next Audio Track"
 msgstr "Next Audio Track"
 
-msgctxt "#37022"
+msgctxt "#32722"
 msgid "Next"
 msgstr "Next"
 
-msgctxt "#37023"
+msgctxt "#32723"
 msgid "Previous"
 msgstr "Previous"
 
-msgctxt "#37500"
+msgctxt "#32750"
 msgid "Keymap"
 msgstr "Keymap"
 
-msgctxt "#37501"
+msgctxt "#32751"
 msgid "Save"
 msgstr "Save"
 
-msgctxt "#37502"
+msgctxt "#32752"
 msgid "Cancel"
 msgstr "Cancel"
 
-msgctxt "#37503"
+msgctxt "#32753"
 msgid "Unknown Key"
 msgstr "Unknown Key"
 
-msgctxt "#37504"
+msgctxt "#32754"
 msgid "Input device not supported"
 msgstr "Input device not supported"
 
-msgctxt "#37505"
+msgctxt "#32755"
 msgid "Already Used"
 msgstr "Already Used"
+
+msgctxt "#32800"
+msgid "back"
+msgstr "back"
+
+msgctxt "#32801"
+msgid "backspace"
+msgstr "backspace"
+
+msgctxt "#32802"
+msgid "blue"
+msgstr "blue"
+
+msgctxt "#32803"
+msgid "browser_back"
+msgstr "browser_back"
+
+msgctxt "#32804"
+msgid "browser_favorites"
+msgstr "browser_favorites"
+
+msgctxt "#32805"
+msgid "browser_forward"
+msgstr "browser_forward"
+
+msgctxt "#32806"
+msgid "browser_home"
+msgstr "browser_home"
+
+msgctxt "#32807"
+msgid "browser_refresh"
+msgstr "browser_refresh"
+
+msgctxt "#32808"
+msgid "browser_search"
+msgstr "browser_search"
+
+msgctxt "#32809"
+msgid "browser_stop"
+msgstr "browser_stop"
+
+msgctxt "#32810"
+msgid "capslock"
+msgstr "capslock"
+
+msgctxt "#32811"
+msgid "clear"
+msgstr "clear"
+
+msgctxt "#32812"
+msgid "config"
+msgstr "config"
+
+msgctxt "#32813"
+msgid "contentsmenu"
+msgstr "contentsmenu"
+
+msgctxt "#32814"
+msgid "delete"
+msgstr "delete"
+
+msgctxt "#32815"
+msgid "display"
+msgstr "display"
+
+msgctxt "#32816"
+msgid "down"
+msgstr "down"
+
+msgctxt "#32817"
+msgid "dvdmenu"
+msgstr "dvdmenu"
+
+msgctxt "#32818"
+msgid "eject"
+msgstr "eject"
+
+msgctxt "#32819"
+msgid "end"
+msgstr "end"
+
+msgctxt "#32820"
+msgid "enter"
+msgstr "enter"
+
+msgctxt "#32821"
+msgid "epg"
+msgstr "epg"
+
+msgctxt "#32822"
+msgid "epgsearch"
+msgstr "epgsearch"
+
+msgctxt "#32823"
+msgid "escape"
+msgstr "escape"
+
+msgctxt "#32824"
+msgid "fastforward"
+msgstr "fastforward"
+
+msgctxt "#32825"
+msgid "favorites"
+msgstr "favorites"
+
+msgctxt "#32826"
+msgid "forward"
+msgstr "forward"
+
+msgctxt "#32827"
+msgid "green"
+msgstr "green"
+
+msgctxt "#32828"
+msgid "guide"
+msgstr "guide"
+
+msgctxt "#32829"
+msgid "home"
+msgstr "home"
+
+msgctxt "#32830"
+msgid "homepage"
+msgstr "homepage"
+
+msgctxt "#32831"
+msgid "info"
+msgstr "info"
+
+msgctxt "#32832"
+msgid "insert"
+msgstr "insert"
+
+msgctxt "#32833"
+msgid "language"
+msgstr "language"
+
+msgctxt "#32834"
+msgid "launch_app1_pc_icon"
+msgstr "launch_app1_pc_icon"
+
+msgctxt "#32835"
+msgid "launch_app2_pc_icon"
+msgstr "launch_app2_pc_icon"
+
+msgctxt "#32836"
+msgid "launch_file_browser"
+msgstr "launch_file_browser"
+
+msgctxt "#32837"
+msgid "launch_mail"
+msgstr "launch_mail"
+
+msgctxt "#32838"
+msgid "launch_media_center"
+msgstr "launch_media_center"
+
+msgctxt "#32839"
+msgid "launch_media_select"
+msgstr "launch_media_select"
+
+msgctxt "#32840"
+msgid "left"
+msgstr "left"
+
+msgctxt "#32841"
+msgid "leftalt"
+msgstr "leftalt"
+
+msgctxt "#32842"
+msgid "leftctrl"
+msgstr "leftctrl"
+
+msgctxt "#32843"
+msgid "leftshift"
+msgstr "leftshift"
+
+msgctxt "#32844"
+msgid "leftwindows"
+msgstr "leftwindows"
+
+msgctxt "#32845"
+msgid "liveradio"
+msgstr "liveradio"
+
+msgctxt "#32846"
+msgid "livetv"
+msgstr "livetv"
+
+msgctxt "#32847"
+msgid "menu"
+msgstr "menu"
+
+msgctxt "#32848"
+msgid "mute"
+msgstr "mute"
+
+msgctxt "#32849"
+msgid "mymusic"
+msgstr "mymusic"
+
+msgctxt "#32850"
+msgid "mypictures"
+msgstr "mypictures"
+
+msgctxt "#32851"
+msgid "mytv"
+msgstr "mytv"
+
+msgctxt "#32852"
+msgid "myvideo"
+msgstr "myvideo"
+
+msgctxt "#32853"
+msgid "next_track"
+msgstr "next_track"
+
+msgctxt "#32854"
+msgid "numlock"
+msgstr "numlock"
+
+msgctxt "#32855"
+msgid "numpadperiod"
+msgstr "numpadperiod"
+
+msgctxt "#32856"
+msgid "pagedown"
+msgstr "pagedown"
+
+msgctxt "#32857"
+msgid "pageminus"
+msgstr "pageminus"
+
+msgctxt "#32858"
+msgid "pageplus"
+msgstr "pageplus"
+
+msgctxt "#32859"
+msgid "pageup"
+msgstr "pageup"
+
+msgctxt "#32860"
+msgid "pause"
+msgstr "pause"
+
+msgctxt "#32861"
+msgid "play"
+msgstr "play"
+
+msgctxt "#32862"
+msgid "play_pause"
+msgstr "play_pause"
+
+msgctxt "#32863"
+msgid "playlist"
+msgstr "playlist"
+
+msgctxt "#32864"
+msgid "power"
+msgstr "power"
+
+msgctxt "#32865"
+msgid "prev_track"
+msgstr "prev_track"
+
+msgctxt "#32866"
+msgid "print"
+msgstr "print"
+
+msgctxt "#32867"
+msgid "printscreen"
+msgstr "printscreen"
+
+msgctxt "#32868"
+msgid "record"
+msgstr "record"
+
+msgctxt "#32869"
+msgid "recordedtv"
+msgstr "recordedtv"
+
+msgctxt "#32870"
+msgid "red"
+msgstr "red"
+
+msgctxt "#32871"
+msgid "return"
+msgstr "return"
+
+msgctxt "#32872"
+msgid "reverse"
+msgstr "reverse"
+
+msgctxt "#32873"
+msgid "rewind"
+msgstr "rewind"
+
+msgctxt "#32874"
+msgid "right"
+msgstr "right"
+
+msgctxt "#32875"
+msgid "rightctrl"
+msgstr "rightctrl"
+
+msgctxt "#32876"
+msgid "rightshift"
+msgstr "rightshift"
+
+msgctxt "#32877"
+msgid "rightwindows"
+msgstr "rightwindows"
+
+msgctxt "#32878"
+msgid "rootmenu"
+msgstr "rootmenu"
+
+msgctxt "#32879"
+msgid "scrolllock"
+msgstr "scrolllock"
+
+msgctxt "#32880"
+msgid "select"
+msgstr "select"
+
+msgctxt "#32881"
+msgid "settings"
+msgstr "settings"
+
+msgctxt "#32882"
+msgid "skipminus"
+msgstr "skipminus"
+
+msgctxt "#32883"
+msgid "skipplus"
+msgstr "skipplus"
+
+msgctxt "#32884"
+msgid "sleep"
+msgstr "sleep"
+
+msgctxt "#32885"
+msgid "space"
+msgstr "space"
+
+msgctxt "#32886"
+msgid "start"
+msgstr "start"
+
+msgctxt "#32887"
+msgid "stop"
+msgstr "stop"
+
+msgctxt "#32888"
+msgid "subtitle"
+msgstr "subtitle"
+
+msgctxt "#32889"
+msgid "tab"
+msgstr "tab"
+
+msgctxt "#32890"
+msgid "teletext"
+msgstr "teletext"
+
+msgctxt "#32891"
+msgid "text"
+msgstr "text"
+
+msgctxt "#32892"
+msgid "title"
+msgstr "title"
+
+msgctxt "#32893"
+msgid "topmenu"
+msgstr "topmenu"
+
+msgctxt "#32894"
+msgid "up"
+msgstr "up"
+
+msgctxt "#32895"
+msgid "volume_down"
+msgstr "volume_down"
+
+msgctxt "#32896"
+msgid "volume_mute"
+msgstr "volume_mute"
+
+msgctxt "#32897"
+msgid "volume_up"
+msgstr "volume_up"
+
+msgctxt "#32898"
+msgid "volumeminus"
+msgstr "volumeminus"
+
+msgctxt "#32899"
+msgid "volumeplus"
+msgstr "volumeplus"
+
+msgctxt "#32900"
+msgid "yellow"
+msgstr "yellow"
+
+msgctxt "#32901"
+msgid "zoom"
+msgstr "zoom"
+
 

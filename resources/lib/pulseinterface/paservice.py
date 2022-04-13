@@ -61,7 +61,7 @@ class PulseInterfaceService():
 			self.start_event_loop()
 			self.service_owner = True
 		else:
-			log("server alreay running, don't start")
+			log("pase: server alreay running, don't start")
 
 	#start all message loops
 	def start_event_loop(self):
@@ -86,12 +86,6 @@ class PulseInterfaceService():
 	#	support functions
 	#
 
-	@staticmethod
-	def handle(e):
-		func_name = sys._getframe(1).f_code.co_name
-		error_type = type(e)
-		logerror("pulse_event_manager: %s %s %s" % (func_name, error_type, e.message))
-
 	def send_message_to_central(self, target, func, param = '', conn = None):
 		# create a new thread per message. So message_forward thread will not crash in case of message handling crash
 		th = Thread(target=self.mc.on_message, args=(target, func, param, conn))
@@ -106,10 +100,10 @@ class PulseInterfaceService():
 	def on_socket_message(self, conn, msg):
 		try:
 			func,target,args = json.loads(msg)
-			log("receive from socket: %s" % repr([func,target,args]))
+			log("pase: receive from socket: %s" % repr([func,target,args]))
 
 			if target == "service" and func == "stop" and args[0]== self.gid:
-				log("stop_service received - stopping service")
+				log("pase: stop_service received - stopping service")
 				conn.close()
 				self.stop_event_loop()
 
@@ -124,13 +118,13 @@ class PulseInterfaceService():
 
 	#start message loop for pulse audio
 	def start_pulse_loop(self):
-		log("start pulse loop")
+		log("pase: start pulse loop")
 		cnt = 1
 		while True:
 			try:
 				self.pulse_event = pulsectl.Pulse('Event Manager')
 
-				log("connected to pulse")
+				log("pase: connected to pulse")
 				cnt = 1
 
 				self.pulse_event.event_mask_set('all')
@@ -139,14 +133,15 @@ class PulseInterfaceService():
 				self.pulse_event.event_listen()
 
 			except pulsectl.PulseDisconnected:
-					log("pulse disconnected")
+					log("pase: pulse disconnected")
 					if not self.running:
 						self.pulseloop = False
-						log("stop pulse loop")
+						log("pase: stop pulse loop")
 						return
 			except Exception as e:
 				if cnt > 0:
 					handle(e)
+					logerror("pase: in event manager")
 					cnt = cnt - 1
 
 			if not self.running: return
@@ -160,7 +155,7 @@ class PulseInterfaceService():
 	#	therefore collect them and process them 100ms after the last message.
 
 	def message_forward(self):
-		log("start message_dispatch")
+		log("pase: start message_dispatch")
 
 		timeout = None
 		while True:
@@ -178,7 +173,7 @@ class PulseInterfaceService():
 					self.send_message_to_central('pa','update')
 					timeout = None
 
-					log("pa_updated: time needed {:2f} ms".format((time.time()-t)*1000))
+					log("pase: pa_updated: time needed {:2f} ms".format((time.time()-t)*1000))
 					continue
 				except Exception as e: handle(e)
 
@@ -192,4 +187,4 @@ class PulseInterfaceService():
 
 			except Exception as e: handle(e)
 
-		log("stop message_dispatch")
+		log("pase: stop message_dispatch")

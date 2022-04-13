@@ -17,7 +17,7 @@
 			<height>3240</height>
 			<animation effect="fade" start="0" end="100" time="300">WindowOpen</animation>
 			<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
-			<texture colordiffuse="{col_screen}">colors/black.png</texture>
+			<texture colordiffuse="{screen}">colors/black.png</texture>
 		</control>
 		<control type="button" id="100">
 			<left>-1920</left>
@@ -26,7 +26,7 @@
 			<height>3240</height>
 			<texturefocus />
 			<texturenofocus />
-			<onclick>Action(close)</onclick>
+			<onclick>Action(back)</onclick>
 		</control>
 
 		<!-- left button pannel -->
@@ -43,61 +43,51 @@
 				<top>0</top>
 				<width>500</width>
 				<height>420</height>
-				<texture colordiffuse="{col_background}">colors/white.png</texture>
+				{background_img}
 			</control>
 			<control type="grouplist" id="1100">
 				<description>grouplist for context buttons</description>
-				<left>50</left>
+				<left>20</left>
 				<top>50</top>
-				<width>400</width>
+				<width>460</width>
 
 				<itemgap>5</itemgap>
 				<height max="320">auto</height>
 				<usecontrolcoords>false</usecontrolcoords>
 					<control type="button" id="1001">
-						<left>0</left>
-						<top>0</top>
-						<width>400</width>
+						<width>460</width>
 						<height>65</height>
-						<label>Load Measurements</label>
-						<textcolor>{col_text}</textcolor>
-						<focusedcolor>{col_textfocus}</focusedcolor>
-						<font>{font}</font>
-						<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-						<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+						<label>$LOCALIZE[32600]</label>
+						{button_tags}
+						{button_textcolor}
+						{font_normal}
+						<aligny>center</aligny>
 						<align>center</align>
 						<onleft>3000</onleft>
 						<onright>2000</onright>
-
 					</control>
 					<control type="button" id="1002">
-						<left>0</left>
-						<top>0</top>
-						<width>400</width>
+						<width>460</width>
 						<height>65</height>
-						<label>Select Microphone</label>
-						<textcolor>{col_text}</textcolor>
-						<focusedcolor>{col_textfocus}</focusedcolor>
-						<font>{font}</font>
-						<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-						<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+						<label>$LOCALIZE[32601]</label>
+						{button_tags}
+						{button_textcolor}
+						{font_normal}
 						<align>center</align>
+						<aligny>center</aligny>
 						<ondown>1003</ondown>
 						<onleft>3000</onleft>
 						<onright>2000</onright>
 					</control>
 					<control type="button" id="1003">
-						<left>50</left>
-						<top>300</top>
-						<width>400</width>
+						<width>460</width>
 						<height>65</height>
-						<label>Save Room Correction</label>
-						<textcolor>{col_text}</textcolor>
-						<focusedcolor>{col_textfocus}</focusedcolor>
-						<font>{font}</font>
-						<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-						<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+						<label>$LOCALIZE[32602]</label>
+						{button_tags}
+						{button_textcolor}
+						{font_normal}
 						<align>center</align>
+						<aligny>center</aligny>
 						<onup>1002</onup>
 						<onleft>3000</onleft>
 						<onright>2000</onright>
@@ -122,36 +112,36 @@
 				<top>0</top>
 				<width>640</width>
 				<height>300</height>
-				<texture colordiffuse="{col_background}">colors/white.png</texture>
+				{background_img}
 			</control>
 			<control type="image">
 				<left>0</left>
 				<top>320</top>
 				<width>640</width>
 				<height>100</height>
-				<texture colordiffuse="{col_background}">colors/white.png</texture>
+				{background_img}
 			</control>
 						<!-- mic labels -->
 			<control type="label" id="2010">
 				<left>20</left>
-				<top>350</top>
+				<top>340</top>
 				<width>250</width>
 				<height>60</height>
-				<font>{font_small}</font>
 				<aligny>center</aligny>
-				<textcolor>{col_text}</textcolor>
+				{font_normal}
+				<textcolor>{text}</textcolor>
 				<selectedcolor>green</selectedcolor>
 				<align>right</align>
-				<label>Microphone</label>
+				<label>$LOCALIZE[32603]</label>
 			</control>
 			<control type="label" id="2020">
 				<left>320</left>
-				<top>350</top>
+				<top>340</top>
 				<width>300</width>
 				<height>60</height>
-				<font>{font_small}</font>
 				<aligny>center</aligny>
-				<textcolor>{col_text}</textcolor>
+				{font_normal}
+				<textcolor>{text}</textcolor>
 				<selectedcolor>green</selectedcolor>
 				<align>left</align>
 				<label>None</label>
@@ -178,11 +168,10 @@
 						<top>3</top>
 						<width>250</width>
 						<height>30</height>
-						<font>{font_small}</font>
-						<aligny>center</aligny>
-						<textcolor>{col_text}</textcolor>
-						<selectedcolor>green</selectedcolor>
+						{font_normal}
+						<textcolor>{text}</textcolor>
 						<align>right</align>
+						<aligny>center</aligny>
 						<label>$INFO[ListItem.Label]</label>
 					</control>
 					<control type="label">
@@ -190,8 +179,8 @@
 						<top>3</top>
 						<width>300</width>
 						<height>30</height>
-						<font>{font_small}</font>
-						<textcolor>{col_text}</textcolor>
+						{font_normal}
+						<textcolor>{text}</textcolor>
 						<aligny>center</aligny>
 						<align>left</align>
 						<label>$INFO[ListItem.Label2]</label>
@@ -205,16 +194,16 @@
 							<left>0</left>
 							<top>0</top>
 							<visible>Control.HasFocus(2100)</visible>
-							<texture colordiffuse="{col_texturefocus}">colors/white.png</texture>
+							<texture colordiffuse="{texturefocus}">colors/white.png</texture>
 					</control>
 					<control type="label">
 						<left>0</left>
 						<top>3</top>
 						<width>250</width>
 						<height>30</height>
-						<font>{font_small}</font>
+						{font_normal}
+						<textcolor>{selected}</textcolor>
 						<aligny>center</aligny>
-						<textcolor>{col_select}</textcolor>
 						<align>right</align>
 						<label>$INFO[ListItem.Label]</label>
 					</control>
@@ -223,9 +212,9 @@
 						<top>3</top>
 						<width>300</width>
 						<height>30</height>
-						<font>{font_small}</font>
+						{font_normal}
+						<textcolor>{selected}</textcolor>
 						<aligny>center</aligny>
-						<textcolor>{col_select}</textcolor>
 						<align>left</align>
 						<label>$INFO[ListItem.Label2]</label>
 					</control>
@@ -248,37 +237,31 @@
 				<top>0</top>
 				<width>500</width>
 				<height>300</height>
-				<texture colordiffuse="{col_background}">colors/white.png</texture>
+				{background_img}
 			</control>
 			<!-- right button list -->
 			<control type="grouplist" id="3100">
 				<description>grouplist for context buttons</description>
-				<left>50</left>
+				<left>20</left>
 				<top>20</top>
-				<width>400</width>
+				<width>460</width>
 				<itemgap>5</itemgap>
 				<height max="300">auto</height>
 				<usecontrolcoords>false</usecontrolcoords>
 					<control type="radiobutton" id="3101">
 						<type>radiobutton</type>
-						<left>0</left>
-						<top>0</top>
-						<width>400</width>
+						<width>460</width>
 						<height>65</height>
 						<visible>true</visible>
-						<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-						<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
-						<textureradioonfocus colordiffuse="{col_textfocus}">radio/button-on.png</textureradioonfocus>
-						<textureradioonnofocus colordiffuse="{col_text}">radio/button-on.png</textureradioonnofocus>
-						<textureradioofffocus colordiffuse="{col_textfocus}">radio/button-off.png</textureradioofffocus>
-						<textureradiooffnofocus colordiffuse="{col_text}">radio/button-off.png</textureradiooffnofocus>
-						<label>Smooth</label>
-						<font>{font}</font>
-						<textcolor>{col_text}</textcolor>
-						<focusedcolor>{col_textfocus}</focusedcolor>
+						<label>$LOCALIZE[32604]</label>
+						{button_tags}
+						{button_textcolor}
+						{font_normal}
+						{button_radio}
 						<align>left</align>
 						<aligny>center</aligny>
-						<textoffsetx>4</textoffsetx>
+
+						<textoffsetx>30</textoffsetx>
 						<textoffsety>5</textoffsety>
 						<onleft>5000</onleft>
 						<onright>1000</onright>
@@ -287,24 +270,18 @@
 					</control>
 					<control type="radiobutton" id="3102">
 						<type>radiobutton</type>
-						<left>0</left>
-						<top>0</top>
-						<width>400</width>
+						<width>460</width>
 						<height>65</height>
+
 						<visible>true</visible>
-						<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-						<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
-						<textureradioonfocus colordiffuse="{col_textfocus}">radio/button-on.png</textureradioonfocus>
-						<textureradioonnofocus colordiffuse="{col_text}">radio/button-on.png</textureradioonnofocus>
-						<textureradioofffocus colordiffuse="{col_textfocus}">radio/button-off.png</textureradioofffocus>
-						<textureradiooffnofocus colordiffuse="{col_text}">radio/button-off.png</textureradiooffnofocus>
-						<label>Fix Volume</label>
-						<font>{font}</font>
-						<textcolor>{col_text}</textcolor>
-						<focusedcolor>{col_textfocus}</focusedcolor>
+						<label>$LOCALIZE[32605]</label>
+						{button_tags}
+						{button_textcolor}
+						{font_normal}
+						{button_radio}
 						<align>left</align>
 						<aligny>center</aligny>
-						<textoffsetx>4</textoffsetx>
+						<textoffsetx>30</textoffsetx>
 						<textoffsety>5</textoffsety>
 						<onleft>5000</onleft>
 						<onright>1000</onright>
@@ -313,31 +290,25 @@
 					</control>
 					<control type="radiobutton" id="3103">
 						<type>radiobutton</type>
-						<left>0</left>
-						<top>0</top>
-						<width>400</width>
+						<width>460</width>
 						<height>65</height>
+						<textoffsetx>30</textoffsetx>
+
 						<visible>true</visible>
-						<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-						<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
-						<textureradioonfocus colordiffuse="{col_textfocus}">radio/button-on.png</textureradioonfocus>
-						<textureradioonnofocus colordiffuse="{col_text}">radio/button-on.png</textureradioonnofocus>
-						<textureradioofffocus colordiffuse="{col_textfocus}">radio/button-off.png</textureradioofffocus>
-						<textureradiooffnofocus colordiffuse="{col_text}">radio/button-off.png</textureradiooffnofocus>
-						<label>Allow Amplify</label>
-						<font>{font}</font>
-						<textcolor>{col_text}</textcolor>
-						<focusedcolor>{col_textfocus}</focusedcolor>
+						{button_tags}
+						{button_textcolor}
+						{font_normal}
+						{button_radio}
+						
+						<label>$LOCALIZE[32606]</label>
 						<align>left</align>
 						<aligny>center</aligny>
-						<textoffsetx>4</textoffsetx>
+						<textoffsetx>30</textoffsetx>
 						<textoffsety>5</textoffsety>
 						<onleft>5000</onleft>
 						<onright>1000</onright>
 						<onup>3102</onup>
 					</control>
-
-
 			</control>
 		</control>
 
@@ -353,24 +324,22 @@
 				<top>0</top>
 				<width>500</width>
 				<height>100</height>
-				<texture colordiffuse="{col_background}">colors/white.png</texture>
+				{background_img}
 			</control>
 			<control type="label" id="4010">
 				<left>20</left>
 				<top>20</top>
 				<width>300</width>
 				<height>60</height>
-				<font>{font_small}</font>
+				{font_normal}
+				<textcolor>{text}</textcolor>
 				<aligny>center</aligny>
-				<textcolor>{col_text}</textcolor>
-				<selectedcolor>green</selectedcolor>
 				<align>left</align>
 				<label>Equalizer</label>
 			</control>
 		</control>
 		
 		<!-- slider pannel -->
-
 		<control type="group" id="5000">
 			<description>ControlGroup</description>
 			<left>1180</left>
@@ -384,7 +353,7 @@
 				<top>0</top>
 				<width>100</width>
 				<height>420</height>
-				<texture colordiffuse="{col_background}">colors/white.png</texture>
+				{background_img}
 			</control>
 			<control type="slider" id="5001">
 				<description>Slider</description>
@@ -393,9 +362,9 @@
 				<width>40</width>
 				<height>400</height>
 				<orientation>vertical</orientation>
-				<texturesliderbar colordiffuse="{col_texturesliderbar}">slider/bk-vertical.png</texturesliderbar>
-				<textureslidernib colordiffuse="{col_textureslidernib}">slider/nofocus.png</textureslidernib>
-				<textureslidernibfocus colordiffuse="{col_textureslidernibfocus}">slider/focus.png</textureslidernibfocus>
+				<texturesliderbar colordiffuse="{texturesliderbar}">slider/bk-vertical.png</texturesliderbar>
+				<textureslidernib colordiffuse="{textureslidernib}">slider/nofocus.png</textureslidernib>
+				<textureslidernibfocus colordiffuse="{textureslidernibfocus}">slider/focus.png</textureslidernibfocus>
 				<onleft>2000</onleft>
 				<onright>3000</onright>
 				
@@ -414,7 +383,7 @@
 				<top>0</top>
 				<width>1800</width>
 				<height>540</height>
-				<texture colordiffuse="{col_background}">colors/white.png</texture>
+				{background_img}
 			</control>
 			<!-- graph grid pannel -->
 			<control type="image" id="1501">
@@ -422,7 +391,7 @@
 				<top>10</top>
 				<width>1690</width>
 				<height>480</height>
-				<texture colordiffuse="{col_text}">graph/grid_40.png</texture>
+				<texture colordiffuse="{text}">graph/grid_40.png</texture>
 			</control>
 			<!-- graph picture pannel -->
 			<control type="image" id="1500">
@@ -430,7 +399,7 @@
 				<top>10</top>
 				<width>1690</width>
 				<height>480</height>
-				<texture colordiffuse="{col_graph}"></texture>
+				<texture colordiffuse="{graph}"></texture>
 			</control>
 			
 			<!-- graph- labels y -->
@@ -439,8 +408,7 @@
 				<top>38</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>0dB</label>
@@ -450,8 +418,7 @@
 				<top>86</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-4dB</label>
@@ -461,8 +428,7 @@
 				<top>134</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-8dB</label>
@@ -472,8 +438,7 @@
 				<top>182</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-12dB</label>
@@ -483,8 +448,7 @@
 				<top>230</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-16dB</label>
@@ -494,8 +458,7 @@
 				<top>278</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-20dB</label>
@@ -505,8 +468,7 @@
 				<top>326</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-24dB</label>
@@ -516,8 +478,7 @@
 				<top>374</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-28dB</label>
@@ -527,8 +488,7 @@
 				<top>422</top>
 				<width>90</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>right</align>
 				<aligny>center</aligny>
 				<label>-32dB</label>
@@ -539,8 +499,7 @@
 				<top>490</top>
 				<width>100</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>50Hz</label>
@@ -551,8 +510,7 @@
 				<top>490</top>
 				<width>100</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>100Hz</label>
@@ -562,8 +520,7 @@
 				<top>490</top>
 				<width>100</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>500Hz</label>
@@ -573,8 +530,7 @@
 				<top>490</top>
 				<width>100</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>1kHz</label>
@@ -584,8 +540,7 @@
 				<top>490</top>
 				<width>100</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>5kHz</label>
@@ -595,20 +550,17 @@
 				<top>490</top>
 				<width>100</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>10kHz</label>
 			</control>
-
 			<control type="label">
 				<left>1680</left>
 				<top>490</top>
 				<width>100</width>
 				<height>40</height>
-				<font>{font_small}</font>
-				<textcolor>{col_text}</textcolor>
+				{font_small}
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>20kHz</label>

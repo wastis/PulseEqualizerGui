@@ -25,7 +25,7 @@
 				<width>90</width>
 				<height>40</height>
 				<label>0 %</label>
-				<font>font16</font>
+				{font_normal}
 				<align>right</align>
 				<aligny>top</aligny>
 		</control>

@@ -22,8 +22,11 @@ path_kodi = None
 path_profile = None
 path_masterprofile = None
 
-path_settings = "addon_data/pulseequalizer/settings/"
-path_filter = "addon_data/pulseequalizer/settings/spectrum/"
+path_settings_old = "addon_data/pulseequalizer/settings/"
+path_settings_base_old = "addon_data/pulseequalizer"
+
+path_settings = None
+path_filter = None
 
 path_keymap = "keymaps/"
 
@@ -48,10 +51,14 @@ try:
 	# ~/.kodi/userdata
 	path_masterprofile = translatePath("special://masterprofile/")
 
+	addon_id =  xbmcaddon.Addon().getAddonInfo("id")
+	path_settings = "addon_data/{}/".format(addon_id)
+	path_filter = "addon_data/{}/spectrum/".format(addon_id)
+
 except ImportError:
 	try:
 		with open(path_tmp + "paths") as f:
-			path_kodi, path_addon, path_masterprofile, path_profile = f.read().split(',')
+			path_kodi, path_addon, path_masterprofile, path_profile, path_settings, path_filter = f.read().split(',')
 	except OSError:
 		p = os.path.realpath(__file__)
 		path_addon = p[:p.rfind("/resources/") + 1]
@@ -78,8 +85,25 @@ def assert_dir(dst):
 def create_paths():
 	assert_dir(path_tmp)
 	assert_dir(path_pipe)
+	#
+	# migrate old user settings
+	#
+	if not os.path.exists(path_masterprofile + path_settings):
+		if os.path.exists(path_masterprofile + path_settings_old):
+			os.rename(path_masterprofile + path_settings_old, path_masterprofile + path_settings)
+			try: os.rmdir(path_masterprofile + path_settings_base_old)
+			except OSError: pass
+			try: os.remove(path_masterprofile + path_settings + "settings.json")
+			except OSError: pass
 
-	# migrate config data
+	if not os.path.exists(path_profile + path_settings):
+		if os.path.exists(path_profile + path_settings_old):
+			os.rename(path_profile + path_settings_old, path_profile + path_settings)
+			try: os.rmdir(path_profile + path_settings_base_old)
+			except OSError: pass
+			try: os.remove(path_profile + path_settings + "settings.json")
+			except OSError: pass
+
 	if not os.path.exists(path_profile + path_settings):
 		assert_dir(path_profile + path_settings)
 
@@ -89,7 +113,7 @@ def create_paths():
 	if not os.path.exists(path_masterprofile + path_filter):
 		assert_dir(path_masterprofile + path_settings)
 
-		try_copy(path_addon + "settings/spectrum",path_masterprofile + path_settings + "spectrum", True)
+		try_copy(path_addon + "addon_data/pulseequalizer/settings/" ,path_masterprofile + path_settings + "spectrum", True)
 
 		assert_dir(path_masterprofile + path_filter)
 
@@ -98,5 +122,9 @@ def create_paths():
 
 	try:
 		with open(path_tmp + "paths", "w") as f:
-			f.write(",".join([path_kodi, path_addon, path_masterprofile, path_profile]))
+			f.write(",".join([path_kodi, path_addon, path_masterprofile, path_profile, path_settings, path_filter]))
 	except OSError: pass
+
+def add_lib_path():
+	sys.path.append ( os.path.join( path_addon, 'resources', 'lib' ))
+	sys.path.append ( os.path.join( path_addon, 'resources', 'language' ))

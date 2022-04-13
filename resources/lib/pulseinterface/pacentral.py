@@ -34,6 +34,8 @@
 
 from .pulsecontrol import PulseControl
 
+from pulsectl import PulseError
+
 from .pamodule import paModuleManager
 
 from .padb import paDatabase
@@ -46,6 +48,7 @@ from helper import Config
 from basic import handle
 from basic import opthandle
 from basic import log
+from basic import logerror
 
 from sound import SoundGen
 
@@ -101,7 +104,21 @@ class MessageCentral():
 				ret = method(*arg)
 				SocketCom.respond(conn, ret)
 
-		except Exception as e: handle(e)
+		except PulseError as e:
+			handle(e)
+			logerror("pact: in {},{},{}".format( target, func, str(arg)))
+			logerror("pact: try to recover")
+
+			try:
+				self.pc.stop()
+				self.on_pulse_connect()
+			except Exception as e:
+				handle(e)
+				logerror("pact: recover failed")
+
+		except Exception as e:
+			logerror("pact: in {},{},{}".format( target, func, str(arg)))
+			handle(e)
 
 	#
 	#	message collector, just collect fast incomeing messages from pulse audio
@@ -132,8 +149,8 @@ class MessageCentral():
 	#	message handler of self
 	#
 
-	def on_outlist_get(self):
-		return self.padb.get_outlist()
+	#def on_outlist_get(self):
+	#	return self.padb.get_outlist()
 
 	def on_latency_get(self):
 		return self.padb.get_latency()

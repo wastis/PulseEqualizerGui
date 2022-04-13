@@ -13,9 +13,9 @@
 			<left>0</left>
 			<top>0</top>
 			<width>400</width>
-			<label></label>
 			<height>25</height>
-			<font>font13</font>
+			<label></label>
+			{font_normal}
 			<align>left</align>
 			<aligny>top</aligny>
 			<shadowcolor>black</shadowcolor>
@@ -30,7 +30,7 @@
 				<width>200</width>
 				<height>25</height>
 				<label>0 ms</label>
-				<font>font13</font>
+				{font_normal}
 				<align>right</align>
 				<aligny>top</aligny>
 			</control>
@@ -42,8 +42,8 @@
 				<height>40</height>
 				<orientation>horizontal</orientation>
 				<texturesliderbar>slider/bk-horizontal.png</texturesliderbar>
-				<textureslidernib colordiffuse="{col_textureslidernib}">slider/nofocus.png</textureslidernib>
-				<textureslidernibfocus colordiffuse="{col_textureslidernibfocus}">slider/focus.png</textureslidernibfocus>
+				<textureslidernib colordiffuse="{textureslidernib}">slider/nofocus.png</textureslidernib>
+				<textureslidernibfocus colordiffuse="{textureslidernibfocus}">slider/focus.png</textureslidernibfocus>
 			</control>
 		</control>
 	</controls>

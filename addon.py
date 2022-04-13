@@ -9,15 +9,15 @@
 #
 #
 
-import sys
 import os
-
+import sys
 import xbmcaddon
 
 cwd	= xbmcaddon.Addon().getAddonInfo('path')
 sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
 sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
 
-from basic import run_addon
+from runaddon import run_addon
 
-run_addon(sys.argv)
+if ( __name__ == "__main__" ):
+	run_addon()

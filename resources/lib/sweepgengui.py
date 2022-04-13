@@ -9,7 +9,6 @@
 #
 #
 
-import xbmcaddon
 import xbmcgui
 
 from contextmenu import contextMenu
@@ -22,11 +21,9 @@ from helper import SocketCom
 
 from basic import opthandle
 
-chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
+from skin import tr
 
-addon = xbmcaddon.Addon()
-def tr(lid):
-	return addon.getLocalizedString(lid)
+chan_num = ["front-left","front-right","rear-left","rear-right","front-center","lfe","side-left","side-right","aux1"]
 
 class SweepGenGui(  xbmcgui.WindowXMLDialog  ):
 	name = None
@@ -78,11 +75,8 @@ class SweepGenGui(  xbmcgui.WindowXMLDialog  ):
 
 	def onInit( self ):
 		if self.name is None: self.close()
-		for i in range(5):	self.getControl(i + 3000).setLabel(tr(32400 + i))
 		self.getControl(300).setLabel(self.profiles[self.sel_profile])
 		self.getControl(301).setLabel(self.corrections[self.sel_correction])
-		self.getControl(302).setLabel(tr(32412))
-		self.getControl(303).setLabel("1")
 
 	def on_sel_profile(self):
 		nsel = contextMenu(items = self.profiles, default = self.profiles[self.sel_profile])

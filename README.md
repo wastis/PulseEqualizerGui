@@ -2,7 +2,7 @@
 
 PulseEqualizer GUI provides a graphical frontend for Kodi on linux systems to control pulse audio equalizer. 
 
-Version 2.1.3
+Version 2.1.4
 
 This includes:
 
@@ -25,11 +25,6 @@ Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubu
 This addon requires pulseaudio-equalizer installed on the system
 
 	sudo apt install pulseaudio-equalizer	
-
-If you run Kodi 18, the module python-dbus is required in addition
-	
-	sudo apt install pulseaudio-equalizer
-	sudo apt install python-dbus
 
 ### Install Addon in Kodi
 

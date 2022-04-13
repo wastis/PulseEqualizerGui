@@ -12,13 +12,12 @@
 import xbmc
 import xbmcgui
 
-from xbmcaddon import Addon
-
 from helper import json
 from helper import SocketCom
 
 from basic import handle
 from basic import logerror
+from basic import path_addon
 
 from time import sleep
 
@@ -28,19 +27,16 @@ from sweepgengui import SweepGenGui
 from rundialog import runDialog
 from importgui import ImportGui
 from latencygui import LatencyGui
-from keymapgui import KeyMapGui
+from keymapgui import keymapDialog
 from contextmenu import contextMenu
 
-addon = Addon()
-def tr(lid):
-	return addon.getLocalizedString(lid)
+from skin import tr
 
 class Menu():
 	skin = "Default"
 
-	def __init__(self, cwd):
-		self.cwd = cwd
-		self.step = 1
+	def __init__(self):
+		self.cwd = path_addon
 
 	#
 	#	Menu selectors
@@ -53,11 +49,9 @@ class Menu():
 							(tr(32027),self.sel_correction),
 							(tr(32010),self.sel_latency),
 							(tr(32036),self.sel_sysvol),
-							(tr(37500),self.sel_keymap)])
+							(tr(32750),self.sel_keymap)])
 
-	def sel_menu(self, command = "None", step = 1):
-		self.step = step
-
+	def sel_menu(self, command = "None"):
 		if command == "None": self.sel_main_menu()
 		else:
 			func = 'sel_' + command
@@ -166,7 +160,7 @@ class Menu():
 			func_available, eqid, desc, is_playing, _, _ =  self.check_func_available()
 			if not func_available: return
 
-			eqDialog(eqid = eqid, desc=desc, is_playing=is_playing, step = self.step)
+			eqDialog(eqid = eqid, desc=desc, is_playing=is_playing)
 		except Exception as e: handle(e)
 
 	#
@@ -224,9 +218,9 @@ class Menu():
 		if profile != '':
 			SocketCom("server").call_func("save","eq_profile" , [profile])
 			SocketCom("server").call_func("load","eq_profile" , [self.eqid, profile])
+		self.sel_profile()
 
-	@staticmethod
-	def sel_delete_profile():
+	def sel_delete_profile(self):
 		profiles = SocketCom("server").call_func("get","eq_profiles")
 
 		if not profiles: return
@@ -238,11 +232,12 @@ class Menu():
 		del_profile = profiles[nr]
 		if xbmcgui.Dialog().yesno(tr(32018) % del_profile,tr(32019) % del_profile)  is True:
 				SocketCom("server").call_func("remove","eq_profile" , [del_profile])
+		self.sel_profile()
 
-	@staticmethod
-	def sel_load_defaults():
+	def sel_load_defaults(self):
 		# load predefined
 		SocketCom("server").call_func("set","eq_defaults")
+		self.sel_profile()
 
 	#
 	#	manage corrections
@@ -250,9 +245,9 @@ class Menu():
 
 	def sel_cor_manager(self):
 		contextMenu(funcs = [(tr(32033),self.sel_import_correction),(tr(32028), self.sel_delete_correction),(tr(32032),self.sel_playsweep)])
+		self.sel_correction()
 
-	@staticmethod
-	def sel_delete_correction():
+	def sel_delete_correction(self):
 		corrections = SocketCom("server").call_func("get","room_corrections")
 
 		if not corrections: return
@@ -264,13 +259,15 @@ class Menu():
 		# sure to delete
 		if xbmcgui.Dialog().yesno(tr(32030) % del_correction,tr(32031) % del_correction)  is True:
 			SocketCom("server").call_func("remove","room_correction" , [del_correction])
+		self.sel_correction()
 
-	@staticmethod
-	def sel_playsweep():
+	def sel_playsweep(self):
 		runDialog(SweepGenGui,"SweepGen")
+		self.sel_correction()
 
 	def sel_import_correction(self):
-		runDialog(ImportGui,"ImportDialog", step = self.step)
+		runDialog(ImportGui,"ImportDialog")
+		self.sel_correction()
 
 	#
 	#	show latency slider
@@ -285,15 +282,15 @@ class Menu():
 	#
 
 	def sel_volup(self):
-		volgui = VolumeGui("OsdVolume.xml" ,self.cwd, self.skin, updown = 'up', step=self.step)
+		volgui = VolumeGui("OsdVolume.xml" ,self.cwd, self.skin, updown = 'up')
 		volgui.doModal()
 
 	def sel_voldown(self):
-		volgui = VolumeGui("OsdVolume.xml" , self.cwd, self.skin, updown = 'down', step=self.step)
+		volgui = VolumeGui("OsdVolume.xml" , self.cwd, self.skin, updown = 'down')
 		volgui.doModal()
 
 	def sel_sysvol(self):
-		volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "none", step=self.step)
+		volgui = VolumeGui("OsdVolume.xml" , self.cwd , self.skin, updown = "none")
 		volgui.doModal()
 
 	#
@@ -302,4 +299,4 @@ class Menu():
 
 	@staticmethod
 	def sel_keymap():
-		runDialog(KeyMapGui,"KeyMapDialog")
+		keymapDialog()

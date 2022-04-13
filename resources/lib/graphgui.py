@@ -9,7 +9,6 @@
 #
 #
 
-import xbmcaddon
 import xbmcgui
 import os
 
@@ -20,10 +19,6 @@ from basic import opthandle
 from sound import createGraph2
 from sound import SpecManager
 from sound import Spectrum
-
-addon = xbmcaddon.Addon()
-def tr(lid):
-	return addon.getLocalizedString(lid)
 
 class GraphGui(  xbmcgui.WindowXMLDialog  ):
 	spec_file = None

@@ -495,7 +495,162 @@ kbdkeys =  [
 		("XBMCVK_EPG","epg")
 		]
 
+t_name = {
+	"one":"1",
+	"two":"2",
+	"three":"3",
+	"four":"4",
+	"five":"5",
+	"six":"6",
+	"seven":"7",
+	"eight":"8",
+	"nine":"9",
+	"zero":"0",
+	"star":"*",
+	"hash":"#",
+	"numpaddivide":"NP /",
+	"numpadtimes":"NP *",
+	"numpadminus":"NP -",
+	"numpadplus":"NP +",
+	"numpadzero":"NP 0",
+	"numpadone":"NP 1",
+	"numpadtwo":"NP 2",
+	"numpadthree":"NP 3",
+	"numpadfour":"NP 4",
+	"numpadfive":"NP 5",
+	"numpadsix":"NP 6",
+	"numpadseven":"NP 7",
+	"numpadeight":"NP 8",
+	"numpadnine":"NP 9",
+	"openbrace":"{",
+	"pipe":"|",
+	"closebrace":"}",
+	"tilde":"~",
+	"f1":"f1",
+	"f2":"f2",
+	"f3":"f3",
+	"f4":"f4",
+	"f5":"f5",
+	"f6":"f6",
+	"f7":"f7",
+	"f8":"f8",
+	"f9":"f9",
+	"f10":"f10",
+	"f11":"f11",
+	"f12":"f12",
+	"f13":"f13",
+	"f14":"f14",
+	"f15":"f15",
+}
+
+#assing translation id
+t_tr = {
+	"back":32800,
+	"backspace":32801,
+	"blue":32802,
+	"browser_back":32803,
+	"browser_favorites":32804,
+	"browser_forward":32805,
+	"browser_home":32806,
+	"browser_refresh":32807,
+	"browser_search":32808,
+	"browser_stop":32809,
+	"capslock":32810,
+	"clear":32811,
+	"config":32812,
+	"contentsmenu":32813,
+	"delete":32814,
+	"display":32815,
+	"down":32816,
+	"dvdmenu":32817,
+	"eject":32818,
+	"end":32819,
+	"enter":32820,
+	"epg":32821,
+	"epgsearch":32822,
+	"escape":32823,
+	"fastforward":32824,
+	"favorites":32825,
+	"forward":32826,
+	"green":32827,
+	"guide":32828,
+	"home":32829,
+	"homepage":32830,
+	"info":32831,
+	"insert":32832,
+	"language":32833,
+	"launch_app1_pc_icon":32834,
+	"launch_app2_pc_icon":32835,
+	"launch_file_browser":32836,
+	"launch_mail":32837,
+	"launch_media_center":32838,
+	"launch_media_select":32839,
+	"left":32840,
+	"leftalt":32841,
+	"leftctrl":32842,
+	"leftshift":32843,
+	"leftwindows":32844,
+	"liveradio":32845,
+	"livetv":32846,
+	"menu":32847,
+	"mute":32848,
+	"mymusic":32849,
+	"mypictures":32850,
+	"mytv":32851,
+	"myvideo":32852,
+	"next_track":32853,
+	"numlock":32854,
+	"numpadperiod":32855,
+	"pagedown":32856,
+	"pageminus":32857,
+	"pageplus":32858,
+	"pageup":32859,
+	"pause":32860,
+	"play":32861,
+	"play_pause":32862,
+	"playlist":32863,
+	"power":32864,
+	"prev_track":32865,
+	"print":32866,
+	"printscreen":32867,
+	"record":32868,
+	"recordedtv":32869,
+	"red":32870,
+	"return":32871,
+	"reverse":32872,
+	"rewind":32873,
+	"right":32874,
+	"rightctrl":32875,
+	"rightshift":32876,
+	"rightwindows":32877,
+	"rootmenu":32878,
+	"scrolllock":32879,
+	"select":32880,
+	"settings":32881,
+	"skipminus":32882,
+	"skipplus":32883,
+	"sleep":32884,
+	"space":32885,
+	"start":32886,
+	"stop":32887,
+	"subtitle":32888,
+	"tab":32889,
+	"teletext":32890,
+	"text":32891,
+	"title":32892,
+	"topmenu":32893,
+	"up":32894,
+	"volume_down":32895,
+	"volume_mute":32896,
+	"volume_up":32897,
+	"volumeminus":32898,
+	"volumeplus":32899,
+	"yellow":32900,
+	"zoom":32901
+}
+
 name_index = {}
+trans_names = {}
 
 for name,vname in RemoteNames:
 	name_index[vname] = name
@@ -506,12 +661,19 @@ for vname, code in RemoteKeys:
 		if code in remote_index:
 			print("double code",code)
 			continue
-		remote_index[code] = name_index[vname]
+		if name_index[vname] in t_name:
+			remote_index[code] = {"name":name_index[vname], "char":t_name[name_index[vname]]}
+		else:
+			remote_index[code] = {"name":name_index[vname], "tr":t_tr[name_index[vname]]}
 	except KeyError:
 		print(vname, "not found")
 
 name_index = {}
 print("RemoteIndex=",remote_index)
+
+for key, val in list(remote_index.items()):
+	if "char" in val: continue
+	trans_names[val["name"]]= val["name"]
 
 for vname,name in kbdkeys:
 	name_index[vname] = name
@@ -522,16 +684,22 @@ for vname, code in VKEYS:
 		if code in remote_index:
 			print("double code",code)
 			continue
-		remote_index[code] = name_index[vname]
+		if code > 32 and code < 97:
+			remote_index[code] = {"name":name_index[vname], "char":chr(code)}
+		else:
+			if name_index[vname] in t_name:
+				remote_index[code] = {"name":name_index[vname], "char":t_name[name_index[vname]]}
+			else:
+				remote_index[code] = {"name":name_index[vname], "tr":t_tr[name_index[vname]]}
+
 	except KeyError:
 		print(vname, "not found")
 
 print("KeyIndex=",remote_index)
 
-for v,name in kbdkeys:
-	if len(name) > 6:
-		print(name)
+for key, val in list(remote_index.items()):
+	if "char" in val: continue
+	trans_names[val["name"]]= val["name"]
 
-for name,v in RemoteNames:
-	if len(name) > 6:
-		print(name)
+for key,val in list(t_tr.items()):
+	print('\nmsgctxt "#{}"\nmsgid "{}"\nmsgstr "{}"'.format(val,key,key))

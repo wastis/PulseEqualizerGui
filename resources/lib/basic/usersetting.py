@@ -8,18 +8,18 @@
 #	or (at your option) any later version.
 #
 #
-import xbmcaddon
-import sys
-import os
 
-cwd	= xbmcaddon.Addon().getAddonInfo('path')
-sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
-sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
+from .minixml import parse_xml
+from .minixml import arr_to_dic
 
-from basic import path
-path.create_paths()
+from .path import path_profile
+from .path import path_settings
 
-from pamonitor import PaMonitor
+def get_user_setting(setting_id, default):
+	try:
+		with open(path_profile + path_settings + "/settings.xml") as f:
+			content = arr_to_dic("id",parse_xml(f.read())["settings"][0]["setting"])
 
-if ( __name__ == "__main__" ):
-	PaMonitor()
+		return content[setting_id]["val"]
+	except OSError:
+		return default

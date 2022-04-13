@@ -17,7 +17,7 @@
 			<height>3240</height>
 			<animation effect="fade" start="0" end="100" time="300">WindowOpen</animation>
 			<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
-			<texture colordiffuse="{col_screen}">colors/black.png</texture>
+			<texture colordiffuse="{screen}">colors/black.png</texture>
 		</control>
 		<control type="button" id="2999">
 			<left>-1920</left>
@@ -26,8 +26,24 @@
 			<height>3240</height>
 			<texturefocus />
 			<texturenofocus />
-			<onclick>Action(close)</onclick>
+			<onclick>Action(back)</onclick>
 		</control>
+		
+		<control type="image">
+			<left>0</left>
+			<top>0</top>
+			<width>800</width>
+			<height>265</height>
+			{background_img}
+		</control>
+		<control type="image">
+			<left>0</left>
+			<top>280</top>
+			<width>800</width>
+			<height>65</height>
+			{background_img}
+		</control>
+
 
 		<control type="button" id="3000">
 			<textoffsetx>50</textoffsetx>
@@ -35,13 +51,10 @@
 			<top>0</top>
 			<width>800</width>
 			<height>65</height>
-			<label>Profile</label>
-			<textcolor>{col_text}</textcolor>
-			<selectedcolor>{col_select}</selectedcolor>
-			<focusedcolor>{col_textfocus}</focusedcolor>
-			<font>{font}</font>
-			<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-			<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+			<label>$LOCALIZE[32400]</label>
+			{button_tags}
+			{button_textcolor}
+			{font_normal}
 			<align>left</align>
 			<aligny>center</aligny>
 			<ondown>3001</ondown>
@@ -52,13 +65,10 @@
 			<top>65</top>
 			<width>800</width>
 			<height>65</height>
-			<label>Room Correction</label>
-			<textcolor>{col_text}</textcolor>
-			<selectedcolor>{col_select}</selectedcolor>
-			<focusedcolor>{col_textfocus}</focusedcolor>
-			<font>{font}</font>
-			<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-			<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+			<label>$LOCALIZE[32401]</label>
+			{button_tags}
+			{button_textcolor}
+			{font_normal}
 			<align>left</align>
 			<aligny>center</aligny>
 			<onup>3000</onup>
@@ -70,13 +80,10 @@
 			<top>130</top>
 			<width>800</width>
 			<height>65</height>
-			<label>Channel</label>
-			<textcolor>{col_text}</textcolor>
-			<selectedcolor>{col_select}</selectedcolor>
-			<focusedcolor>{col_textfocus}</focusedcolor>
-			<font>{font}</font>
-			<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-			<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+			<label>$LOCALIZE[32402]</label>
+			{button_tags}
+			{button_textcolor}
+			{font_normal}
 			<align>left</align>
 			<aligny>center</aligny>
 			<onup>3001</onup>
@@ -88,13 +95,10 @@
 			<top>195</top>
 			<width>800</width>
 			<height>65</height>
-			<label>Count</label>
-			<textcolor>{col_text}</textcolor>
-			<selectedcolor>{col_select}</selectedcolor>
-			<focusedcolor>{col_textfocus}</focusedcolor>
-			<font>{font}</font>
-			<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-			<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+			<label>$LOCALIZE[32403]</label>
+			{button_tags}
+			{button_textcolor}
+			{font_normal}
 			<align>left</align>
 			<aligny>center</aligny>
 			<onup>3002</onup>
@@ -106,13 +110,10 @@
 			<top>280</top>
 			<width>800</width>
 			<height>65</height>
-			<label>Play</label>
-			<textcolor>{col_text}</textcolor>
-			<selectedcolor>{col_select}</selectedcolor>
-			<focusedcolor>{col_textfocus}</focusedcolor>
-			<font>{font}</font>
-			<texturefocus colordiffuse="{col_texturefocus}">colors/white.png</texturefocus>
-			<texturenofocus colordiffuse="{col_texturenofocus}">colors/white.png</texturenofocus>
+			<label>$LOCALIZE[32404]</label>
+			{button_tags}
+			{button_textcolor}
+			{font_normal}
 			<align>center</align>
 			<aligny>center</aligny>
 			<onup>3003</onup>
@@ -125,9 +126,8 @@
 			<height>65</height>
 			<height>70</height>
 			<label>Flat</label>
-			<textcolor>{col_text}</textcolor>
-			<shadowcolor>{col_shadow}</shadowcolor>
-			<font>{font}</font>
+			{font_normal}
+			<textcolor>{text}</textcolor>
 			<align>left</align>
 			<aligny>center</aligny>
 		</control>
@@ -138,9 +138,8 @@
 			<height>65</height>
 			<label>None</label>
 			<height>70</height>
-			<textcolor>{col_text}</textcolor>
-			<shadowcolor>{col_shadow}</shadowcolor>
-			<font>{font}</font>
+			{font_normal}
+			<textcolor>{text}</textcolor>
 			<align>left</align>
 			<aligny>center</aligny>
 		</control>
@@ -149,11 +148,10 @@
 			<top>130</top>
 			<width>400</width>
 			<height>65</height>
-			<label>All</label>
+			<label>$LOCALIZE[32412]</label>
 			<height>70</height>
-			<textcolor>{col_text}</textcolor>
-			<shadowcolor>{col_shadow}</shadowcolor>
-			<font>{font}</font>
+			{font_normal}
+			<textcolor>{text}</textcolor>
 			<align>left</align>
 			<aligny>center</aligny>
 		</control>
@@ -162,11 +160,10 @@
 			<top>195</top>
 			<width>400</width>
 			<height>65</height>
-			<label>1</label>
+			<label>$NUMBER[1]</label>
 			<height>70</height>
-			<textcolor>{col_text}</textcolor>
-			<shadowcolor>{col_shadow}</shadowcolor>
-			<font>{font}</font>
+			{font_normal}
+			<textcolor>{text}</textcolor>
 			<align>left</align>
 			<aligny>center</aligny>
 		</control>

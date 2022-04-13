@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #	This file is part of PulseEqualizerGui for Kodi.
 #
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
@@ -8,18 +10,13 @@
 #	or (at your option) any later version.
 #
 #
-import xbmcaddon
 import sys
-import os
+sys.path.append ('./resources/lib/')
+sys.path.append ('./fakekodi')
 
-cwd	= xbmcaddon.Addon().getAddonInfo('path')
-sys.path.append ( os.path.join( cwd, 'resources', 'lib' ))
-sys.path.append ( os.path.join( cwd, 'resources', 'language' ))
+from helper import json as json_relax
+import json
 
-from basic import path
-path.create_paths()
+with open("resources/skins/Default/skincolors.json") as f: content = json_relax.loads(f.read())
 
-from pamonitor import PaMonitor
-
-if ( __name__ == "__main__" ):
-	PaMonitor()
+print(json.dumps(content,indent=4,sort_keys=True))

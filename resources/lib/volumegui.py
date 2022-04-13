@@ -16,6 +16,7 @@ import threading
 
 from helper import SocketCom
 from helper import DynStep
+from basic import get_user_setting
 
 class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 	def __init__( self, *args, **kwargs ):
@@ -26,7 +27,7 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 		self.progress1 = None
 		self.updown = kwargs["updown"]
 
-		try: step = float(kwargs["step"]) / 100
+		try: step = (float(get_user_setting("sysvolstep",0)) + 1) / 100
 		except Exception: step = float(0.01)
 		if step <= 0: step = float(0.01)
 
@@ -73,13 +74,19 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 
 	def vol_up(self):
 		if self.vol is None: return
-		self.vol = self.vol + self.dyn_step.dynstep
+		vol_new = self.vol + self.dyn_step.dynstep
+		if self.vol < float(1) and vol_new > float(1):
+			vol_new = float(1)
+		self.vol = vol_new
 		if self.vol > float(1.5): self.vol = float(1.5)
 		self.update()
 
 	def vol_down(self):
 		if self.vol is None: return
-		self.vol = self.vol - self.dyn_step.dynstep
+		vol_new = self.vol - self.dyn_step.dynstep
+		if self.vol > float(1) and vol_new < float(1):
+			vol_new = float(1)
+		self.vol = vol_new
 		if self.vol < 0: self.vol = float(0)
 		self.update()
 

@@ -20,7 +20,7 @@ from helper import SocketCom
 from launcher import Launcher
 
 class PaMonitor( xbmc.Monitor ):
-	def __init__( self , cwd):
+	def __init__( self ):
 		#strat process
 		xbmc.Monitor.__init__( self )
 		xbmc.log("eq: start PulesEqualizer service",xbmc.LOGDEBUG)
@@ -30,7 +30,7 @@ class PaMonitor( xbmc.Monitor ):
 			self.server_sock.start_func_server(self)
 		else: self.server_sock = None
 
-		launcher = Launcher(cwd,"menu")
+		launcher = Launcher("menu")
 		launcher.start()
 
 		self.sock = SocketCom("server")
