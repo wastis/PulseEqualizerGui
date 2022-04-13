@@ -246,6 +246,7 @@
         "textureslidernibfocus": "highlight"
     },
     "quartz": {
+        "background":"Black",
         "button_radio": [
             "<radioposx>370</radioposx>"
         ],
