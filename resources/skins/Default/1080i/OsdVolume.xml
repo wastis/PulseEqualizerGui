@@ -23,9 +23,9 @@
 		</control>
 		<control type="label" id="1901">
 				<description>Percent</description>
-				<left>200</left>
+				<left>100</left>
 				<top>0</top>
-				<width>90</width>
+				<width>190</width>
 				<height>40</height>
 				<label>0 %</label>
 				{font_normal}

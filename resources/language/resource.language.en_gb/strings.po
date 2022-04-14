@@ -424,12 +424,12 @@ msgid "Screenshot"
 msgstr "Screenshot"
 
 msgctxt "#32716"
-msgid "Sys Volume Up"
-msgstr "Sys Volume Up"
+msgid "System Vol Up"
+msgstr "Sysem Vol Up"
 
 msgctxt "#32717"
-msgid "Sys Volume Down"
-msgstr "Sys Volume Down"
+msgid "System Vol Down"
+msgstr "System Vol Down"
 
 msgctxt "#32718"
 msgid "Info"

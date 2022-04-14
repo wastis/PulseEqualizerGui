@@ -45,21 +45,21 @@
 			<control type="image">
 				<left>0</left>
 				<top>{btop}</top>
-				<width>520</width>
+				<width>530</width>
 				<height>{bheight}</height>
 				{background_img}
 			</control>
 			<control type="button" id="{bid}">
-				<textoffsetx>50</textoffsetx>
+				<textoffsetx>5</textoffsetx>
 				<left>0</left>
 				<top>{btop}</top>
-				<width>520</width>
+				<width>530</width>
 				<height>{bheight}</height>
 				<label>{lbutton}</label>
 				{button_tags}
 				{button_textcolor}
-				{font_normal}
-				<align>left</align>
+				{font_keymap}
+				<align>{align}</align>
 				<aligny>center</aligny>
 			</control>
 			<!-- label template -->
@@ -69,9 +69,10 @@
 				<width>200</width>
 				<height>{bheight}</height>
 				<label>{llable}</label>
-				{font_normal}
+				{font_keymap}
+				 <textcolor>{text}</textcolor>
 				<shadowcolor>{shadow}</shadowcolor>
-				<align>left</align>
+				<align>right</align>
 				<aligny>center</aligny>
 			</control>
 

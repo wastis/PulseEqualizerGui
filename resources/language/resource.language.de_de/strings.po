@@ -385,7 +385,7 @@ msgstr "Verzögerung"
 
 msgctxt "#32706"
 msgid "Codec Info"
-msgstr "Codec Information"
+msgstr "Codec Info"
 
 msgctxt "#32707"
 msgid "Play Pause"
@@ -424,11 +424,11 @@ msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
 msgctxt "#32716"
-msgid "Sys Volume Up"
+msgid "System Vol Up"
 msgstr "System lauter"
 
 msgctxt "#32717"
-msgid "Sys Volume Down"
+msgid "System Vol Down"
 msgstr "System leiser"
 
 msgctxt "#32718"
@@ -441,7 +441,7 @@ msgstr "Zeige Untertitel"
 
 msgctxt "#32720"
 msgid "Aspect Ratio"
-msgstr "Anzeigeverhältnis"
+msgstr "Anzeigeverhältn."
 
 msgctxt "#32721"
 msgid "Next Audio Track"

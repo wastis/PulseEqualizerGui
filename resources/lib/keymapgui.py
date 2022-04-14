@@ -57,6 +57,7 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 			"lid":ginfo.cid + 0x100,
 			"btop":ginfo.top,
 			"bheight":ginfo.height,
+			"align":"left",
 			"lbutton":tr(keystruct["name"]),
 			"llable":cls.format_key(key, translate_keycode(key), True)
 			}
@@ -118,6 +119,7 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 				if ipos == 1:
 					glob["default"] = ginfo.cid
 					glob["gtop"] = (1080 - (ginfo.top + ginfo.height)) / 2
+					self.cancel = ginfo.cid
 
 				self.index[ginfo.cid]=["CANCEL","SAVE"][ipos-1]
 
@@ -125,6 +127,7 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 					"bid":ginfo.cid,
 					"btop":ginfo.top,
 					"bheight":ginfo.height,
+					"align":"center",
 					"lbutton":[tr(32752),tr(32751)][ipos-1]
 					}
 				ginfo.cid += 1
@@ -212,10 +215,12 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 			return "key {}".format(but)
 
 	def set_key(self, fid, but, val):
-		self.kmf.set_info(self.index[fid], but)
-		lab_ctl = self.getControl(fid | 0x100)
-		lab_ctl.reset()
-		lab_ctl.addLabel(val)
+		try:
+			self.kmf.set_info(self.index[fid], but)
+			lab_ctl = self.getControl(fid | 0x100)
+			lab_ctl.reset()
+			lab_ctl.addLabel(val)
+		except RuntimeError: pass
 
 	def check_end(self, button_name):
 		if button_name == "CANCEL":
@@ -227,11 +232,19 @@ class KeyMapGui(  xbmcgui.WindowXMLDialog  ):
 		return True
 
 	def navigate(self, command_name, fid):
-		if command_name in ["return","select","enter","back","backspace"]:
+		if command_name in ["return","select","enter"]:
 			if self.check_end(self.index[fid]):
 				return True
 			else:
 				self.set_key(fid, 0, "-")
+				return True
+
+		elif command_name in ["back","backspace"]:
+			if self.check_end(self.index[fid]):
+				return True
+			else:
+				self.setFocusId(self.cancel)
+				return True
 
 		elif command_name == 'up':
 			self.on_up_down(fid,-1)

@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 #	This file is part of PulseEqualizerGui for Kodi.
 #
 #	Copyright (C) 2021 wastis    https://github.com/wastis/PulseEqualizerGui
@@ -10,10 +8,8 @@
 #	or (at your option) any later version.
 #
 #
-
-import re
-
-from basic import handle
+import os, re, math
+from helper import *
 
 class Spectrum():
 	def __init__(self, freq_db = []):
@@ -29,6 +25,9 @@ class Spectrum():
 
 	def __str__(self):
 		return repr(self.freq_db)
+
+	#def __repr__(self):
+	#	return self.freq_db
 
 	def __len__(self):
 		return self.size
@@ -47,7 +46,7 @@ class Spectrum():
 		self.index = -1
 		return self
 
-	def __next__(self):
+	def next(self):
 		self.index = self.index + 1
 		if self.index >= self.size - 1:
 			raise StopIteration
@@ -80,20 +79,20 @@ class Spectrum():
 		it = self.iter()
 		ot = other.iter()
 
-		itf1, itv1, itf2, itv2 = next(it)
-		otf1, otv1, otf2, otv2 = next(ot)
+		itf1, itv1, itf2, itv2 = it.next()
+		otf1, otv1, otf2, otv2 = ot.next()
 
 		result = []
 		try:
 			# first value
 			if itf1 < otf1:
-				while itf2 < otf1: itf1, itv1, itf2, itv2 = next(it)
+				while itf2 < otf1: itf1, itv1, itf2, itv2 = it.next()
 				m = (itv2 - itv1) / (itf2 - itf1)
 				val = (otf2 - itf1) * m + itv1
 				result.append((otf1,func(val, otv1)))
 
 			elif itf1 > otf1:
-				while otf2 < itf1: otf1, otv1, otf2, otv2 = next(ot)
+				while otf2 < itf1: otf1, otv1, otf2, otv2 = ot.next()
 				m = (otv2 - otv1) / (otf2 - otf1)
 				val = (itf2 - otf1) * m + otv1
 				result.append((itf1,func(itv1,val)))
@@ -103,18 +102,18 @@ class Spectrum():
 				while itf2 < otf2:
 					val = (itf2 - otf1) * m + otv1
 					result.append((itf2, func(itv2, val)))
-					itf1, itv1, itf2, itv2 = next(it)
+					itf1, itv1, itf2, itv2 = it.next()
 
 				m = (itv2 - itv1) / (itf2 - itf1)
 				while otf2 < itf2:
 					val = (otf2 - itf1) * m + itv1
 					result.append((otf2, func(val, otv2)))
-					otf1, otv1, otf2, otv2 = next(ot)
+					otf1, otv1, otf2, otv2 = ot.next()
 
 				if itf2 == otf2:
 					result.append((itf2, func(itv2,  otv2)))
-					itf1, itv1, itf2, itv2 = next(it)
-					otf1, otv1, otf2, otv2 = next(ot)
+					itf1, itv1, itf2, itv2 = it.next()
+					otf1, otv1, otf2, otv2 = ot.next()
 		except StopIteration: pass
 
 		return Spectrum(result)
@@ -122,7 +121,7 @@ class Spectrum():
 	def convert(self, freq):
 		result = []
 		it = self.iter()
-		itf1, itv1, itf2, itv2 = next(it)
+		itf1, itv1, itf2, itv2 = it.next()
 		m = (itv2 - itv1) / (itf2 - itf1)
 
 		fr = iter(freq)
@@ -140,7 +139,7 @@ class Spectrum():
 					f = next(fr)
 				else:
 					try:
-						itf1, itv1, itf2, itv2 = next(it)
+						itf1, itv1, itf2, itv2 = it.next()
 						m = (itv2 - itv1) / (itf2 - itf1)
 					except StopIteration:
 						try:
@@ -159,7 +158,7 @@ class Spectrum():
 		try:
 			it = self.iter()
 			while True:
-				itf1, _, itf2, _ = next(it)
+				itf1, itv1, itf2, itv2 = it.next()
 				if itf1 >= itf2:
 					self.freq_db = []
 					self.size = 0
@@ -232,7 +231,7 @@ class Spectrum():
 
 			su = 0
 			for n in range(low,hi):
-				_, v = freq_db[n]
+				f, v = freq_db[n]
 				su = su + v
 			val = su / (hi-low)
 
@@ -249,7 +248,7 @@ class Spectrum():
 	def set_coefs(self, coefs):
 		result = []
 		it = iter(coefs)
-		for f,_ in self.freq_db:
+		for f,v in self.freq_db:
 			nv = next(it)
 			result.append((f,nv))
 

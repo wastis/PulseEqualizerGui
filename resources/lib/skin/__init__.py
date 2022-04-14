@@ -174,7 +174,7 @@ def run_dialog(dialog, name, **kwargs):
 
 	try:
 		return ui.result
-	except: return None
+	except Exception: return None
 
 def get_frequencies():
 	result = []
