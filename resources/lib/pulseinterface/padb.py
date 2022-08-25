@@ -60,7 +60,8 @@ class paDatabase():
 		for attr,val in self:
 			r = r + " ( %s=%s ) " % (attr,repr(val))
 		r = r + "}"
-		return  r + "\nPlayback: " + " -> ".join(sl)
+		#return  r + "\npadb:Default playback: " + " -> ".join(sl)
+		return  r
 
 	def __iter__(self):
 		for attr in self.attributes + ["output_sink"]:
@@ -181,6 +182,9 @@ class paDatabase():
 
 		self.info["kodi_output"] = sink
 
+	def is_dynamic(self):
+		return self.kodi_is_dynamic or (self.bt_sink is not None)
+
 	#
 	#	after information gathering from pulseaudio, create attributs in self and collect changes to create change messages
 	#
@@ -235,8 +239,11 @@ class paDatabase():
 
 	def proc_device(self):
 		self.output_sink = None
-		sock = SocketCom("kodi")
-		device = sock.call_func("get","device")
+		try:
+			sock = SocketCom("kodi")
+			device = sock.call_func("get","device")
+		except:
+			pass
 		if device: self.proc_device_set(device)
 
 	def proc_device_set(self,arg):
@@ -277,6 +284,18 @@ class paDatabase():
 	def on_device_set(self,arg):
 		self.bt_sink = None
 		self.proc_device_set(arg)
+
+	def on_default_set(self, name):
+		try:
+			sink = self.sink_by_name[name]
+			self.pc.set_default_sink(sink)
+
+		except IndexError:
+			pass
+
+	def on_device_get(self):
+		if self.bt_sink: return self.bt_sink.name
+		return self.kodi_first_sink.name
 
 	#
 	#  all messages arrive here, filter the ones from pulseaudio and collect them for later aggregation
@@ -330,13 +349,14 @@ class paDatabase():
 	# set the current output sink, new connected bt-device over kodi selected device
 	def get_output_sink(self):
 		if self.bt_sink: return self.bt_sink
+
 		return self.kodi_output
 
 	#
 	#	this function is called 100ms after the last message from pulseaudio
 	#
 	#	this will update local dictionary with information from pulseaudio base on the previouse pa messages
-	#	futher collect the additional information like who is the kodi strea, now
+	#	futher collect the additional information like who is the kodi stream, now
 	#	then it will create messages for changes in the additional information
 
 	def do_update(self):

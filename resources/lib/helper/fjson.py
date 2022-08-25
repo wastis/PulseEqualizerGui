@@ -16,8 +16,6 @@
 
 #import re
 
-import sys
-
 class StructProblme(Exception):
 	slots__ = ("message","detail")
 	def __init__(self,  message, detail) :
@@ -37,24 +35,14 @@ class json():
 		s = ''
 		it = iter(text)
 		try:
-			if sys.version_info[0] > 2:
-				while True:
-					c = next(it)
-					if c in ',"\'{}[]():':
-						l.append(s)
-						l.append(c)
-						s=''
-					else:
-						s=s+c
-			else:
-				while True:
-					c = next(it)
-					if c in ',"\'{}[]():':
-						l.append(s.encode('utf-8'))
-						l.append(c.encode('utf-8'))
-						s=''
-					else:
-						s=s+c
+			while True:
+				c = next(it)
+				if c in ',"\'{}[]():':
+					l.append(s)
+					l.append(c)
+					s=''
+				else:
+					s=s+c
 
 		except StopIteration: pass
 		if s: l.append(s)

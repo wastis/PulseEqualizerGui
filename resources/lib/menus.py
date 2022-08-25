@@ -167,15 +167,18 @@ class Menu():
 	#	select output device
 	#
 
-	@staticmethod
-	def sel_device():
+	def sel_device(self):
 		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettings", "params":{ "filter": {"section":"system", "category":"audio"}}, "id":1}')
 		r_dict = json.loads( response )
 
 		settings = r_dict["result"]["settings"]
+		#value = None
+
+		kodi_output = "PULSE:" + SocketCom("server").call_func("get","device" , [])
+
 		for s in settings:
 			if s["id"] == "audiooutput.audiodevice":
-				value = s["value"]
+				#value = s["value"]
 				options = s["options"]
 
 				sel_lables = []
@@ -184,8 +187,11 @@ class Menu():
 				index = 0
 				for o in options:
 					if "eq-auto-load" in o["value"]: continue
+					if o["value"] in sel_values: continue
+					#if o["value"] == "PULSE:Default": continue
 
-					if o["value"] == value:
+					#if o["value"] == value:
+					if o["value"] == kodi_output:
 						preselect = index
 
 					sel_values.append(o["value"])
@@ -194,12 +200,35 @@ class Menu():
 
 		# device selection Dialog
 
-		sel = contextMenu( items = sel_lables, default = sel_lables[preselect], width = 1000)
+		funcs = [(tr(32038),self.sel_set_default)]
+
+		sel = contextMenu( items = sel_lables, default = sel_lables[preselect], width = 1000, funcs = funcs)
 
 		if sel is None: return
 
 		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice", "value":"%s"}, "id":1}' %(sel_values[sel]))
 		SocketCom("server").call_func("set","device" , [sel_values[sel]])
+
+	def sel_set_default(self):
+		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettings", "params":{ "filter": {"section":"system", "category":"audio"}}, "id":1}')
+		r_dict = json.loads( response )
+
+		settings = r_dict["result"]["settings"]
+		value = None
+
+		for s in settings:
+			if s["id"] == "audiooutput.audiodevice":
+				value = s["value"]
+
+		if value is None:
+			return
+		if value[:6]!="PULSE:":
+			return
+		value = value[6:]
+		if value == "Default":
+			return
+
+		SocketCom("server").call_func("set","default" , [value])
 
 	#
 	#	manage profiles

@@ -38,7 +38,7 @@ def runDialog(dialog, name ,**kwargs):
 	#
 	log("runDialog")
 
-	ui = dialog(name, path_tmp, "Default", "720p", **kwargs)
+	ui = dialog(name, path_tmp, "Default", "1080i", **kwargs)
 	ui.doModal()
 
 	os.remove(file_s["tmp_dialog"])

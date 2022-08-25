@@ -163,13 +163,10 @@ class SoundGen():
 			self.pid = self.player_proc.pid
 			return True
 
+		except FileNotFoundError:
+			logerror("soge: cannot find 'parec', please install 'pulseaudio-utils'")
 		except Exception as e:
-			if e.__class__.__name__ == "FileNotFoundError":
-				logerror("soge: cannot find 'parec', please install 'pulseaudio-utils'")
-			elif e.__class__.__name__ == "OSError" and e[0]==2:
-				logerror("soge: cannot find 'parec', please install 'pulseaudio-utils'")
-			else:
-				handle(e)
+			handle(e)
 			return False
 
 	def on_pulseplayer_stop(self):

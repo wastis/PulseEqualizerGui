@@ -22,7 +22,6 @@
 #   forward: send messages to MessageCentral, send timeout message 100ms after last pulseaudio message
 #
 
-import sys
 import time
 import pulsectl
 
@@ -37,12 +36,8 @@ from basic import logerror
 
 from .pacentral import MessageCentral
 
-if sys.version_info[0] < 3:
-	from Queue import Queue
-	from Queue import Empty
-else:
-	from queue import Queue
-	from queue import Empty
+from queue import Queue
+from queue import Empty
 
 class PulseInterfaceService():
 	def __init__(self, gid = 0):

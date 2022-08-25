@@ -137,3 +137,6 @@ class PulseControl():
 
 	def get_sink_channel(self, index):
 		return self.get_info("sink",index).channel_list
+
+	def set_default_sink(self, sink_obj):
+		self.pulse.sink_default_set(sink_obj)

@@ -35,11 +35,7 @@ path_skin = "resources/skins/{skin}/1080i/"
 path_skin_root = "resources/skins/"
 
 try:
-	if sys.version_info[0] > 2:
-		from xbmcvfs import translatePath
-	else:
-		from xbmc import translatePath
-
+	from xbmcvfs import translatePath
 	import xbmcaddon
 
 	# ~/.kodi/addons/script.pulseequalizer.gui/

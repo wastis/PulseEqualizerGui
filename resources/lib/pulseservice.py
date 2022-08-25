@@ -20,10 +20,7 @@ from basic import log
 
 class PulseService:
 	def start(self):
-		if sys.version_info[0] > 2:
-			self.ps = subprocess.Popen(["python3",os.path.realpath(__file__), str(os.getpid())])
-		else:
-			self.ps = subprocess.Popen(["python2",os.path.realpath(__file__), str(os.getpid())])
+		self.ps = subprocess.Popen(["python3",os.path.realpath(__file__), str(os.getpid())])
 
 	def stop(self):
 		from helper.socketcom import SocketCom

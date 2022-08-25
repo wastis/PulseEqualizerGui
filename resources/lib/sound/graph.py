@@ -9,24 +9,16 @@
 #
 #
 
-import sys
 import math
 
 from basic import logerror
 from basic import opthandle
 
-if sys.version_info[0] > 2:
-	try:
-		from PIL import Image
-		from PIL import ImageDraw
-	except ModuleNotFoundError:
-		logerror("please install python3-pil")
-else:
-	try:
-		from PIL import Image
-		from PIL import ImageDraw
-	except ImportError:
-		logerror("please install python-pil")
+try:
+	from PIL import Image
+	from PIL import ImageDraw
+except ModuleNotFoundError:
+	logerror("please install python3-pil")
 
 def createGraph2(fn, spec = None, width = 1700, height = 700):
 	with Image.new("RGBA",(width, height),(0,0,0,0)) as im:

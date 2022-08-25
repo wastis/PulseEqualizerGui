@@ -145,6 +145,10 @@ msgctxt "#32037"
 msgid "pre"
 msgstr "Vor"
 
+msgctxt "#32038"
+msgid "Set current device as default output device"
+msgstr "Setze derzeitige Audioausgabe als Standardausgabe"
+
 msgctxt "#32100"
 msgid "General"
 msgstr "Allgemein"
@@ -479,9 +483,6 @@ msgctxt "#32755"
 msgid "Already Used"
 msgstr "Bereits genutzt"
 
-
-
-
 msgctxt "#32800"
 msgid "back"
 msgstr "zurück"
@@ -728,19 +729,19 @@ msgstr "Pause"
 
 msgctxt "#32861"
 msgid "play"
-msgstr "play"
+msgstr "Play"
 
 msgctxt "#32862"
 msgid "play_pause"
-msgstr "play_pause"
+msgstr "Play_Pause"
 
 msgctxt "#32863"
 msgid "playlist"
-msgstr "playlist"
+msgstr "Playlist"
 
 msgctxt "#32864"
 msgid "power"
-msgstr "power"
+msgstr "Power"
 
 msgctxt "#32865"
 msgid "prev_track"
@@ -760,7 +761,7 @@ msgstr "Aufnahme"
 
 msgctxt "#32869"
 msgid "recordedtv"
-msgstr "recordedtv"
+msgstr "Fernsehaufnahmen"
 
 msgctxt "#32870"
 msgid "red"
@@ -768,15 +769,15 @@ msgstr "Rot"
 
 msgctxt "#32871"
 msgid "return"
-msgstr "return"
+msgstr "Return"
 
 msgctxt "#32872"
 msgid "reverse"
-msgstr "reverse"
+msgstr "zurück"
 
 msgctxt "#32873"
 msgid "rewind"
-msgstr "rewind"
+msgstr "zurückspulen"
 
 msgctxt "#32874"
 msgid "right"
@@ -796,7 +797,7 @@ msgstr "windows rechts"
 
 msgctxt "#32878"
 msgid "rootmenu"
-msgstr "rootmenu"
+msgstr "Wurzelmenü"
 
 msgctxt "#32879"
 msgid "scrolllock"
@@ -804,7 +805,7 @@ msgstr "scrolllock"
 
 msgctxt "#32880"
 msgid "select"
-msgstr "select"
+msgstr "auswählen"
 
 msgctxt "#32881"
 msgid "settings"
@@ -812,51 +813,51 @@ msgstr "Einstellungen"
 
 msgctxt "#32882"
 msgid "skipminus"
-msgstr "skipminus"
+msgstr "zurückspringen"
 
 msgctxt "#32883"
 msgid "skipplus"
-msgstr "skipplus"
+msgstr "vorspringen"
 
 msgctxt "#32884"
 msgid "sleep"
-msgstr "sleep"
+msgstr "schlafen"
 
 msgctxt "#32885"
 msgid "space"
-msgstr "space"
+msgstr "Leertaste"
 
 msgctxt "#32886"
 msgid "start"
-msgstr "start"
+msgstr "Start"
 
 msgctxt "#32887"
 msgid "stop"
-msgstr "stop"
+msgstr "Stop"
 
 msgctxt "#32888"
 msgid "subtitle"
-msgstr "subtitle"
+msgstr "Untertitle"
 
 msgctxt "#32889"
 msgid "tab"
-msgstr "tab"
+msgstr "Tab"
 
 msgctxt "#32890"
 msgid "teletext"
-msgstr "teletext"
+msgstr "Teletext"
 
 msgctxt "#32891"
 msgid "text"
-msgstr "text"
+msgstr "Text"
 
 msgctxt "#32892"
 msgid "title"
-msgstr "title"
+msgstr "Titel"
 
 msgctxt "#32893"
 msgid "topmenu"
-msgstr "topmenu"
+msgstr "Topmenü"
 
 msgctxt "#32894"
 msgid "up"
@@ -888,5 +889,5 @@ msgstr "Gelb"
 
 msgctxt "#32901"
 msgid "zoom"
-msgstr "zoom"
+msgstr "Vergrößern"
 

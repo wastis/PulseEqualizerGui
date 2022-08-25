@@ -17,7 +17,6 @@ try: import xbmc
 except Exception:
 	# this is the python service, started outside from kodi
 	# so to log into kodi-log, we need to send the log info to kodi-addon-service.py
-	import sys
 	import socket
 	from .path import path_pipe
 
@@ -35,8 +34,7 @@ except Exception:
 		@staticmethod
 		def log(text, level):
 			msg = str(["write","log",["s"+text[1:],level]])
-			if sys.version_info[0] > 2:
-				msg = bytes(msg,"utf-8")
+			msg = bytes(msg,"utf-8")
 			try:
 				s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 				s.settimeout(1.0)

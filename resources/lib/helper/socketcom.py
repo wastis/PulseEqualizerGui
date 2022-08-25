@@ -16,7 +16,6 @@
 
 import socket
 import os
-import sys
 
 from .fjson import json
 
@@ -167,22 +166,12 @@ class SocketCom():
 
 	@staticmethod
 	def _send(sock,text):
-		if sys.version_info[0] > 2:
-			try:
-				sock.send(bytes(text,"utf-8"))
-			except BrokenPipeError: pass
-		else:
-			try:
-				sock.send(text)
-			except socket.error: pass
+		try:
+			sock.send(bytes(text,"utf-8"))
+		except BrokenPipeError: pass
 
 	@staticmethod
 	def _close(sock):
-		if sys.version_info[0] > 2:
-			try:
-				sock.close()
-			except BrokenPipeError: pass
-		else:
-			try:
-				sock.close()
-			except socket.error: pass
+		try:
+			sock.close()
+		except BrokenPipeError: pass

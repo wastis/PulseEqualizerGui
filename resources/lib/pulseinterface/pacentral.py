@@ -102,16 +102,23 @@ class MessageCentral():
 
 			for method in methods:
 				ret = method(*arg)
-				SocketCom.respond(conn, ret)
+				try:
+					SocketCom.respond(conn, ret)
+				except OSError:
+					pass
 
 		except PulseError as e:
+			SocketCom.respond(conn, None)
+
 			handle(e)
 			logerror("pact: in {},{},{}".format( target, func, str(arg)))
 			logerror("pact: try to recover")
 
 			try:
 				self.pc.stop()
+				logerror("pact: pulse connect stopped")
 				self.on_pulse_connect()
+				logerror("pact: recover succeeded")
 			except Exception as e:
 				handle(e)
 				logerror("pact: recover failed")

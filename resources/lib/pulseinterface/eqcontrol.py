@@ -17,8 +17,6 @@
 #
 #   user request <-> spec manager -> dbus <-> equalizer
 
-import sys
-
 from padbus import DBusInterface as IF
 from padbus import PulseDBus
 
@@ -58,7 +56,7 @@ class EqControl():
 	def eq_filter_get(self, index, filter_freq):
 		param = self.get_filter_param(index)
 		coefs, preamp = self.pulse_dbus.call_func(IF.EQUALIZER_I,param.path,'FilterAtPoints',"uau",param.channel,filter_freq)
-		preamp = preamp[1] if sys.version_info[0] > 2 else preamp
+		preamp = preamp[1]
 		return [preamp, coefs]
 
 	def eq_filter_set(self, param, filter_freq, preamp, coefs):

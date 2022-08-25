@@ -29,6 +29,7 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 	def __init__(self, *_args, **kwargs ):
 		self.result = {"type":"item", "index":None}
 		self.index = None
+		self.sid = 5000
 
 		self.build_dialog(**kwargs)
 
@@ -87,9 +88,11 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 
 		button_list_txt = ""
 		iid = 5000
+		self.sid = 5000
 		for item in items:
 			if default == item:
 				color["button_textcolor"]= "<textcolor>{col}</textcolor><focusedcolor>{col}</focusedcolor>".format(col=selected)
+				self.sid = iid
 			else:
 				color["button_textcolor"]= "<textcolor>{col}</textcolor><focusedcolor>{foccol}</focusedcolor>".format(col=text, foccol= focused)
 
@@ -104,6 +107,9 @@ class ContextGui(  xbmcgui.WindowXMLDialog  ):
 			button_list_txt +
 			groupend_t +
 			bodyend_t)
+
+	def onInit( self ):
+		self.setFocusId(self.sid)
 
 	def onAction( self, action ):
 		aid = action.getId()

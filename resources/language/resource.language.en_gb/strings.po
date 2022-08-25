@@ -145,6 +145,10 @@ msgctxt "#32037"
 msgid "pre"
 msgstr "pre"
 
+msgctxt "#32038"
+msgid "Set current device as default output device"
+msgstr "Set current device as default output device"
+
 
 msgctxt "#32100"
 msgid "General"
