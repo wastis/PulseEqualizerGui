@@ -1,6 +1,6 @@
 # Kodi PulseEqualizer GUI Addon
 
-A graphical frontend in Kodi based linux systems to control the pulse audio equalizer. 
+A graphical frontend in Kodi based on linux for control the pulse audio equalizer. 
 
 Version 2.1.5
 
