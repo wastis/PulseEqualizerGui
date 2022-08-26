@@ -318,7 +318,8 @@ class paDatabase():
 			pass
 
 	def on_device_get(self):
-		if self.bt_sink: return self.bt_sink.name
+		if self.kodi_first_sink is None:
+			return "Default"
 		return self.kodi_first_sink.name
 
 	#
