@@ -10,6 +10,7 @@
 #
 
 import xbmcgui
+import xbmcaddon
 import math
 import time
 
@@ -17,8 +18,6 @@ from threading import Thread
 
 from helper import SocketCom
 from helper import DynStep
-
-from basic import get_user_setting
 
 from time import sleep
 
@@ -53,7 +52,7 @@ class EqGui(  xbmcgui.WindowXMLDialog  ):
 		self.sock = SocketCom("server")
 		self.eqid = kwargs["eqid"]
 		self.desc = kwargs["desc"]
-		try: step = int(get_user_setting("equalstep",0))+1
+		try: step = xbmcaddon.Addon().getSettingInt("equalstep")+1
 		except Exception: step = int(1)
 
 		self.dyn_step = DynStep(step,5,1,3)

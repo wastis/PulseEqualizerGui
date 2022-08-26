@@ -1,24 +1,25 @@
 # Kodi PulseEqualizer GUI Addon
 
-PulseEqualizer GUI provides a graphical frontend for Kodi on linux systems to control pulse audio equalizer. 
+A graphical frontend in Kodi based linux systems to control the pulse audio equalizer. 
 
 Version 2.1.5
 
-This includes:
+Features include:
 
 *	Graphical configuration of the pulseaudio equalizer
 *	Digital Room Correction
 *	Management of equalizer profiles (add, remove and change)
-*	Automatic profile switching based on output device
-*	Audio latency-offset slider and automatic switch (for video/audio sync)
-*	Control system volume (needed if a compressor is used in the filter chain)
+*	Automatic filter profile switching based on output device
+*	Audio latency-offset slider and automatic switch based on device
+*	System volume control in Kodi 
+*	Automatic switch to Bluetooth headset, if it becomes available
 *	Mini keymap editor
 
 Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless
 
 More information can be found on [Wiki](https://github.com/wastis/PulseEqualizerGui/wiki)
 
-Help can be found in the Kodi forum within this [thread](https://forum.kodi.tv/showthread.php?tid=360514&pid=3076706#pid3076706)
+Help can be found in the Kodi forum within this [thread](https://forum.kodi.tv/showthread.php?tid=360514&pid=3094412#pid3094412)
 
 2022 wastis
 

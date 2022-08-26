@@ -22,7 +22,6 @@ from basic import path_tmp
 from basic import path_skin_root
 from basic import path_skin
 from basic import handle
-from basic import get_user_setting
 
 from helper.fjson import json
 
@@ -179,7 +178,7 @@ def run_dialog(dialog, name, **kwargs):
 def get_frequencies():
 	result = []
 	default = "64, 125, 250, 500, 750, 1000,  2000,  3000,  4000,  8000, 16000"
-	freqs = get_user_setting("frequencies",default).split(",")
+	freqs = xbmcaddon.Addon().getSettingString("frequencies").split(",")
 
 	for freq in freqs:
 		try:

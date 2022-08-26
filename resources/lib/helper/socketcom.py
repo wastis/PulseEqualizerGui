@@ -168,10 +168,10 @@ class SocketCom():
 	def _send(sock,text):
 		try:
 			sock.send(bytes(text,"utf-8"))
-		except BrokenPipeError: pass
+		except OSError: pass
 
 	@staticmethod
 	def _close(sock):
 		try:
 			sock.close()
-		except BrokenPipeError: pass
+		except OSError: pass

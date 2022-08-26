@@ -11,8 +11,9 @@
 import os
 import sys
 
+import xbmcaddon
+
 from basic import path_pipe
-from basic import get_user_setting
 from basic import log
 from basic import handle
 
@@ -51,10 +52,14 @@ def run_addon():
 
 		try:
 			open(lock,'w')
-			if get_user_setting("servermode","true") == "true":
+
+			if xbmcaddon.Addon().getSettingBool("servermode"):
+				log("server mode:")
+
 				service_mode = True
 				run_on_service(cmd)
 			else:
+				log("direct mode:")
 				run_direct(cmd)
 
 		except OSError: pass

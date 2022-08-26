@@ -194,8 +194,13 @@ class Menu():
 					if o["value"] == kodi_output:
 						preselect = index
 
+					lab = o["label"].replace("(PULSEAUDIO)",'').replace("PULSE:","").strip()
+					lab_col = lab.split(",")
+					if lab_col[0].strip() == lab_col[1].strip():
+						lab =  lab_col[0].strip()
+
 					sel_values.append(o["value"])
-					sel_lables.append(o["label"].replace("(PULSEAUDIO)",''))
+					sel_lables.append(lab)
 					index = index + 1
 
 		# device selection Dialog

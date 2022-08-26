@@ -10,13 +10,13 @@
 #
 
 import xbmcgui
+import xbmcaddon
 import os
 import time
 import threading
 
 from helper import SocketCom
 from helper import DynStep
-from basic import get_user_setting
 
 class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 	def __init__( self, *args, **kwargs ):
@@ -27,7 +27,8 @@ class VolumeGui(  xbmcgui.WindowXMLDialog  ):
 		self.progress1 = None
 		self.updown = kwargs["updown"]
 
-		try: step = (float(get_user_setting("sysvolstep",0)) + 1) / 100
+		try:
+			step = float((xbmcaddon.Addon().getSettingInt("sysvolstep") + 1)) / 100
 		except Exception: step = float(0.01)
 		if step <= 0: step = float(0.01)
 

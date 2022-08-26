@@ -32,8 +32,8 @@ from basic import log
 
 class paDatabase():
 	target_list = ["card","module","sink","client","sink_input"]
-	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic","kodi_output", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink"]
-	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "kodi_output", "bt_sink", "chaineq_sink", "cureq_sink"]
+	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink","last_sink", "default_sink"]
+	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "bt_sink", "chaineq_sink", "cureq_sink", "last_sink", "default_sink"]
 	lookups = ["sink_by_name", "sink_by_module", "stream_by_module"]
 
 	playback_stream = None
@@ -53,15 +53,18 @@ class paDatabase():
 
 	def __str__(self):
 		sl = []
-		if self.playback_stream is not None:
-			for stream, sink in self.playback_stream: sl.append("%s(%d) -> %s(%d)" % (stream.name,stream.index,sink.name,sink.index))
+		try:
+			if self.playback_stream is not None:
+				for stream, sink in self.playback_stream: sl.append("%s(%d) -> %s(%d)" % (stream.name,stream.index,sink.name,sink.index))
+		except AttributeError:
+			pass
 
 		r = "{"
 		for attr,val in self:
 			r = r + " ( %s=%s ) " % (attr,repr(val))
 		r = r + "}"
-		#return  r + "\npadb:Default playback: " + " -> ".join(sl)
-		return  r
+		return  r + "\nPlayback: " + " -> ".join(sl)
+		#return  r
 
 	def __iter__(self):
 		for attr in self.attributes + ["output_sink"]:
@@ -118,11 +121,13 @@ class paDatabase():
 	#
 
 	def update_kodi_info(self):
+		log("padb: update_kodi_info")
 		self.info = {}
 		for key in self.attributes: self.info[key] = None
 		self.get_kodi_client()
 		self.parse_sink_inputs()
 		self.parse_sinks()
+		self.info["default_sink"] = self.sink_by_name[self.pc.get_server_info().default_sink_name]
 
 	def get_kodi_client(self):
 		pid = str(os.getgid())
@@ -164,23 +169,32 @@ class paDatabase():
 
 		self.default_sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
 
-	def set_kodi_chain(self, sink_input):
-		sink = self.sinks[sink_input.sink]
+	def set_kodi_chain_sink(self, sink):
+		sink_input = self.info["kodi_stream"]
+		log("padb: set_kodi_chain")
 		self.info["kodi_first_sink"] = sink
 		self.info["kodi_is_dynamic"] = sink.proplist["device.class"] == "sound"
 
 		self.playback_stream = [(sink_input, sink)]
+		self.info["chaineq_sink"] = None
 
 		while True:
 			try:
-				if sink.driver == "module-equalizer-sink.c": self.info["chaineq_sink"] = sink
+				if sink.driver == "module-equalizer-sink.c":
+					self.info["chaineq_sink"] = sink
 
 				sink_input = self.stream_by_module[sink.owner_module]
 				sink = self.sink_by_name[sink.proplist["device.master_device"]]
 				self.playback_stream.append((sink_input, sink))
 			except Exception: break
 
-		self.info["kodi_output"] = sink
+		self.info["output_sink"] = sink
+
+	def set_kodi_chain(self, sink_input):
+		if self.bt_sink is None:
+			self.set_kodi_chain_sink(self.sinks[sink_input.sink])
+		else:
+			self.set_kodi_chain_sink(self.bt_sink)
 
 	def is_dynamic(self):
 		return self.kodi_is_dynamic or (self.bt_sink is not None)
@@ -204,7 +218,7 @@ class paDatabase():
 			except Exception: nv = val
 
 			if ov != nv:
-				#log("padb: on_%s_update" % key)
+				log("padb: on_%s_update" % key)
 				updates.append(("on_%s_update" % key,[old_val, val]))
 
 		return updates
@@ -225,13 +239,30 @@ class paDatabase():
 		log("padb: on_sink_new %s" % sink.name)
 
 		if sink.driver == "module-bluez5-device.c":
+			self.info["last_sink"] = self.kodi_first_sink
 			self.info["bt_sink"] = sink
+			self.set_kodi_chain_sink(sink)
 
 	def on_sink_remove(self, index):
 		log("padb: on_sink_remove %d" % index)
 		if self.bt_sink is not None:
 			if index == self.bt_sink.index:
 				self.info["bt_sink"] = "force_none"
+
+		if self.last_sink is not None:
+			if index == self.last_sink.index:
+				self.info["last_sink"] = None
+				self.last_sink = None
+
+		if self.kodi_first_sink.index == index:
+			log("padb: active sink removed: %s" % self.kodi_first_sink.name)
+			if self.last_sink is None:
+				# move to default sink
+				sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
+			else:
+				sink = self.last_sink
+
+			self.set_kodi_chain_sink(sink)
 
 	#
 	#	special messages from kodi player, we need to know the selected sink in kodi
@@ -268,18 +299,10 @@ class paDatabase():
 				log("padb: on_device_set: device not found")
 				return
 
-		self.chaineq_sink = None
-
-		self.kodi_first_sink = sink
-		while True:
-			try:
-				sink = self.sink_by_name[sink.proplist["device.master_device"]]
-				if sink.driver == "module-equalizer-sink.c":
-					self.chaineq_sink = sink
-			except Exception: break
-
-		self.kodi_output = sink
-		self.output_sink = self.get_output_sink()
+		if self.kodi_first_sink.index != sink.index:
+			self.info["last_sink"] = self.kodi_first_sink
+		self.set_kodi_chain_sink(sink)
+		self.update_attr()
 
 	def on_device_set(self,arg):
 		self.bt_sink = None
@@ -289,6 +312,7 @@ class paDatabase():
 		try:
 			sink = self.sink_by_name[name]
 			self.pc.set_default_sink(sink)
+			self.default_sink = sink
 
 		except IndexError:
 			pass
@@ -303,23 +327,10 @@ class paDatabase():
 
 	def on_message(self,target,func,arg):
 		if target not in self.target_list: return False
-		log("padb: re: on_%s_%s %s" % (target, func, arg))
+		#log("padb: re: on_%s_%s %s" % (target, func, arg))
 
 		self.mc.collect_message(target,func,*arg)
 		return True
-
-	#
-	#
-	#
-
-	def update_output_sink(self):
-		msg_list = []
-		old = self.output_sink
-		new = self.get_output_sink()
-
-		self.output_sink = new
-		if old != new: msg_list.append(("on_output_sink_update",[old,new]))
-		return msg_list
 
 	#
 	#	update changes to the object dictionaries, (add, remove or change)
@@ -346,12 +357,6 @@ class paDatabase():
 
 			setattr(self, targets,obj_list)
 
-	# set the current output sink, new connected bt-device over kodi selected device
-	def get_output_sink(self):
-		if self.bt_sink: return self.bt_sink
-
-		return self.kodi_output
-
 	#
 	#	this function is called 100ms after the last message from pulseaudio
 	#
@@ -376,7 +381,6 @@ class paDatabase():
 			except Exception as e: handle(e)
 
 		msg_list = self.update_attr() + msg_list
-		msg_list = self.update_output_sink() + msg_list
 
 		#log("padb: {}".format(str(self)))
 

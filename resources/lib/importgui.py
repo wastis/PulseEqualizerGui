@@ -10,6 +10,7 @@
 #
 
 import xbmcgui
+import xbmcaddon
 import shutil
 import os
 
@@ -20,7 +21,6 @@ from basic import opthandle
 from basic import path_tmp
 from basic import path_filter
 from basic import path_masterprofile
-from basic import get_user_setting
 
 from sound import SpecManager
 from sound import Spectrum
@@ -82,7 +82,7 @@ class ImportGui(  xbmcgui.WindowXMLDialog  ):
 		self.channel_name = channel_name
 		self.file_name = file_name
 
-		try: step = int(get_user_setting("importstep",0))+1
+		try: step = xbmcaddon.Addon().getSettingInt("importstep")+1
 		except Exception: step = int(1)
 
 		self.dyn_step = DynStep(step,5,1,3)

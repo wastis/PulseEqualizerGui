@@ -75,7 +75,7 @@ class paModuleManager():
 		self.pc.stop()
 
 	#
-	#	Kodi Play/Pause/Resum/Stop messages
+	#	Kodi Play/Pause/Resum/Stop/device set messages
 	#
 
 	def on_player_play(self):
@@ -96,6 +96,10 @@ class paModuleManager():
 	def on_player_stop(self):
 		log("pamm: on_player_stop")
 		self.is_playing = False
+		self.adjust_routing()
+
+	def on_device_set(self,_):
+		log("pamm: on_device_set")
 		self.adjust_routing()
 
 	def on_player_avstart(self): pass
@@ -219,6 +223,7 @@ class paModuleManager():
 
 	#check if we need to play to a chain (filter device) or an sound output
 	def adjust_routing_play(self):
+		log("pamm: adjust routing play")
 		if self.padb.is_dynamic():
 			self.aj_play_sound_device()
 		else:
@@ -228,14 +233,18 @@ class paModuleManager():
 	def timer_routing_stop(self):
 		time.sleep(1)
 		if not self.is_playing:
-			if self.padb.kodi_stream is None or self.padb.output_sink is None: return
+			if self.padb.kodi_stream is None or self.padb.output_sink is None:
+				log("pamm: no stream to move")
+				return
 			try:
+				log("pamm: move stream %s -> %s" % (self.padb.kodi_stream.name, self.padb.output_sink.name))
 				self.pc.move_sink_input(self.padb.kodi_stream.index , self.padb.output_sink.index)
 			except Exception as e:
 				handle(e)
 
 	#in case player is not playing, move kodi output always to sound sink to avoid latency
 	def adjust_routing_stop(self):
+		log("pamm: adjust routing stop")
 		self.padb.cureq_sink = None
 		threading.Thread(target = self.timer_routing_stop).start()
 
@@ -264,17 +273,12 @@ class paModuleManager():
 
 	# check if equalizer for this device is enabled and insert it if so
 	def aj_play_sound_device(self):
-		if self.padb.bt_sink:
-			output_sink = self.padb.bt_sink
-		else:
-			output_sink = self.padb.output_sink
-
-		eq_enable = self.config.get("eq_enable","off", output_sink.name)
+		eq_enable = self.config.get("eq_enable","off", self.padb.output_sink.name)
 
 		if eq_enable == "off":
 			# should directly be connected to the target
-			log("pamm: move stream %s -> %s" % (self.padb.kodi_stream.name, output_sink.name))
-			self.pc.move_sink_input(self.padb.kodi_stream.index  , output_sink.index)
+			log("pamm: move stream %s -> %s" % (self.padb.kodi_stream.name, self.padb.output_sink.name))
+			self.pc.move_sink_input(self.padb.kodi_stream.index  , self.padb.output_sink.index)
 			self.padb.cureq_sink = None
 
 		else:
@@ -288,8 +292,8 @@ class paModuleManager():
 				self.pc.move_sink_input(self.padb.kodi_stream.index , self.padb.autoeq_sink.index)
 
 				# equalizer should directly be connected to target
-				log("pamm: move stream %s -> %s" % (self.padb.autoeq_stream.name, output_sink.name))
-				self.pc.move_sink_input(self.padb.autoeq_stream.index , output_sink.index)
+				log("pamm: move stream %s -> %s" % (self.padb.autoeq_stream.name, self.padb.output_sink.name))
+				self.pc.move_sink_input(self.padb.autoeq_stream.index , self.padb.output_sink.index)
 				self.padb.cureq_sink = self.padb.autoeq_sink
 
 	#
