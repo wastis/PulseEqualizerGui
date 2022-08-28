@@ -92,7 +92,10 @@ class PulseControl():
 
 	def get_server_info(self):
 		self.lock.acquire()
-		result = self.pulse.server_info()
+		try:
+			result = self.pulse.server_info()
+		except Exception as e:
+				handle(e)
 		self.lock.release()
 
 		return result
@@ -102,14 +105,36 @@ class PulseControl():
 	#
 
 	def load_module(self, name, args = ""):
-			self.pulse.module_load(name, args)
+			self.lock.acquire()
+			try:
+				self.pulse.module_load(name, args)
+			except Exception as e:
+				handle(e)
+
+			self.lock.release()
 
 	def unload_module(self, index):
-			self.pulse.module_unload(index)
+			self.lock.acquire()
+			try:
+				self.pulse.module_unload(index)
+			except Exception as e:
+				handle(e)
+
+			self.lock.release()
 
 	def move_sink_input(self, si_index, s_index):
 			if si_index is not None and s_index is not None:
-				self.pulse.sink_input_move(si_index, s_index)
+				if not self.get_info("sink",s_index):
+					return
+				if not self.get_info("sink_input",si_index):
+					return
+
+				self.lock.acquire()
+				try:
+					self.pulse.sink_input_move(si_index, s_index)
+				except Exception as e:
+					handle(e)
+				self.lock.release()
 
 	#
 	# set values
@@ -117,26 +142,48 @@ class PulseControl():
 
 	def set_port_latency(self, info):
 		if info["card"] == '':return
-		self.pulse.card_port_set_latency(info["card"],info["port"],int(info["latency"]))
+		self.lock.acquire()
+		try:
+			self.pulse.card_port_set_latency(info["card"],info["port"],int(info["latency"]))
+		except Exception as e:
+			handle(e)
+		self.lock.release()
 
 	def set_sink_volume(self, index, vol):
 		vol_obj = self.get_info("sink",index).volume
 		vol_obj.value_flat = vol
-		self.pulse.sink_volume_set(index, vol_obj)
+		self.lock.acquire()
+		try:
+			self.pulse.sink_volume_set(index, vol_obj)
+		except Exception as e:
+			handle(e)
+		self.lock.release()
 
 	def get_sink_volume(self, index):
-		vol_obj = self.get_info("sink",index).volume
-		return vol_obj.value_flat
+		obj = self.get_info("sink",index)
+		if obj is None:
+			return None
+		return obj.volume.value_flat
 
 	def get_sink_volume_array(self, index):
 		return self.get_info("sink",index).volume.values
 
 	def set_sink_volume_array(self, index, volarray):
 		vol_obj = PulseVolumeInfo(volarray)
-		self.pulse.sink_volume_set(index, vol_obj)
+		self.lock.acquire()
+		try:
+			self.pulse.sink_volume_set(index, vol_obj)
+		except Exception as e:
+			handle(e)
+		self.lock.release()
 
 	def get_sink_channel(self, index):
 		return self.get_info("sink",index).channel_list
 
 	def set_default_sink(self, sink_obj):
-		self.pulse.sink_default_set(sink_obj)
+		self.lock.acquire()
+		try:
+			self.pulse.sink_default_set(sink_obj)
+		except Exception as e:
+			handle(e)
+		self.lock.release()

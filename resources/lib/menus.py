@@ -178,7 +178,8 @@ class Menu():
 
 		for s in settings:
 			if s["id"] == "audiooutput.audiodevice":
-				#value = s["value"]
+				if kodi_output == "PULSE:Default":
+					kodi_output = s["value"]
 				options = s["options"]
 
 				sel_lables = []
@@ -188,9 +189,7 @@ class Menu():
 				for o in options:
 					if "eq-auto-load" in o["value"]: continue
 					if o["value"] in sel_values: continue
-					#if o["value"] == "PULSE:Default": continue
 
-					#if o["value"] == value:
 					if o["value"] == kodi_output:
 						preselect = index
 

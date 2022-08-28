@@ -23,7 +23,7 @@ class PaMonitor( xbmc.Monitor ):
 	def __init__( self ):
 		#strat process
 		xbmc.Monitor.__init__( self )
-		xbmc.log("eq: start PulesEqualizer service",xbmc.LOGDEBUG)
+		xbmc.log("m_eq: start PulesEqualizer service",xbmc.LOGDEBUG)
 
 		self.server_sock = SocketCom("kodi")
 		if not self.server_sock.is_server_running():
@@ -52,18 +52,22 @@ class PaMonitor( xbmc.Monitor ):
 
 	@staticmethod
 	def get_device():
-		device = ""
-		r_dict = json.loads(xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettings", "params":{ "filter": {"section":"system", "category":"audio"}}, "id":1}'))
-		for s in r_dict["result"]["settings"]:
-			if s["id"] == "audiooutput.audiodevice":
-				device = s["value"]
-				break
-		return device
+		device = json.loads(xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Settings.GetSettingValue", "params":{"setting":"audiooutput.audiodevice"},"id":1}'))
+		return device["result"]["value"].replace("PULSE:","")
 
 	def on_device_get(self):
 		result = self.get_device()
-		xbmc.log("eq: kodi service: on_device_get %s" % result,xbmc.LOGDEBUG)
+		xbmc.log("m_eq: kodi service: on_device_get %s" % result,xbmc.LOGDEBUG)
 		return result
+
+	@staticmethod
+	def on_device_set(device):
+		xbmc.log("m_eq: device set %s" % device,xbmc.LOGDEBUG)
+		result = xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice","value":"%s"},"id":1}' % ("PULSE:" + device))
+		if result == '{"id":1,"jsonrpc":"2.0","result":true}':
+			xbmc.log("m_eq: device set success",xbmc.LOGDEBUG)
+		else:
+			xbmc.log("m_eq: device set failed",xbmc.LOGDEBUG)
 
 	@staticmethod
 	def on_player_get():

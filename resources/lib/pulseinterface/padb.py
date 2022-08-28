@@ -32,8 +32,8 @@ from basic import log
 
 class paDatabase():
 	target_list = ["card","module","sink","client","sink_input"]
-	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic", "autoeq_sink", "autoeq_stream", "bt_sink", "chaineq_sink", "cureq_sink","null_sink","last_sink", "default_sink"]
-	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "bt_sink", "chaineq_sink", "cureq_sink", "last_sink", "default_sink"]
+	attributes = ["kodi_client", "kodi_stream", "kodi_first_sink", "kodi_is_dynamic", "autoeq_sink", "autoeq_stream", "removable_sink", "chaineq_sink", "cureq_sink", "default_sink"]
+	attr_keep = ["kodi_first_sink", "kodi_is_dynamic", "removable_sink", "chaineq_sink", "cureq_sink", "default_sink"]
 	lookups = ["sink_by_name", "sink_by_module", "stream_by_module"]
 
 	playback_stream = None
@@ -164,14 +164,11 @@ class paDatabase():
 				self.info["autoeq_sink"] = sink
 				self.info["autoeq_stream"] = self.stream_by_module[sink.owner_module]
 
-			if sink.driver == "module-null-sink.c":
-				self.info["null_sink"] = sink.index
-
 		self.default_sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
 
 	def set_kodi_chain_sink(self, sink):
 		sink_input = self.info["kodi_stream"]
-		log("padb: set_kodi_chain")
+		log("padb: set_kodi_chain @ sink: "+ sink.name)
 		self.info["kodi_first_sink"] = sink
 		self.info["kodi_is_dynamic"] = sink.proplist["device.class"] == "sound"
 
@@ -191,13 +188,13 @@ class paDatabase():
 		self.info["output_sink"] = sink
 
 	def set_kodi_chain(self, sink_input):
-		if self.bt_sink is None:
+		if self.removable_sink is None:
 			self.set_kodi_chain_sink(self.sinks[sink_input.sink])
 		else:
-			self.set_kodi_chain_sink(self.bt_sink)
+			self.set_kodi_chain_sink(self.removable_sink)
 
 	def is_dynamic(self):
-		return self.kodi_is_dynamic or (self.bt_sink is not None)
+		return self.kodi_is_dynamic or (self.removable_sink is not None)
 
 	#
 	#	after information gathering from pulseaudio, create attributs in self and collect changes to create change messages
@@ -238,29 +235,21 @@ class paDatabase():
 		sink = self.sinks[index]
 		log("padb: on_sink_new %s" % sink.name)
 
-		if sink.driver == "module-bluez5-device.c":
-			self.info["last_sink"] = self.kodi_first_sink
-			self.info["bt_sink"] = sink
+		if "device.bus" in sink.proplist and \
+		sink.proplist["device.bus"] in ['bluetooth','usb'] :
+			self.info["removable_sink"] = sink
 			self.set_kodi_chain_sink(sink)
 
 	def on_sink_remove(self, index):
 		log("padb: on_sink_remove %d" % index)
-		if self.bt_sink is not None:
-			if index == self.bt_sink.index:
-				self.info["bt_sink"] = "force_none"
-
-		if self.last_sink is not None:
-			if index == self.last_sink.index:
-				self.info["last_sink"] = None
-				self.last_sink = None
+		if self.removable_sink is not None:
+			if index == self.removable_sink.index:
+				self.info["removable_sink"] = "force_none"
 
 		if self.kodi_first_sink.index == index:
 			log("padb: active sink removed: %s" % self.kodi_first_sink.name)
-			if self.last_sink is None:
-				# move to default sink
-				sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
-			else:
-				sink = self.last_sink
+
+			sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
 
 			self.set_kodi_chain_sink(sink)
 
@@ -270,12 +259,13 @@ class paDatabase():
 
 	def proc_device(self):
 		self.output_sink = None
-		try:
-			sock = SocketCom("kodi")
-			device = sock.call_func("get","device")
-		except:
-			pass
-		if device: self.proc_device_set(device)
+
+		sock = SocketCom("kodi")
+		device = sock.call_func("get","device")
+
+		if not device:
+			device = "Default"
+		self.proc_device_set(device)
 
 	def proc_device_set(self,arg):
 		pos = arg.rfind(":")
@@ -299,13 +289,11 @@ class paDatabase():
 				log("padb: on_device_set: device not found")
 				return
 
-		if self.kodi_first_sink.index != sink.index:
-			self.info["last_sink"] = self.kodi_first_sink
 		self.set_kodi_chain_sink(sink)
 		self.update_attr()
 
 	def on_device_set(self,arg):
-		self.bt_sink = None
+		self.removable_sink = None
 		self.proc_device_set(arg)
 
 	def on_default_set(self, name):

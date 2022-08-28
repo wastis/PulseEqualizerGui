@@ -37,7 +37,6 @@ def run_on_service(cmd):
 		with open(pname, "w") as f: f.write(cmd)
 
 	except Exception as e:
-		from resources.lib.basic import handle
 		handle(e)
 
 def run_addon():

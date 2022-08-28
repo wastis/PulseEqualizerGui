@@ -73,4 +73,5 @@ def loginfo(text):
 def logerror(text):
 	xbmc.log("c_eq: " + text, xbmc.LOGERROR)
 	log_to_history(text,"ERROR")
+	log_to_history("******************** END ****************************","ERROR")
 	log_to_file()

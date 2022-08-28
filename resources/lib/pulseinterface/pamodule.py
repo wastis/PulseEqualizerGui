@@ -146,7 +146,8 @@ class paModuleManager():
 		if self.padb.output_sink and self.padb.output_sink.index == index:
 			log("pamm: on_sink_change %s" % self.padb.output_sink.name)
 			vol = self.pc.get_sink_volume(self.padb.output_sink.index)
-			self.config.set("volume",vol, self.padb.output_sink.name)
+			if vol is not None:
+				self.config.set("volume",vol, self.padb.output_sink.name)
 
 		else: log("pamm: on_sink_change %d" % index)
 

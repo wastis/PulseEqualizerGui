@@ -2,7 +2,7 @@
 
 A graphical frontend in Kodi based on linux for control the pulse audio equalizer. 
 
-Version 2.1.5
+Version 2.1.6
 
 Features include:
 
