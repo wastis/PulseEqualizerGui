@@ -23,7 +23,8 @@ Help can be found in the Kodi forum within this [thread](https://forum.kodi.tv/s
 
 2022 wastis
 
-![Pulse Equalizer](/resources/images/Equalizer.png)
+<img src="resources/images/Equalizer.png" alt="drawing" width="400"/>
+
 
 ## Installation
 
