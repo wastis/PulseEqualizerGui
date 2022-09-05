@@ -2,7 +2,7 @@
 
 A graphical frontend in Kodi based on linux for control the pulse audio equalizer. 
 
-Version 2.1.6
+Version 2.1.7
 
 Features include:
 
@@ -27,13 +27,13 @@ Help can be found in the Kodi forum within this [thread](https://forum.kodi.tv/s
 
 ## Installation
 
+### System Prerequisites
 This addon requires pulseaudio-equalizer installed on the system
 
 	sudo apt install pulseaudio-equalizer	
 
 ### Install Addon in Kodi
-
-Launch *Kodi >> Add-ons >> Get More >> .. >> Install from zip file*
+This addon is included into the [Linux Addon Repository](https://github.com/wastis/LinuxAddonRepo). It is recommended to use the repository for the installation of the addon. This will ease version upgrades.
 
 ### Configuration
 
