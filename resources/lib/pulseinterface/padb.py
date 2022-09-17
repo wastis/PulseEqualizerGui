@@ -92,7 +92,8 @@ class paDatabase():
 	# try to find kodi stream and all elements included
 	# try to find the auto-loaded equalizer
 
-	def on_pa_connect(self):
+	def on_init(self):
+		log("padb: on_init")
 		self.mc = MessageCollector()
 
 		for attr in self.attributes: setattr(self, attr, None)
@@ -101,8 +102,10 @@ class paDatabase():
 			setattr(self, target + "s", {})
 			self.get_pa_object_list(target)
 
-		self.update_kodi_info()
+	def on_pa_connect(self):
+		log("padb: on_pa_connect")
 
+		self.update_kodi_info()
 		self.proc_device()
 
 	# get the current list of objects (sinks, cards...) from pulse audio an create a lookup dictionary by index
@@ -134,12 +137,21 @@ class paDatabase():
 		for cid,client in list(self.clients.items()):
 			if client.name in ['Kodi', 'KodiSink'] and client.proplist['application.process.id']==pid:
 				self.info["kodi_client"] = cid
+				return
+
+			if client.name.startswith("ALSA plug-in") and client.proplist['application.process.id']==pid:
+				self.info["kodi_client"] = cid
+				return
 
 		#no kodi client with pid matching myself, I might be the develop script, so pick first kodi
-		if self.info['kodi_client']  is None:
-			for cid,client in list(self.clients.items()):
-				if client.name in ['Kodi','KodiSink']:
-					self.info['kodi_client'] = cid
+		for cid,client in list(self.clients.items()):
+			if client.name in ['Kodi','KodiSink']:
+				self.info['kodi_client'] = cid
+				return
+
+			if client.name.startswith("ALSA plug-in"):
+				self.info["kodi_client"] = cid
+				return
 
 	def parse_sink_inputs(self):
 		self.stream_by_module = {}
@@ -261,10 +273,11 @@ class paDatabase():
 		self.output_sink = None
 
 		sock = SocketCom("kodi")
-		device = sock.call_func("get","device")
+		device = sock.call_func("get","device")[0]
 
-		if not device:
+		if not device or device.startswith("ALSA:"):
 			device = "Default"
+
 		self.proc_device_set(device)
 
 	def proc_device_set(self,arg):
@@ -309,6 +322,13 @@ class paDatabase():
 		if self.kodi_first_sink is None:
 			return "Default"
 		return self.kodi_first_sink.name
+
+	def on_sinks_get(self):
+		result = []
+		for _, sink in list(self.sinks.items()):
+			if sink.name != "eq-auto-load":
+				result.append((sink.description,sink.name))
+		return result
 
 	#
 	#  all messages arrive here, filter the ones from pulseaudio and collect them for later aggregation

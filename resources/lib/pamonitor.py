@@ -38,8 +38,6 @@ class PaMonitor( xbmc.Monitor ):
 		ps = PulseService()
 		ps.start()
 
-		self.sock.call_func("set","device",[self.get_device()])
-
 		while not self.abortRequested():
 			if self.waitForAbort( 10 ):
 				break
@@ -58,7 +56,7 @@ class PaMonitor( xbmc.Monitor ):
 	def on_device_get(self):
 		result = self.get_device()
 		xbmc.log("m_eq: kodi service: on_device_get %s" % result,xbmc.LOGDEBUG)
-		return result
+		return [result]
 
 	@staticmethod
 	def on_device_set(device):

@@ -18,6 +18,7 @@ from helper import SocketCom
 from basic import handle
 from basic import logerror
 from basic import path_addon
+from basic import log
 
 from time import sleep
 
@@ -175,6 +176,7 @@ class Menu():
 		#value = None
 
 		kodi_output = "PULSE:" + SocketCom("server").call_func("get","device" , [])
+		alsa = False
 
 		for s in settings:
 			if s["id"] == "audiooutput.audiodevice":
@@ -187,6 +189,10 @@ class Menu():
 				preselect = 0
 				index = 0
 				for o in options:
+					if o["value"].startswith("ALSA:"):
+						alsa = True
+						break
+
 					if "eq-auto-load" in o["value"]: continue
 					if o["value"] in sel_values: continue
 
@@ -195,12 +201,25 @@ class Menu():
 
 					lab = o["label"].replace("(PULSEAUDIO)",'').replace("PULSE:","").strip()
 					lab_col = lab.split(",")
-					if lab_col[0].strip() == lab_col[1].strip():
+					if len(lab_col) > 1 and lab_col[0].strip() == lab_col[1].strip():
 						lab =  lab_col[0].strip()
 
 					sel_values.append(o["value"])
 					sel_lables.append(lab)
 					index = index + 1
+
+		if alsa:
+			sel_lables = []
+			sel_values = []
+			kodi_output = kodi_output[6:]
+			index = 0
+
+			for label,values in SocketCom("server").call_func("get","sinks" , []):
+				sel_lables.append(label)
+				sel_values.append(values)
+				if values == kodi_output:
+						preselect = index
+				index+=1
 
 		# device selection Dialog
 
@@ -210,7 +229,8 @@ class Menu():
 
 		if sel is None: return
 
-		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice", "value":"%s"}, "id":1}' %(sel_values[sel]))
+		if not alsa:
+			response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice", "value":"%s"}, "id":1}' %(sel_values[sel]))
 		SocketCom("server").call_func("set","device" , [sel_values[sel]])
 
 	def sel_set_default(self):

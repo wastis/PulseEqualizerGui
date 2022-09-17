@@ -181,7 +181,7 @@ class SpecManager():
 		try:
 			self.profile = EqProfile([name] + self.profiles[name])
 		except KeyError:
-			log("cannot find %s, load default profile" % name)
+			log("spec: cannot find %s, load default profile" % name)
 			self.profile = EqProfile()
 		except Exception as e: handle(e)
 		self.filter_freq = None

@@ -28,57 +28,87 @@ from basic import log
 
 class PulseDBus:
 	def __init__( self, *_args, **_kwargs ):
-		destination = 'org.PulseAudio1'
-		object_path = '/org/pulseaudio/server_lookup1'
-		interface_name = 'org.PulseAudio.ServerLookup1'
 		try:
-			if 'PULSE_DBUS_SERVER' in os.environ:
-				address = os.environ['PULSE_DBUS_SERVER']
-				log("got dbus address from environment: %s" % address)
-			else:
-				conn = dbus.Connection.bus_get(DBUS.BUS_SESSION,private = False)
-
-				request = dbus.Message.new_method_call (
-					destination = dbus.valid_bus_name(destination),
-					path = dbus.valid_path(object_path),
-					iface = IF.INTERFACE_PROPERTIES,
-					method = "Get"
-				)
-
-				request.append_objects("ss", dbus.valid_interface(interface_name),'Address')
-				reply = conn.send_with_reply_and_block(request)
-
-				address = reply.expect_return_objects("v")[0][1]
-				log("got dbus address from pulseaudio: %s" % address)
-
-			self.conn = dbus.Connection.open(address,0)
+			self.conn = None
+			address = self.get_pulse_dbus()
+			if address:
+				self.conn = dbus.Connection.open(address,0)
 		except DBusError as e:
-			fb = "/run/user/%s/pulse/dbus-socket" % os.geteuid()
-			address = 'unix:path=' + fb
+			self.handle_exception(e,"python3","on connect")
 
-			if os.path.exists(fb):
-				try:
-					log("fallback dbus: %s" % address)
-					self.conn = dbus.Connection.open(address,0)
-				except DBusError as ex: self.handle_exception(ex,"python3","on connect")
-			else:
-				log("fallback did not work: %s" % address)
-				self.handle_exception(e,"python3","on connect")
+	@staticmethod
+	def check_dbus_address(address):
+		if not address:
+			return False
 
-	def print_introspect(self, interface, d_path ):
+		if "=" in address:
+			_,addr =  address.split("=")
+		else:
+			addr = address
+		if os.path.exists(addr.strip()):
+			return True
+
+		log("dbus socket does not exist: %s" % addr)
+		return False
+
+	@classmethod
+	def get_pulse_dbus(cls):
+		address=None
+
+		# environment variable
 		try:
-			request = dbus.Message.new_method_call(
-					destination = dbus.valid_bus_name(interface),
-					path = d_path,
-					iface = IF.INTERFACE_INTROSPECTABLE,
-					method = "Introspect"
-				)
+			address = os.environ['PULSE_DBUS_SERVER']
+		except KeyError:
+			log("environment variable PULSE_DBUS_SERVER is not set")
+			pass
+		else:
+			if cls.check_dbus_address(address):
+				log("got dbus address from environment variable PULSE_DBUS_SERVER: %s" % address)
+				return address
 
-			reply = self.conn.send_with_reply_and_block(request)
-			sys.stdout.write(reply.expect_return_objects("s")[0])
-		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
+		# from session bus
+		try:
+			conn = dbus.Connection.bus_get(DBUS.BUS_SESSION,private = False)
+
+			request = dbus.Message.new_method_call (
+				destination = dbus.valid_bus_name('org.PulseAudio1'),
+				path = dbus.valid_path('/org/pulseaudio/server_lookup1'),
+				iface = IF.INTERFACE_PROPERTIES,
+				method = "Get"
+			)
+
+			request.append_objects("ss", dbus.valid_interface('org.PulseAudio.ServerLookup1'),'Address')
+			reply = conn.send_with_reply_and_block(request)
+
+			address = reply.expect_return_objects("v")[0][1]
+		except DBusError:
+			pass
+		else:
+			if cls.check_dbus_address(address):
+				log("got dbus address from SESSION_BUS: %s" % address)
+				return address
+		# from XDG_RUNTIME_DIR
+
+		try:
+			address = 'unix:path=' + os.environ['XDG_RUNTIME_DIR'] + "/pulse/dbus-socket"
+		except KeyError:
+			pass
+		else:
+			if cls.check_dbus_address(address):
+				log("got dbus address from XDG_RUNTIME_DIR: %s" % address)
+				return address
+
+		# guessing
+		address = "unix:path=/run/user/%s/pulse/dbus-socket" % os.geteuid()
+		if cls.check_dbus_address(address):
+			log("guessing dbus address: %s" % address)
+			return address
+
+		log("pulseaudio dbus-socket not found.")
+		return None
 
 	def get_property(self, interface, d_path, p_name):
+		if not self.conn: return None
 		try:
 			request = dbus.Message.new_method_call (
 				destination = dbus.valid_bus_name(interface),
@@ -93,6 +123,7 @@ class PulseDBus:
 		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
 
 	def set_property(self, interface, d_path, p_name, *p_val):
+		if not self.conn: return None
 		try:
 			request = dbus.Message.new_method_call (
 				destination = dbus.valid_bus_name(interface),
@@ -104,21 +135,8 @@ class PulseDBus:
 			self.conn.send_with_reply_and_block(request)
 		except DBusError as e: self.handle_exception(e,"python3","on dbus function call")
 
-	def get_all_property(self, interface, d_path):
-		try:
-			request = dbus.Message.new_method_call (
-				destination = dbus.valid_bus_name(interface),
-				path = d_path,
-				iface = IF.INTERFACE_PROPERTIES,
-				method = "GetAll"
-			)
-			request.append_objects("s", dbus.valid_interface(interface))
-			reply = self.conn.send_with_reply_and_block(request)
-
-			return reply.expect_return_objects("a{sv}")[1]
-		except DBusError as e:  self.handle_exception(e,"python3","on dbus function call")
-
 	def call_func(self, interface, d_path, func, *args):
+		if not self.conn: return None
 		try:
 			request = dbus.Message.new_method_call (
 				destination = dbus.valid_bus_name(interface),

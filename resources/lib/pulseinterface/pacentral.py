@@ -69,13 +69,17 @@ class MessageCentral():
 	#
 
 	def on_pulse_connect(self):
-		log("pact: start pulse control")
-		self.pc.start()
-		self.padb.on_pa_connect()
-		self.pamm.on_pa_connect()
+		try:
+			log("pact: start pulse control")
+			self.pc.start()
+			self.padb.on_init()
+			self.pamm.on_pa_connect()
+			self.padb.on_pa_connect()
 
-		SocketCom("kodi").call_func("up","service",[])
-		SocketCom("kodi").call_func("get","player",[])
+			SocketCom("kodi").call_func("up","service",[])
+			SocketCom("kodi").call_func("get","player",[])
+		except Exception as e:
+			handle(e)
 
 	#
 	# Dispatch messages

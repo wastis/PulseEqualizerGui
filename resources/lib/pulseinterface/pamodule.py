@@ -369,10 +369,12 @@ class paModuleManager():
 	#
 
 	def load_dyn_equalizer(self):
+		log("pamm: load "+ self.eq_name)
 		# equalizer already loaded?
 		for _, sink in list(self.padb.sinks.items()):
 			if sink.name == self.eq_name:
 				self.dyn_equalizer = sink.index
+				log("pamm: %s already loaded" % self.eq_name)
 				return
 
 		args = 'sink_name=%s sink_properties="device.description=Equalizer"' % ( self.eq_name )
@@ -385,6 +387,7 @@ class paModuleManager():
 			self.pc.unload_module(index)
 
 	def load_required_module(self, name):
+		log("pamm: load "+ name)
 		for _,module in list(self.padb.modules.items()):
 			if module.name == name:
 				log("pamm: %s already loaded" % name)

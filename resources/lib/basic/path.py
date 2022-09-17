@@ -14,8 +14,13 @@ import sys
 
 # default
 
-path_tmp = "/run/user/%d/pa/" % os.geteuid()
-path_pipe = "/run/user/%d/pa/" % os.geteuid()
+if 'XDG_RUNTIME_DIR' in os.environ:
+	runtime_dir = os.environ['XDG_RUNTIME_DIR']
+else:
+	runtime_dir = "/run/user/%d" % os.geteuid()
+
+path_tmp = runtime_dir + "/pa/"
+path_pipe = runtime_dir + "/pa/"
 
 path_addon = None
 path_kodi = None
