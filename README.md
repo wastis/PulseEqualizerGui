@@ -23,8 +23,8 @@ Help can be found in the Kodi forum within this [thread](https://forum.kodi.tv/s
 
 2022 wastis
 
-<img src="resources/images/Equalizer.png" alt="drawing" width="400"/>
-<img src="resources/images/Room Correction.png" alt="drawing" width="400"/>
+| <img src="resources/images/Equalizer.png" alt="drawing" width="350"/> | <img src="resources/images/Room Correction.png" alt="drawing" width="350"/> |
+|:--------------:|:-----------:|
 
 ## Installation
 
