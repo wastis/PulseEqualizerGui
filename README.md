@@ -40,3 +40,5 @@ This addon is included into the [Linux Addon Repository](https://github.com/wast
 
 In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select an equalizer profile. The equalizer is then automatically inserted into the playback stream. 
 
+### OSMC
+If you run on OSMC, the [OSMC Equalizer Setup](https://github.com/wastis/OSMCEqualizerSetup) addon does the whole system configuration for you. 
