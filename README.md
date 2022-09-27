@@ -2,7 +2,9 @@
 
 A graphical frontend in Kodi based on linux for control the pulse audio equalizer. 
 
-[Version 2.1.8](https://github.com/wastis/LinuxAddonRepo)
+[Version 2.1.8](https://github.com/wastis/LinuxAddonRepo) 
+
+[*OSMC setup is here*](https://github.com/wastis/OSMCEqualizerSetup)
 
 Features include:
 
@@ -15,7 +17,7 @@ Features include:
 *	Automatic switch to Bluetooth headset, if it becomes available
 *	Mini keymap editor
 
-Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless
+Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless / OSMC 9/22
 
 More information can be found on [Wiki](https://github.com/wastis/PulseEqualizerGui/wiki)
 
