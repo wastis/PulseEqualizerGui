@@ -10,6 +10,7 @@
 #
 
 import subprocess
+import struct
 
 from time import sleep
 
@@ -139,6 +140,7 @@ class SoundGen():
 	def on_pulseplayer_start(self,channel):
 		try:
 			sink = self.padb.chaineq_sink if self.padb.chaineq_sink is not None else self.padb.autoeq_sink
+			log("soge: play to %s" % sink.name)
 			if sink is None:
 				log("soge: on_pulseplayer_start: no equalizer sink found")
 				self.cur_eq_index = None
@@ -201,12 +203,15 @@ class SoundGen():
 
 	def on_sink_input_new(self,index):
 		si = self.padb.sink_inputs[index]
-		log("soge: on_sink_input_new %s"%index)
+		log("soge: on_sink_input_new %s"%si.name)
 		if si.name == "parec" and si.proplist['application.process.id']==str(self.pid):
 			log("pasp: parec stream found")
 			if self.cur_eq_index is not None:
 				# move parec stream to equalizer and then to output
-				log("pasp: move stream parec -> %s -> %s" % (self.cur_eq.name, self.padb.output_sink.name))
+				out_sink = self.padb.default_sink if self.padb.output_sink is None else self.padb.output_sink
+				log("pasp: move stream parec -> %s -> %s" % (self.cur_eq.name, out_sink.name))
 
 				self.pc.move_sink_input(index , self.cur_eq_index)
-				self.pc.move_sink_input(self.cur_eq_stream , self.padb.output_sink.index)
+				self.pc.move_sink_input(self.cur_eq_stream , out_sink.index)
+			else:
+				log("pasp: no equalizer in chain")

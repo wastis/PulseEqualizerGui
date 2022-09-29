@@ -37,10 +37,11 @@ class Launcher():
 	def loop(self):
 		log("launcher: start {}".format(self.ppath))
 		try: os.makedirs(path_pipe)
-		except OSError: pass
-
+		except OSError:
+			pass
 		try: os.mkfifo(self.ppath)
-		except OSError: pass
+		except OSError:
+			pass
 
 		lock = path_pipe + "lock"
 

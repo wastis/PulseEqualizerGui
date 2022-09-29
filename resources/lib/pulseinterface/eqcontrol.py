@@ -22,6 +22,8 @@ from padbus import PulseDBus
 
 from sound import SpecManager
 
+from basic import log
+
 class FilterParam(): pass
 
 class EqControl():

@@ -39,7 +39,7 @@ class SpecGroup():
 			self.relvol = src.relvol
 
 		if speclist: self.speclist = speclist
-		log("SPEC %s" % repr(self.speclist))
+		log("SPEC %s %s" % (self.name, repr(self.speclist)))
 
 	def load(self, filename):
 		path, fn = os.path.split(filename)

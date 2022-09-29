@@ -104,6 +104,12 @@ class PulseDBus:
 			log("guessing dbus address: %s" % address)
 			return address
 
+		# guessing 2
+		address = "unix:path=/run/pulse/dbus-socket" % os.geteuid()
+		if cls.check_dbus_address(address):
+			log("pulseaudio as system wide, guessing dbus address : %s" % address)
+			return address
+
 		log("pulseaudio dbus-socket not found.")
 		return None
 

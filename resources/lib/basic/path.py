@@ -18,6 +18,11 @@ if 'XDG_RUNTIME_DIR' in os.environ:
 	runtime_dir = os.environ['XDG_RUNTIME_DIR']
 else:
 	runtime_dir = "/run/user/%d" % os.geteuid()
+	if not os.path.exists(runtime_dir):
+		runtime_dir = "/run/shm"
+	if not os.path.exists(runtime_dir):
+		runtime_dir = "/tmp"
+	os.environ['XDG_RUNTIME_DIR'] = runtime_dir
 
 path_tmp = runtime_dir + "/pa/"
 path_pipe = runtime_dir + "/pa/"

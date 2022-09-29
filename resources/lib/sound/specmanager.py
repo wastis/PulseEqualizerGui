@@ -220,6 +220,43 @@ class SpecManager():
 		fac = float(filter_rate) / float(sample_rate)
 		self.filter_freq = [int(round(x * fac)) for x in spec.get_freqs()]
 
+	@staticmethod
+	def remove_from_array(skip, arr):
+		result = []
+		sit = iter(skip)
+		cur = next(sit)
+
+		for i in range(0,len(arr)):
+			if (cur > -1) and (i == cur):
+				try:
+					cur = next(sit)
+				except StopIteration:
+					cur = -1
+				continue
+			result.append(arr[i])
+
+		return result
+
+	@classmethod
+	def remove_duplicates(cls, freq , preamp, coefs):
+		skip = []
+
+		last = -1
+		for i in range(0,len(freq)):
+			if freq[i] == last:
+				skip.append(i)
+			last = freq[i]
+
+		if len(skip) == 0:
+			return freq , preamp, coefs
+
+		freq = cls.remove_from_array(skip, freq)
+		new_coef = []
+		for co in coefs:
+			new_coef.append(cls.remove_from_array(skip, co))
+
+		return freq , preamp, new_coef
+
 	def get_ffreq_coef(self,filter_rate, sample_rate):
 		if self.profile is None: self.set_profile_default()
 		if self.cur_spec and self.profile:
@@ -249,4 +286,4 @@ class SpecManager():
 
 		log("%s, number of channels: %s" % (info, len(coefs)))
 
-		return self.filter_freq, preamp, coefs
+		return self.remove_duplicates( self.filter_freq, preamp, coefs)

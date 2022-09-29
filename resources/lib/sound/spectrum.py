@@ -27,8 +27,8 @@ class Spectrum():
 	def __str__(self):
 		return repr(self.freq_db)
 
-	#def __repr__(self):
-	#	return self.freq_db
+	def __repr__(self):
+		return "length: %d" % len(self.freq_db)
 
 	def __len__(self):
 		return self.size
