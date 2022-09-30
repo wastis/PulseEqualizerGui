@@ -14,7 +14,6 @@
 #
 
 import os
-import sys
 
 from . import dbussy as dbus
 from . import interface as IF
@@ -102,12 +101,6 @@ class PulseDBus:
 		address = "unix:path=/run/user/%s/pulse/dbus-socket" % os.geteuid()
 		if cls.check_dbus_address(address):
 			log("guessing dbus address: %s" % address)
-			return address
-
-		# guessing 2
-		address = "unix:path=/run/pulse/dbus-socket" % os.geteuid()
-		if cls.check_dbus_address(address):
-			log("pulseaudio as system wide, guessing dbus address : %s" % address)
 			return address
 
 		log("pulseaudio dbus-socket not found.")

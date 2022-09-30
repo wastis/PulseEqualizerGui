@@ -18,7 +18,6 @@ from helper import SocketCom
 from basic import handle
 from basic import logerror
 from basic import path_addon
-from basic import log
 
 from time import sleep
 

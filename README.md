@@ -1,10 +1,10 @@
 # Kodi PulseEqualizer GUI Addon
 
-A graphical frontend in Kodi based on linux for control the pulse audio equalizer. 
+A graphical frontend in Kodi based on linux for control the pulseaudio equalizer. 
 
-[Version 2.1.8](https://github.com/wastis/LinuxAddonRepo) 
-
-[*OSMC setup is here*](https://github.com/wastis/OSMCEqualizerSetup)
+Version 2.1.9 / 
+[Linux Addon Repo](https://github.com/wastis/LinuxAddonRepo) / 
+[*OSMC setup*](https://github.com/wastis/OSMCEqualizerSetup)
 
 Features include:
 
@@ -12,9 +12,9 @@ Features include:
 *	Digital Room Correction
 *	Management of equalizer profiles (add, remove and change)
 *	Automatic filter profile switching based on output device
-*	Audio latency-offset slider and automatic switch based on device
-*	System volume control in Kodi 
-*	Automatic switch to Bluetooth headset, if it becomes available
+*	Audio latency control based on device
+*	System volume control 
+*	Automatic switch to Bluetooth device
 *	Mini keymap editor
 
 Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless / OSMC 9/22
@@ -36,7 +36,7 @@ This addon requires pulseaudio-equalizer installed on the system
 	sudo apt install pulseaudio-equalizer	
 
 ### Install Addon in Kodi
-This addon is included into the [Linux Addon Repository](https://github.com/wastis/LinuxAddonRepo). It is recommended to use the repository for the installation of the addon. This will ease version upgrades.
+This addon is included into the [Linux Addon Repository](https://github.com/wastis/LinuxAddonRepo). It is recommended to use the repository for the installation of the addon. This will enable automatic version upgrades.
 
 ### Configuration
 

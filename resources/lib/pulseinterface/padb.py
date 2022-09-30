@@ -273,7 +273,10 @@ class paDatabase():
 		self.output_sink = None
 
 		sock = SocketCom("kodi")
-		device = sock.call_func("get","device")[0]
+		try:
+			device = sock.call_func("get","device")[0]
+		except TypeError:
+			device = "Default"
 
 		if not device or device.startswith("ALSA:"):
 			device = "Default"

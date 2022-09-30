@@ -10,7 +10,6 @@
 #
 
 import subprocess
-import struct
 
 from time import sleep
 
