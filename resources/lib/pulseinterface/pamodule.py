@@ -48,7 +48,7 @@ class paModuleManager():
 	#
 
 	def on_pa_connect(self):
-		log("pamm: start paModuleManager")
+		log("pamm: on_pa_connect")
 		try:
 			self.load_dyn_equalizer()
 			self.eq_fatal = False

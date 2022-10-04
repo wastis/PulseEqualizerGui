@@ -60,7 +60,7 @@ class MessageCentral():
 		self.eq = EqControl(self.pc)
 		self.config = Config()
 
-		self.padb = paDatabase(self.pc)
+		self.padb = paDatabase(self.pc, self.config)
 		self.sg = SoundGen(self.padb, self.pc)
 		self.pamm = paModuleManager(self.pc, self.eq, self.padb, self.config)
 

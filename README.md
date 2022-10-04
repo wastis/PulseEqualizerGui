@@ -2,7 +2,7 @@
 
 A graphical frontend in Kodi based on linux for control the pulseaudio equalizer. 
 
-Version 2.1.9 / 
+Version 2.2.0 / 
 [Linux Addon Repo](https://github.com/wastis/LinuxAddonRepo) / 
 [*OSMC setup*](https://github.com/wastis/OSMCEqualizerSetup)
 

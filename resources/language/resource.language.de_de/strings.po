@@ -146,8 +146,12 @@ msgid "pre"
 msgstr "Vor"
 
 msgctxt "#32038"
-msgid "Set current device as default output device"
-msgstr "Setze derzeitige Audioausgabe als Standardausgabe"
+msgid "Set the kodi stardard device"
+msgstr "Setze die Standardausgabe für Kodi"
+
+msgctxt "#32039"
+msgid "Set the system stardard device"
+msgstr "Setze die Standardausgabe für das System"
 
 msgctxt "#32100"
 msgid "General"

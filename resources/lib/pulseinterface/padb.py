@@ -40,9 +40,10 @@ class paDatabase():
 	output_sink = None
 	default_sink = None
 
-	def __init__(self, pulsecontrol):
+	def __init__(self, pulsecontrol, config):
 		self.pc = pulsecontrol
 		self.mc = MessageCollector()
+		self.config = config
 
 		for attr in self.attributes: setattr(self, attr, None)
 		for attr in self.lookups: setattr(self, attr, None)
@@ -106,6 +107,7 @@ class paDatabase():
 		log("padb: on_pa_connect")
 
 		self.update_kodi_info()
+		self.info["removable_sink"]=None
 		self.proc_device()
 
 	# get the current list of objects (sinks, cards...) from pulse audio an create a lookup dictionary by index
@@ -122,6 +124,15 @@ class paDatabase():
 	#
 	#	fill kodi info, collect certain information like kodi-stream, kodi-first sink, autoloaded-equalizer etc.
 	#
+	def get_default_sink(self):
+		sysname = self.pc.get_server_info().default_sink_name
+		name = self.config.get("default_sink",sysname,"global")
+		if name in self.sink_by_name.keys():
+			return self.sink_by_name[name]
+		elif sysname in self.sink_by_name.keys():
+			return self.sink_by_name[sysname]
+		else:
+			return None
 
 	def update_kodi_info(self):
 		log("padb: update_kodi_info")
@@ -130,7 +141,7 @@ class paDatabase():
 		self.get_kodi_client()
 		self.parse_sink_inputs()
 		self.parse_sinks()
-		self.info["default_sink"] = self.sink_by_name[self.pc.get_server_info().default_sink_name]
+		self.info["default_sink"] = self.get_default_sink()
 
 	def get_kodi_client(self):
 		pid = str(os.getgid())
@@ -176,7 +187,7 @@ class paDatabase():
 				self.info["autoeq_sink"] = sink
 				self.info["autoeq_stream"] = self.stream_by_module[sink.owner_module]
 
-		self.default_sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
+		self.default_sink = self.get_default_sink()
 
 	def set_kodi_chain_sink(self, sink):
 		sink_input = self.info["kodi_stream"]
@@ -199,9 +210,12 @@ class paDatabase():
 
 		self.info["output_sink"] = sink
 
-	def set_kodi_chain(self, sink_input):
+	def set_kodi_chain(self, sink_input, keep = False):
 		if self.removable_sink is None:
-			self.set_kodi_chain_sink(self.sinks[sink_input.sink])
+			if keep and self.kodi_first_sink is not None:
+				self.set_kodi_chain_sink(self.kodi_first_sink)
+			else:
+				self.set_kodi_chain_sink(self.sinks[sink_input.sink])
 		else:
 			self.set_kodi_chain_sink(self.removable_sink)
 
@@ -241,7 +255,8 @@ class paDatabase():
 
 		if self.info['kodi_stream'] is not None:
 			if index == self.info['kodi_stream'].index:
-				self.set_kodi_chain(self.info['kodi_stream'])
+				device = self.get_kodi_device()
+				self.set_kodi_chain(self.info['kodi_stream'], device == "Default")
 
 	def on_sink_new(self, index):
 		sink = self.sinks[index]
@@ -261,7 +276,7 @@ class paDatabase():
 		if self.kodi_first_sink.index == index:
 			log("padb: active sink removed: %s" % self.kodi_first_sink.name)
 
-			sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
+			sink = self.get_default_sink()
 
 			self.set_kodi_chain_sink(sink)
 
@@ -269,9 +284,7 @@ class paDatabase():
 	#	special messages from kodi player, we need to know the selected sink in kodi
 	#
 
-	def proc_device(self):
-		self.output_sink = None
-
+	def get_kodi_device(self):
 		sock = SocketCom("kodi")
 		try:
 			device = sock.call_func("get","device")[0]
@@ -281,20 +294,30 @@ class paDatabase():
 		if not device or device.startswith("ALSA:"):
 			device = "Default"
 
-		self.proc_device_set(device)
+		return device
+
+	def proc_device(self):
+		self.output_sink = None
+		self.proc_device_set(self.get_kodi_device())
+
+	@staticmethod
+	def extract_device_name(name):
+		if name.startswith("PULSE:"):
+			return name[6:]
+		elif name.startswith("ALSA:"):
+			return name[5:]
+		return name
 
 	def proc_device_set(self,arg):
-		pos = arg.rfind(":")
-		if pos > -1: arg = arg[pos+1:]
+		arg = self.extract_device_name(arg)
 
 		if arg == 'Default':
-			try:
-				self.default_sink = self.sink_by_name[self.pc.get_server_info().default_sink_name]
-				log("padb: on_device_set: default sink found")
-			except Exception:
+			self.default_sink = self.get_default_sink()
+			if not self.default_sink:
 				log("padb: on_device_set: default sink not found")
-				self.default_sink = None
 				return
+
+			log("padb: on_device_set: default sink found")
 
 			sink = self.default_sink
 		else:
@@ -312,13 +335,39 @@ class paDatabase():
 		self.removable_sink = None
 		self.proc_device_set(arg)
 
-	def on_default_set(self, name):
+	def on_kodidefault_get(self):
+		return self.get_default_sink().name
+
+	def on_kodidefault_set(self, name):
 		try:
+			# set default sink for playback
+			name = self.extract_device_name(name)
+			sink = self.sink_by_name[name]
+			self.config.set("default_sink",name,"global")
+			self.default_sink = sink
+			self.info["default_sink"] = sink
+
+			log("padb: set kodi default sink to: %s" % sink.name)
+
+		except KeyError:
+			log("padb: set default error, cannot find sink: %s" % name)
+			pass
+
+	def on_systemdefault_get(self):
+		try:
+			return self.pc.get_server_info().default_sink_name
+		except Exception as e:
+			handle(e)
+			return None
+
+	def on_systemdefault_set(self, name):
+		try:
+			name = self.extract_device_name(name)
 			sink = self.sink_by_name[name]
 			self.pc.set_default_sink(sink)
-			self.default_sink = sink
-
-		except IndexError:
+			log("padb: set system default sink to: %s" % sink.name)
+		except KeyError:
+			log("padb: set default error, cannot find sink: %s" % name)
 			pass
 
 	def on_device_get(self):
@@ -331,6 +380,16 @@ class paDatabase():
 		for _, sink in list(self.sinks.items()):
 			if sink.name != "eq-auto-load":
 				result.append((sink.description,sink.name))
+		return result
+
+	def on_soundsinks_get(self):
+		result = []
+		for _, sink in list(self.sinks.items()):
+			try:
+				if sink.proplist["device.class"] == "sound":
+					result.append((sink.description,sink.name))
+			except IndexError:
+				continue
 		return result
 
 	#

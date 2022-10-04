@@ -222,7 +222,8 @@ class Menu():
 
 		# device selection Dialog
 
-		funcs = [(tr(32038),self.sel_set_default)]
+		funcs = [(tr(32038),self.sel_set_kodi_default),
+				(tr(32039),self.sel_set_system_default)]
 
 		sel = contextMenu( items = sel_lables, default = sel_lables[preselect], width = 1000, funcs = funcs)
 
@@ -232,26 +233,36 @@ class Menu():
 			response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"audiooutput.audiodevice", "value":"%s"}, "id":1}' %(sel_values[sel]))
 		SocketCom("server").call_func("set","device" , [sel_values[sel]])
 
-	def sel_set_default(self):
-		response = xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.GetSettings", "params":{ "filter": {"section":"system", "category":"audio"}}, "id":1}')
-		r_dict = json.loads( response )
+	def sel_set_default(self, deftype, sinks):
+		sel_lables = []
+		sel_values = []
+		preselect = -1
 
-		settings = r_dict["result"]["settings"]
-		value = None
+		index = 0
+		sel = SocketCom("server").call_func("get",deftype , [])
+		for label,values in SocketCom("server").call_func("get",sinks , []):
+				sel_lables.append(label)
+				sel_values.append(values)
+				if values == sel:
+					preselect = index
+				index+=1
 
-		for s in settings:
-			if s["id"] == "audiooutput.audiodevice":
-				value = s["value"]
+		if preselect == -1:
+			default = None
+		else:
+			default = sel_lables[preselect]
 
-		if value is None:
+		sel = contextMenu( items = sel_lables, default = default, width = 1000)
+		if sel is None:
 			return
-		if value[:6]!="PULSE:":
-			return
-		value = value[6:]
-		if value == "Default":
-			return
 
-		SocketCom("server").call_func("set","default" , [value])
+		SocketCom("server").call_func("set",deftype , [sel_values[sel]])
+
+	def sel_set_kodi_default(self):
+		self.sel_set_default("kodidefault","sinks")
+
+	def sel_set_system_default(self):
+		self.sel_set_default("systemdefault","soundsinks")
 
 	#
 	#	manage profiles
