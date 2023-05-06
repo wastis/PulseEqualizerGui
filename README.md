@@ -46,6 +46,6 @@ In Kodi, select a pulseaudio hardware ouptut device and start a playback. Select
 If you run on OSMC, the [OSMC Equalizer Setup](https://github.com/wastis/OSMCEqualizerSetup) addon does the whole system configuration for you. 
 
 ### Flatpak
-If Kodi has been installed from flatpak, additional access rights have to be granted to the the Kodi sandbox of flatpak for pulseaudio, pules-equalizer and the addon to work correctly.
+If Kodi had been installed from flatpak, additional access rights have to be granted to the the Kodi sandbox of flatpak for pulseaudio, pules-equalizer and the addon to work correctly.
 
 	sudo flatpak override --filesystem=/run/user tv.kodi.Kodi 
