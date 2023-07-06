@@ -2,7 +2,7 @@
 
 A graphical frontend in Kodi based on linux for control the pulseaudio equalizer. 
 
-Version 2.2.0 / 
+Version 2.2.1 / 
 [Linux Addon Repo](https://github.com/wastis/LinuxAddonRepo) / 
 [*OSMC setup*](https://github.com/wastis/OSMCEqualizerSetup)
 
@@ -17,13 +17,14 @@ Features include:
 *	Automatic switch to Bluetooth device
 *	Mini keymap editor
 
-Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless / OSMC 9/22
+Tested with Kodi 19.x, 20.1
+Tested on i386 Linux Mint / Debian 10/11 headless / Raspberry PI 2b and 3b / Ubuntu 18 headless / OSMC 6/23
 
 More information can be found on [Wiki](https://github.com/wastis/PulseEqualizerGui/wiki)
 
 Help can be found in the Kodi forum within this [thread](https://forum.kodi.tv/showthread.php?tid=360514&pid=3094412#pid3094412)
 
-2022 wastis
+2023 wastis
 
 | <img src="resources/images/Equalizer.png" alt="drawing" width="350"/> | <img src="resources/images/Room Correction.png" alt="drawing" width="350"/> |
 |:--------------:|:-----------:|

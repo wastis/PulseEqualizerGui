@@ -30,6 +30,7 @@ from .specgroup import SpecGroup
 ## first one must be flat as it is used as filter for room correction
 presets = [
 ("default", 1.0, [(0,1.0),(125,1.0),(250,1.0),(500,1.0),(1e3,1.0),(2e3,1.0),(4e3,1.0),(8e3,1.0),(16e3,1.0)]),
+("Default", 1.0, [(0,1.0),(125,1.0),(250,1.0),(500,1.0),(1e3,1.0),(2e3,1.0),(4e3,1.0),(8e3,1.0),(16e3,1.0)]),
 ("Flat", 1.0, [(0,1.0),(125,1.0),(250,1.0),(500,1.0),(1e3,1.0),(2e3,1.0),(4e3,1.0),(8e3,1.0),(16e3,1.0)]),
 ("Bass", 0.6, [(0, 2.2), (64, 2.2), (125, 1.5), (250, 1.0), (500, 1.0), (750, 1.0), (1000, 1.0), (2000, 1.0), (3000, 1.0), (4000, 1.0), (8000, 1.0), (16000, 1.0)]),
 ("Speech", 0.4, [(0, 1.0), (64, 1.0), (125, 1.0), (250, 1.0), (500, 0.7), (750, 0.6), (1000, 0.63), (2000, 1.3), (3000, 2), (4000, 2.5), (8000, 1.0), (16000, 1.0)]),
@@ -37,7 +38,7 @@ presets = [
 ]
 
 class EqProfile():
-	def __init__(self, args = presets[0]):
+	def __init__(self, args = presets[1]):
 		self.name = args[0]
 		self.preamp = args[1]
 		self.spec = Spectrum(args[2])
@@ -187,7 +188,7 @@ class SpecManager():
 		self.filter_freq = None
 
 	def profile_unload(self):
-			self.profile = EqProfile()
+			self.profile = EqProfile(args = presets[0])
 			self.filter_freq = None
 
 	def profile_save(self,name):
